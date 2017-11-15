@@ -35,12 +35,13 @@ username: Lorem Ipsum
 user_description: Anon Developer at Lorem Ipsum Dolor
 user_title: Anon Developer
 email: anon@anon.com
-twitter_username: lorem_ipsum
-github_username:  lorem_ipsum
-linkedin_username: lorem_ipsum
-gplus_username:  lorem_ipsum
-reddit_username: lorem_ipsum
-keybase_username: lorem_ipsum
+accounts:
+  - name: GitHub
+    icon: github-alt
+    url: https://github.com/lorem_ipsum
+  - name: Twitter
+    icon: twitter
+    url: https://twitter.com/lorem_ipsum
 ```
 
 **Don't forget to change your url before you deploy your site!**
