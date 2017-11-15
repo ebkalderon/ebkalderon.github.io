@@ -1,0 +1,21 @@
+<div id="particles-js">
+  <div class="header">
+      <h1>
+        <span class="site-title">{{ site.username }}</span>
+        <span class="site-description">{{ site.user_subtitle }}</span>
+      </h1>
+      <div class="header-icons">
+        {% if site.email %}
+        <a aria-label="Send email" href="mailto:{{ site.email }}"><i class="icon fa fa-envelope"></i></a>
+        {% endif %}
+        {% for social in site.accounts %}
+        <a aria-label="My {{ social.name }}" target="_blank" href="{{ social.url }}"><i class="icon fa fa-{{ social.icon }}" aria-hidden="true"></i></a>
+        {% endfor %}
+      </div>
+      <div class="header-links">
+        <a class="link" href="#about" data-scroll>About Me</a>
+        <a class="link" href="#projects" data-scroll>Projects</a>
+      </div>
+  </div>
+  <a class="down" href="#about" data-scroll><i class="icon fa fa-chevron-down" aria-hidden="true"></i></a>
+</div>
