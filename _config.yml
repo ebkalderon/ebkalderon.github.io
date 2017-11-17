@@ -28,6 +28,6 @@ accounts:
 
 # Google-analytics
 google-analytics:
-  id: ""
+  id: UA-109846401-1
 
 exclude: ['package.json', 'src' , 'node_modules']
