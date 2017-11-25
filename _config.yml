@@ -9,13 +9,13 @@ google-analytics:
 markdown: rdiscount
 permalink: pretty
 plugins:
-  - bootstrap
-  - jekyll-autoprefixer
+  # - bootstrap
+  # - jekyll-autoprefixer
   - jekyll-tidy
 
-autoprefixer:
-  browsers:
-    - last 2 versions
+# autoprefixer:
+#   browsers:
+#     - last 2 versions
 
 jekyll_tidy:
   compress_html: false
