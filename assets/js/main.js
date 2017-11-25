@@ -2,7 +2,7 @@ jQuery(document).ready(function($) {
 	//toggle 3d navigation
 	$('.navbar-buttons-trigger').on('click', function() {
         var marker = $('.navbar-marker');
-        var selectedItem = $('.navbar-buttons-selected');
+        var selectedItem = $('.navbar-selected');
         marker.width(selectedItem.width());
 		toggle3dBlock(!$('.navbar-header').hasClass('nav-visible'));
 	});
@@ -10,7 +10,7 @@ jQuery(document).ready(function($) {
 	//select a new item from the 3d navigation
 	$('.navbar-buttons').on('click', 'a', function() {
 		var selected = $(this);
-		selected.parent('li').addClass('navbar-buttons-selected').siblings('li').removeClass('navbar-buttons-selected');
+		selected.parent('li').addClass('navbar-selected').siblings('li').removeClass('navbar-selected');
 		updateSelectedNav('close');
 	});
 
@@ -30,7 +30,7 @@ jQuery(document).ready(function($) {
 
 	//this function update the .cd-marker position
 	function updateSelectedNav(type) {
-		var selectedItem = $('.navbar-buttons-selected'),
+		var selectedItem = $('.navbar-selected'),
 			selectedItemPosition = selectedItem.index() + 1, 
 			leftPosition = selectedItem.offset().left,
 			backgroundColor = selectedItem.data('navbar-color'),

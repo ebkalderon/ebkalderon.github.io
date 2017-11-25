@@ -4,9 +4,9 @@
 
 @import "bootstrap/bootstrap";
 @import "bourbon/bourbon";
+@import "_config";
 @import "_layout";
 @import "_mixins";
-@import "_variables";
 
 /* -------------------------------- 
 
@@ -227,7 +227,7 @@ Main Components
 		}
 	}
 
-	.navbar-buttons-selected a {
+	.navbar-selected a {
 		background-color: darken($body-bg, 20%);
 
 		.no-touch &:hover {

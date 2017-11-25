@@ -6,7 +6,7 @@
   <ul class="navbar-buttons">
     {% for button in site.data.navbar %}
       {% if page.url == button.url %}
-        <li class="navbar-buttons-selected"><a href="#"><i class="fa {{ button.icon }} fa-2x"></i><br>{{ button.name }}</a></li>
+        <li class="navbar-selected"><a href="#"><i class="fa {{ button.icon }} fa-2x"></i><br>{{ button.name }}</a></li>
       {% else %}
         <li><a href="#"><i class="fa {{ button.icon }} fa-2x"></i><br>{{ button.name }}</a></li>
       {% endif %}
