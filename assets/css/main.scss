@@ -197,94 +197,93 @@ Main Components
 		transition: opacity $animation-duration 0s, visibility $animation-duration 0s;
 	}
 
-	li {
+  .navbar-selected {
+    background-color: darken($body-bg, 20%);
+
+    .no-touch &:hover {
+      background-color: darken($body-bg, 20%);
+    }
+
+    &::before {
+      background-position: 0 -32px;
+    } 
+  }
+
+  li {
     @extend .col;
     padding: 0px;
-	}
+  }
 
-	a {
-		position: relative;
-		display: block;
-		height: 100%;
-		color: transparent;
-	  text-decoration: none;
-		transition: background-color 0.2s;
+  a {
+    position: relative;
+    display: block;
+    height: 100%;
+    color: transparent;
+    text-decoration: none;
+    transition: color 0.2s;
 
-		&::before {
-			/* navigation icons */
-			content: '';
-			height: 32px;
-			width: 32px;
-			position: absolute;
-			@include center;
-			background-size: 32px 64px;
-			background-repeat: no-repeat;
-			background-position: 0 0;
-		}
+    &::before {
+      /* navigation icons */
+      content: '';
+      height: 32px;
+      width: 32px;
+      position: absolute;
+      @include center;
+      background-size: 32px 64px;
+      background-repeat: no-repeat;
+      background-position: 0 0;
+    }
 
-		.no-touch &:hover {
-			background-color: darken($body-bg, 15%);
-		}
-	}
+    .no-touch &:hover {
+      background-color: darken($body-bg, 15%);
+    }
+  }
 
-	.navbar-selected a {
-		background-color: darken($body-bg, 20%);
+  .nav-visible & {
+    transform: translateZ(0);
 
-		.no-touch &:hover {
-			background-color: darken($body-bg, 20%);
-		}
+    &::after {
+      /* menu cover layer - hide it when navigation is visible */
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity $animation-duration 0s, visibility 0s $animation-duration;
+    }
+  }
 
-		&::before {
-			background-position: 0 -32px;
-		} 
-	}
+  @include MQ(M) {
+    a {
+      padding: 5em 1em 0;
+      color: $text-color;
+      font: {
+        size: 1.3rem;
+        weight: 600;
+      }
+      text-align: center;
+      @include font-smoothing;
 
-	.nav-visible & {
-		transform: translateZ(0);
+      /* truncate text with ellipsis if too long */
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
 
-		&::after {
-			/* menu cover layer - hide it when navigation is visible */
-			opacity: 0;
-			visibility: hidden;
-			transition: opacity $animation-duration 0s, visibility 0s $animation-duration;
-		}
-	}
-
-	@include MQ(M) {
-		a {
-			padding: 5em 1em 0;
-			color: $text-color;
-			font: {
-				size: 1.3rem;
-				weight: 600;
-			}
-			text-align: center;
-			@include font-smoothing;
-			
-			/* truncate text with ellipsis if too long */
-			white-space: nowrap;
-			overflow: hidden;
-			text-overflow: ellipsis;
-
-			&::before {
-				top: 4.4em;
-				@include center(x);
-			}
-		}
-	}
+      &::before {
+        @include center(x);
+      }
+    }
+  }
 }
 
 .navbar-marker {
-	/* line at the bottom of nav selected item */
-	position: absolute;
-	bottom: 0;
-	left: 0;
-	height: 3px;
-	width: 100%/$nav-items;
-	transform-origin: center bottom;
-	transform: translateZ(0) rotateX(90deg);
-	
-	transition: transform $animation-duration, left 0.5s, color 0.5s, background-color 0.5s;
+  /* line at the bottom of nav selected item */
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 3px;
+  width: 100%/$nav-items;
+  transform-origin: center bottom;
+  transform: translateZ(0) rotateX(90deg);
+
+  transition: transform $animation-duration, left 0.5s, color 0.5s, background-color 0.5s;
 
   &::before {
     /* triangle at the bottom of nav selected item */
