@@ -7,5 +7,3 @@ group :jekyll_plugins do
     gem 'jekyll-autoprefixer'
     gem 'jekyll-tidy'
 end
-
-gem 'bourbon'
