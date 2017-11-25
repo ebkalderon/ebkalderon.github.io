@@ -3,6 +3,9 @@ description:
 email: ebkalderon@gmail.com
 url: https://www.eyalkalderon.com/
 
+google-analytics:
+  id: UA-109846401-1
+
 markdown: rdiscount
 permalink: pretty
 plugins:
