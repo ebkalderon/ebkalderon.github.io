@@ -1,14 +1,13 @@
 <!DOCTYPE html>
-<html lang="en">
+<html class="no-js">
   {% include head.html %}
   <body>
-      {% include header.html %}
-      <section id="about">
-        {% include about.html %}
-      </section>
-      <section id="projects">
-        {% include projects.html %}
-      </section>
-        {{ content }}
-      {% include footer.html %}
+    {% include header.html %}
+    <main>
+      {{ content }}
+    </main>
+    {% include footer.html %}
+    <script src="/lib/jquery-3.2.1.min.js"></script>
+    <script src="/assets/js/main.js"></script>
   </body>
+</html>

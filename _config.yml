@@ -1,33 +1,18 @@
-# Site settings
 title: Eyal Kalderon
-description: A blog about lorem ipsum dolor sit amet
-# baseurl: "/particle" # the subpath of your site, e.g. /blog
-# url: "localhost:3000" # the base hostname & protocol for your site e.g. http://willianjusten.com.br
-
-# User settings
-username: Eyal Kalderon
-user_description: Website under construction!
-user_subtitle: Software Developer
+description: 
 email: ebkalderon@gmail.com
-accounts:
-  - name: GitHub
-    icon: github-alt
-    url: https://github.com/ebkalderon
-  - name: LinkedIn
-    icon: linkedin
-    url: https://www.linkedin.com/in/ebkalderon
-  - name: Google+
-    icon: google-plus
-    url: https://plus.google.com/103512371273886467008
-  - name: Reddit
-    icon: reddit-alien
-    url: https://www.reddit.com/user/ebkalderon
-  - name: Keybase
-    icon: key
-    url: https://keybase.io/ebkalderon
+url: https://www.eyalkalderon.com/
 
-# Google-analytics
-google-analytics:
-  id: ""
+markdown: rdiscount
+permalink: pretty
+plugins:
+  - bootstrap
+  - jekyll-autoprefixer
+  - jekyll-tidy
 
-exclude: ['package.json', 'src' , 'node_modules']
+autoprefixer:
+  browsers:
+    - last 2 versions
+
+jekyll_tidy:
+  compress_html: false

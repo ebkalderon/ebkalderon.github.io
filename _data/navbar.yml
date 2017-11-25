@@ -1,0 +1,15 @@
+- name: Home
+  icon: fa-home
+  url: /
+
+- name: Portfolio
+  icon: fa-briefcase
+  url: /portfolio/
+
+- name: Blog
+  icon: fa-newspaper-o
+  url: /blog/
+
+- name: About Me
+  icon: fa-user
+  url: /about/
