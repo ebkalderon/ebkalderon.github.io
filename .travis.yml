@@ -1,0 +1,11 @@
+language: ruby
+
+branches:
+  only:
+    - master
+
+rvm:
+  - 2.2.3
+
+script:
+  - ./deploy.sh
