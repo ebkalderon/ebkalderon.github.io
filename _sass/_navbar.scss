@@ -1,9 +1,7 @@
-/*
- * 3D Rotating Navigation Bar
- * Copyright 2017 Eyal Kalderon
- * Licensed under MIT (https://github.com/ebkalderon/ebkalderon.github.io/blob/master/LICENSE)
- * Originally based on https://codyhouse.co/gem/3d-rotating-navigation/
- */
+// 3D Rotating Navigation Bar
+// Copyright 2017 Eyal Kalderon
+// Licensed under MIT (https://github.com/ebkalderon/ebkalderon.github.io/blob/master/LICENSE)
+// Originally based on https://codyhouse.co/gem/3d-rotating-navigation/
 
 .navbar-header {
 	height: 80px;
@@ -137,7 +135,9 @@
 	height: 100%;
   width: 100%;
 	background-color: $nav-bg;
-  margin: 0px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
 
 	/* Force Hardware Acceleration */
 	transform: translateZ(0);

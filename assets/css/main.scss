@@ -9,10 +9,6 @@
 @import "_mixins";
 @import "_navbar";
 
-*, *::after, *::before {
-	box-sizing: border-box;
-}
-
 html {
 	font-size: 62.5%;
 }
