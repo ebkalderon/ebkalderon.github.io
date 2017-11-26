@@ -1,5 +1,9 @@
 language: ruby
 
+branches:
+  only:
+    - source
+
 deploy:
   provider: pages
   skip_cleanup: true
