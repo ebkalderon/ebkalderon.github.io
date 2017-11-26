@@ -4,7 +4,7 @@
 // Originally based on https://codyhouse.co/gem/3d-rotating-navigation/
 
 .navbar-header {
-	height: 80px;
+	height: 8rem;
 	width: 90%;
 	margin: 0 auto;
 	transition: transform $animation-duration;
@@ -26,7 +26,7 @@
 
 .navbar-logo {
 	float: left;
-	margin-top: 28px; 
+	margin-top: 2.8rem;
 }
 
 .navbar-buttons-trigger {
@@ -47,16 +47,16 @@
 	span::after {
 		/* hamburger icon in CSS */
 		position: absolute;
-		width: 28px;
-		height: 3px;
+		width: 2.8rem;
+		height: 0.3rem;
 		background-color: #FFF;
 		backface-visibility: hidden;
 	}
 
 	span {
 		/* this is the central line */
-		top: 21px;
-		left: 8px;
+		top: 2.1rem;
+		left: 0.8rem;
 		transition: background 0.2s $animation-duration;
 
 		&::before, 
@@ -68,11 +68,11 @@
 		}
 		
 		&::before {
-			bottom: 8px;
+			bottom: 0.8rem;
 		}
 
 		&::after {
-			top: 8px;
+			top: 0.8rem;
 		}
 	}
 	
@@ -88,11 +88,11 @@
 			}
 
 			&::before {
-				transform: translateY(8px) rotate(-45deg);
+				transform: translateY(0.8rem) rotate(-45deg);
 			}
 
 			&::after {
-				transform: translateY(-8px) rotate(45deg);
+				transform: translateY(-0.8rem) rotate(45deg);
 			}
 		}
 	}
@@ -112,7 +112,7 @@
 	visibility: hidden;
 
 	/* enable a 3D-space for children elements */
-	perspective: 1000px;
+	perspective: 100rem;
 	transform: translateY(-100%);
   transition: transform $animation-duration 0s, visibility 0s $animation-duration;
 
@@ -169,13 +169,13 @@
     }
 
     &::before {
-      background-position: 0 -32px;
+      background-position: 0 -3.2rem;
     } 
   }
 
   li {
     @extend .col;
-    padding: 0px;
+    padding: 0;
   }
 
   a {
@@ -189,11 +189,11 @@
     &::before {
       /* navigation icons */
       content: '';
-      height: 32px;
-      width: 32px;
+      height: 3.2rem;
+      width: 3.2rem;
       position: absolute;
       @include center;
-      background-size: 32px 64px;
+      background-size: 3.2rem 6.4rem;
       background-repeat: no-repeat;
       background-position: 0 0;
     }
@@ -242,7 +242,7 @@
   position: absolute;
   bottom: 0;
   left: 0;
-  height: 3px;
+  height: 0.3rem;
   width: 100%/$nav-items;
   transform-origin: center bottom;
   transform: translateZ(0) rotateX(90deg);
@@ -253,11 +253,11 @@
     /* triangle at the bottom of nav selected item */
     content: '';
     position: absolute;
-    bottom: 3px;
+    bottom: 0.3rem;
     @include center(x);
     height: 0;
     width: 0;
-    border: 10px solid transparent;
+    border: 1rem solid transparent;
     border-bottom-color: inherit;
   }
 
@@ -302,7 +302,7 @@ main {
 			weight: 300;
 		}
 		color: $text-color;
-		margin: 2em auto;
+		margin: 4.8rem auto;
 		@include font-smoothing;
 	}
 
@@ -317,7 +317,7 @@ main {
 
 		h1 {
 			font-size: 3.6rem;
-			margin: 4em auto;
+			margin: 14.4rem auto;
 		}
 	}
 }
