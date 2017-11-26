@@ -4,10 +4,10 @@
 </header>
 <nav class="navbar-container">
   <ul class="navbar-buttons">
-    {% for button in site.data.navbar %}
+    {%- for button in site.data.navbar -%}
       {% if page.url == button.url %}
         <li class="navbar-selected">
-      {% else %}
+      {%- else -%}
         <li>
       {% endif %}
           <a href="#">
