@@ -1,19 +1,19 @@
 - name: GitHub
   url: https://github.com/ebkalderon
-  icon: fa-github-alt
+  icon: fab fa-github
 
 - name: LinkedIn
   url: https://www.linkedin.com/in/ebkalderon
-  icon: fa-linkedin
+  icon: fab fa-linkedin
 
 - name: Google+
   url: https://plus.google.com/103512371273886467008
-  icon: fa-google-plus
+  icon: fab fa-google-plus
 
 - name: Reddit
   url: https://www.reddit.com/user/ebkalderon
-  icon: fa-reddit-alien
+  icon: fab fa-reddit-alien
 
 - name: Keybase
   url: https://keybase.io/ebkalderon
-  icon: fa-key
+  icon: fa fa-key
