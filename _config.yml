@@ -18,6 +18,9 @@ baseurl: ""
 url: https://www.eyalkalderon.com/
 github_username:  ebkalderon
 
+# Theme settings
+logo: /assets/img/logo.png
+
 # Build settings
 markdown: kramdown
 remote_theme: ebkalderon/artsy
