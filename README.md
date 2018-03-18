@@ -2,7 +2,7 @@
 
 [![CC-BY License][badge]][license]
 
-[badge]: https://img.shields.io/badge/license-CC%20BY--blue.svg
+[badge]: https://img.shields.io/badge/license-CC--BY-blue.svg
 [license]: https://creativecommons.org/licenses/by/4.0/
 
 This is the source code for my personal website. Built by [Jekyll], deployed
