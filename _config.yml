@@ -66,6 +66,7 @@ markdown: kramdown
 remote_theme: ebkalderon/artsy
 plugins:
   - jekyll-feed
+  - jemoji
 
 # 8. Files excluded from builds
 exclude:
