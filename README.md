@@ -6,7 +6,8 @@
 [license]: https://creativecommons.org/licenses/by/4.0/
 
 This is the source code for my personal website. Built by [Jekyll], deployed
-automatically on [GitHub Pages]. Uses the [Artsy] portfolio magazine theme.
+automatically on [GitHub Pages]. This website utilizes the [Artsy] portfolio
+magazine theme.
 
 [Jekyll]: https://jekyllrb.com/docs/installation/
 [GitHub Pages]: https://pages.github.com/
