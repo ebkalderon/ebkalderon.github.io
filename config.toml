@@ -1,0 +1,21 @@
+base_url = "https://www.eyalkalderon.com"
+compile_sass = true
+highlight_code = true
+highligh_theme = "solarized-dark"
+build_search_index = false
+theme = "ergo"
+
+title = "Eyal Kalderon"
+description = "If you listen to a UNIX shell, can you hear the C?"
+
+default_language = "en"
+generate_rss = true
+rss_limit = 20
+
+[extra]
+profile = "profile.svg"
+github = "ebkalderon"
+keybase = "ebkalderon"
+email = "ebkalderon@gmail.com"
+linkedin = "ebkalderon"
+reddit = "ebkalderon"
