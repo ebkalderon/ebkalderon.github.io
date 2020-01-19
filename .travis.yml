@@ -15,6 +15,7 @@ after_success: |
   [ $TRAVIS_BRANCH = source ] &&
   [ $TRAVIS_PULL_REQUEST = false ] &&
   zola build &&
+  cp README.md public/ &&
   sudo pip install ghp-import &&
   ghp-import -c www.eyalkalderon.com -n public -b master &&
   git push -fq https://${GITHUB_TOKEN}@github.com/${TRAVIS_REPO_SLUG}.git master
