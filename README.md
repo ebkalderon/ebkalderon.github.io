@@ -2,7 +2,7 @@
 
 [![Build Status][tbadge]][tlink] [![CC BY-SA License][lbadge]][llink]
 
-[tbadge]: https://api.travis-ci.org/ebkalderon/ebkalderon.github.io.svg
+[tbadge]: https://api.travis-ci.org/ebkalderon/ebkalderon.github.io.svg?branch=source
 [tlink]: https://travis-ci.org/ebkalderon/ebkalderon.github.io
 
 [lbadge]: https://img.shields.io/badge/license-MIT-blue.svg
@@ -16,8 +16,11 @@ automatically through [Travis CI], and hosted on [GitHub Pages].
 [GitHub Pages]: https://pages.github.com/
 
 Commits pushed to the [`source`] branch of this repository are automatically
-deployed to the `master` branch by Travis CI, which are then published by GitHub
-Pages.
+deployed to the [`master`] branch by Travis CI, which are then published by
+GitHub Pages.
+
+[`source`]: https://github.com/ebkalderon/ebkalderon.github.io/tree/source
+[`master`]: https://github.com/ebkalderon/ebkalderon.github.io/tree/master
 
 ## Building locally
 

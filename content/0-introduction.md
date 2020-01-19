@@ -17,6 +17,7 @@ which happened to also be my last post to date. Crafting articles, writing
 guides, and posting them for the world to see was great fun, though, and I'd
 like to start doing that again.
 
+[technical blog on WordPress]: https://nullpwd.wordpress.com/
 [Amethyst]: https://nullpwd.wordpress.com/2016/01/13/starting-an-open-source-project/
 
 ## A note about platforms
@@ -32,7 +33,7 @@ offers, and since I have grown increasingly comfortable working with Git and the
 terminal, I would personally rather write [Markdown] in simple text files
 committed to version control than have to deal with WordPress' idiosyncrasies.
 
-[technical blog on WordPress]: https://nullpwd.wordpress.com/
+[Markdown]: https://daringfireball.net/projects/markdown/syntax
 
 As such, I have decided to re-launch my personal blog as a static site hosted on
 [GitHub Pages] using [Zola] as my preferred static site generator. I chose to
