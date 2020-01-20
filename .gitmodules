@@ -1,4 +1,3 @@
 [submodule "themes/ergo"]
 	path = themes/ergo
 	url = https://github.com/ebkalderon/Ergo
-	branch = set-page-title
