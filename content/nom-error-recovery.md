@@ -124,7 +124,10 @@ often than not. This means that halting parsing and bailing with an error
 message whenever the first error is encountered, like many traditional parsers
 do, is _simply not an option_.
 
-![VSCode Screenshot](https://code.visualstudio.com/assets/home/home-screenshot-linux-lg.png)
+![rust-analyzer in action](https://user-images.githubusercontent.com/1711539/76758522-1ee9ad80-678a-11ea-84cd-111739ecd379.gif)
+*Source: [rust-analyzer Changelog #16][changelog]*
+
+[changelog]: https://rust-analyzer.github.io/thisweek/2020/03/16/changelog-16.html
 
 Instead, the parser needs to be as fault-tolerant as possible, always producing
 a syntax tree of some kind on every single parse and deriving as much syntactic
