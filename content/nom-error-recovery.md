@@ -88,10 +88,10 @@ fn value(input: &str) -> IResult<&str, &str> {
 }
 ```
 
-Each of the four parser combinators above corresponds to a PEG rule, and since
-each one is represented as a pure function, they compose nicely in code and each
-one can easily be tested in isolation from the others, e.g. with inline unit
-tests. All in all, I enjoy working with PEG and parser combinators!
+Each of the four parsers above corresponds to a PEG rule, and since each one is
+represented as a pure function, they compose nicely in code and each one can
+easily be tested in isolation from the others, e.g. with inline unit tests. All
+in all, I enjoy working with PEG and parser combinators!
 
 ## Motivation
 
