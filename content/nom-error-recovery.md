@@ -74,17 +74,17 @@ fn expr(input: &str) -> IResult<&str, &str> {
 }
 
 fn sum(input: &str) -> IResult<&str, &str> {
-  let op = alt((char('+'), char('-')));
-  recognize(pair(product, many0(pair(op, product))))(input)
+    let op = alt((char('+'), char('-')));
+    recognize(pair(product, many0(pair(op, product))))(input)
 }
 
 fn product(input: &str) -> IResult<&str, &str> {
-  let op = alt((char('*'), char('/')));
-  recognize(pair(value, many0(pair(op, value))))(input)
+    let op = alt((char('*'), char('/')));
+    recognize(pair(value, many0(pair(op, value))))(input)
 }
 
 fn value(input: &str) -> IResult<&str, &str> {
-  recognize(alt((digit1, delimited(char('('), expr, char(')')))))(input)
+    recognize(alt((digit1, delimited(char('('), expr, char(')')))))(input)
 }
 ```
 
