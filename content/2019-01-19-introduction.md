@@ -1,7 +1,11 @@
 +++
-title="Introduction"
-date=2019-01-19
-category="webdev"
+title = "Introduction"
+description = "Reinvigorating my love of creative writing, one post at a time."
+date = 2019-01-19
+
+[taxonomies]
+tags = ["webdev"]
+categories = ["meta"]
 +++
 
 Welcome to my new development blog! This is a place where I can record my
@@ -10,14 +14,14 @@ processes precisely and eloquently through text is a very valuable skill, and
 it's one that only comes through practice.
 
 Notice that I wrote _new_ development blog in the very first sentence of this
-post. That choice of words was quite intentional. I used to maintain a hobby
-[technical blog on WordPress] quite a few years ago, beginning in 2011. It was
+post. That choice of words was quite intentional. I used to maintain a
+[personal WordPress blog] quite a few years ago, beginning in 2011. It was also
 the place where I announced the founding of the [Amethyst] game engine project,
 which happened to also be my last post to date. Crafting articles, writing
 guides, and posting them for the world to see was great fun, though, and I'd
 like to start doing that again.
 
-[technical blog on WordPress]: https://nullpwd.wordpress.com/
+[personal WordPress blog]: https://nullpwd.wordpress.com/
 [Amethyst]: https://nullpwd.wordpress.com/2016/01/13/starting-an-open-source-project/
 
 ## A note about platforms
@@ -51,7 +55,7 @@ which I happen to personally enjoy.
 This new blog is deployed automatically through [Travis CI] and the source code
 is available as free and open source software on GitHub ([repository link]).
 Feel free to peruse through the source, if you'd like. If you'd like to get in
-touch with me, hit me up on any of the social media links above.
+touch with me, hit me up on any of these [social links](/about).
 
 [Travis CI]: https://travis-ci.org/
 [repository link]: https://github.com/ebkalderon/ebkalderon.github.io/

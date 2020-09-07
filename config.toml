@@ -1,19 +1,40 @@
 base_url = "https://www.eyalkalderon.com"
-compile_sass = true
+compile_sass = false
 highlight_code = true
+highlight_theme = "charcoal"
 build_search_index = false
-theme = "ergo"
+theme = "zerm"
 
 title = "Eyal Kalderon"
 description = "If you listen to a UNIX shell, can you hear the C?"
 
 default_language = "en"
-generate_rss = true
+generate_feed = true
 rss_limit = 20
+feed_filename = "rss.xml"
+
+taxonomies = [
+    { name = "tags" },
+    { name = "categories" },
+]
 
 [extra]
-profile = "profile.svg"
-github = "ebkalderon"
-keybase = "ebkalderon"
-email = "ebkalderon@gmail.com"
-linkedin = "ebkalderon"
+author = "Eyal Kalderon"
+show_author = false
+show_categories = true
+show_tags = true
+theme_color = "orange"
+center = true
+favicon = "/img/favicon.png"
+copyright = "If you listen to a UNIX shell, can you hear the C?"
+logo_text = "eyal kalderon"
+
+main_menu = [
+    { url = "/about/", name = "about" },
+    { url = "/portfolio/", name = "portfolio" },
+    { url = "/resume.pdf", name = "résumé" },
+    { url = "/rss.xml", name = "rss" },
+]
+
+menu_more = "show more"
+read_more = "read more"

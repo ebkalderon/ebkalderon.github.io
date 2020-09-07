@@ -1,7 +1,11 @@
 +++
-title="Error recovery with parser combinators (using nom)"
-date=2020-04-01
-category="parsers"
+title = "Error recovery with parser combinators (using nom)"
+description = "A brief exploration of the paper \"Syntax error recovery in parsing expression grammars\" (2018) and a practical demonstration in code."
+date = 2020-04-01
+
+[taxonomies]
+tags = ["parsers", "rust"]
+categories = ["research"]
 +++
 
 As the COVID-19 pandemic continues to ravage the globe, lots of people are stuck
