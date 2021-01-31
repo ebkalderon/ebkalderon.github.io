@@ -2,6 +2,7 @@
 title = "Introduction"
 description = "Reinvigorating my love of creative writing, one post at a time."
 date = 2019-01-19
+aliases = ["introduction"]
 
 [taxonomies]
 tags = ["webdev"]
