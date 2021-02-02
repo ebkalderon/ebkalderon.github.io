@@ -1,7 +1,5 @@
 base_url = "https://www.eyalkalderon.com"
 compile_sass = false
-highlight_code = true
-highlight_theme = "charcoal"
 build_search_index = false
 theme = "zerm"
 
@@ -17,6 +15,10 @@ taxonomies = [
     { name = "tags" },
     { name = "categories" },
 ]
+
+[markdown]
+highlight_code = true
+highlight_theme = "charcoal"
 
 [extra]
 author = "Eyal Kalderon"
