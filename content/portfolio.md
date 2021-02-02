@@ -18,11 +18,12 @@ Convenient framework for writing [Language Server Protocol] (LSP) servers.
 ## [cargo2nix] \(2018–Present)
 
 Wrapper for [Cargo] crates to be built with the binary reproducible
-[Nix build system]. Written at [TenX] and released under the MIT License.
+[Nix build system]. Originally written at [TenX] and released under the MIT
+License.
 
 * **Technologies used:** Nix, Rust
 
-[cargo2nix]: https://github.com/tenx-tech/cargo2nix
+[cargo2nix]: https://github.com/cargo2nix/cargo2nix
 [Cargo]: https://github.com/rust-lang/cargo
 [Nix build system]: https://nixos.org/
 [TenX]: https://tenx.tech/
