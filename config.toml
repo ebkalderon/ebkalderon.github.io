@@ -33,6 +33,7 @@ copyright = "If you listen to a UNIX shell, can you hear the C?"
 logo_text = "eyal kalderon"
 
 main_menu = [
+    { url = "/", name = "home" },
     { url = "/about/", name = "about" },
     { url = "/projects/", name = "projects" },
     { url = "/resume.pdf", name = "résumé" },
