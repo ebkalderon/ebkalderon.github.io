@@ -2,7 +2,7 @@
 
 [![Build Status][gbadge]][glink] [![MIT License][lbadge]][llink]
 
-[gbadge]: https://github.com/ebkalderon/ebkalderon.github.io/workflows/zola/badge.svg?branch=source
+[gbadge]: https://github.com/ebkalderon/ebkalderon.github.io/workflows/zola/badge.svg?branch=master
 [glink]: https://github.com/ebkalderon/ebkalderon.github.io/actions
 
 [lbadge]: https://img.shields.io/badge/license-MIT-blue.svg
@@ -15,12 +15,12 @@ automatically through [GitHub Actions], and hosted on [GitHub Pages].
 [GitHub Actions]: https://github.com/features/actions
 [GitHub Pages]: https://pages.github.com/
 
-Commits pushed to the [`source`] branch of this repository are automatically
-deployed to the [`master`] branch by GitHub Actions, which are then published by
-GitHub Pages.
+Commits pushed to the [`master`] branch of this repository are automatically
+deployed to the [`gh-pages`] branch by GitHub Actions, which are then published
+by GitHub Pages.
 
-[`source`]: https://github.com/ebkalderon/ebkalderon.github.io/tree/source
 [`master`]: https://github.com/ebkalderon/ebkalderon.github.io/tree/master
+[`gh-pages`]: https://github.com/ebkalderon/ebkalderon.github.io/tree/gh-pages
 
 ## Building locally
 

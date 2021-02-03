@@ -3,14 +3,14 @@ name: zola
 on:
   push:
     branches:
-    - source
+    - master
   pull_request:
 
 jobs:
   build:
     name: Build
     runs-on: ubuntu-latest
-    if: github.ref != 'refs/heads/source'
+    if: github.ref != 'refs/heads/master'
     steps:
     - name: 'Checkout'
       uses: actions/checkout@master
@@ -23,13 +23,13 @@ jobs:
   build_and_deploy:
     name: Build and deploy
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/source'
+    if: github.ref == 'refs/heads/master'
     steps:
     - name: 'Checkout'
       uses: actions/checkout@master
     - name: 'Build and deploy'
       uses: shalzz/zola-deploy-action@master
       env:
-        PAGES_BRANCH: master
+        PAGES_BRANCH: gh-pages
         BUILD_DIR: .
         TOKEN: ${{ secrets.TOKEN }}
