@@ -3,7 +3,7 @@ name: zola
 on:
   push:
     branches:
-    - master
+    - source
   pull_request:
 
 jobs:
