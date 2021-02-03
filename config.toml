@@ -20,6 +20,7 @@ taxonomies = [
 highlight_code = true
 highlight_theme = "charcoal"
 render_emoji = true
+smart_punctuation = true
 
 [extra]
 author = "Eyal Kalderon"
