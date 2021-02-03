@@ -3,7 +3,7 @@ title = "Projects"
 +++
 
 Below is a sampling of some interesting things I've built over the years; at
-least, those that I'm permitted to publicly discuss. ⚒
+least, those that I'm permitted to publicly discuss. :hammer_and_wrench:
 
 ## [tower-lsp] \(2019–Present)
 

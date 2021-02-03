@@ -19,6 +19,7 @@ taxonomies = [
 [markdown]
 highlight_code = true
 highlight_theme = "charcoal"
+render_emoji = true
 
 [extra]
 author = "Eyal Kalderon"

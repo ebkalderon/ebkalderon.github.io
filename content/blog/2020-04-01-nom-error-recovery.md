@@ -275,7 +275,7 @@ prominent author of [`rust-analyzer`] and [`rowan`], a library for lossless
 And they managed to do all of this while not bailing out on the first parse
 error and still producing some kind of syntax tree _100% of the time_ in all the
 cases they tested. And the final result still looks and feels like PEG. Quite
-promising stuff! 😍
+promising stuff! :heart_eyes:
 
 [Lua programming language]: https://www.lua.org/
 [LL parser]: https://en.wikipedia.org/wiki/LL_parser
@@ -534,7 +534,7 @@ whenever I have some spare time, armed with plenty of useful knowledge and
 principles I didn't have before. Maybe I'll actually get to producing meaningful
 auto-completions and semantic analysis out of it for once, as soon as I can
 focus on traversing the syntax tree itself and building a usable interpreter for
-evaluating the language. 😛
+evaluating the language. :stuck_out_tongue:
 
 ## External links
 
