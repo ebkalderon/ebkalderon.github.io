@@ -56,7 +56,7 @@ which I happen to personally enjoy.
 This new blog is deployed automatically through [Travis CI] and the source code
 is available as free and open source software on GitHub ([repository link]).
 Feel free to peruse through the source, if you'd like. If you'd like to get in
-touch with me, hit me up on any of these [social links](/about).
+touch with me, hit me up on any of these [social links](@/about.md).
 
 [Travis CI]: https://travis-ci.org/
 [repository link]: https://github.com/ebkalderon/ebkalderon.github.io/
