@@ -1,10 +1,9 @@
 +++
-title = "Portfolio"
+title = "Projects"
 +++
 
-I've hacked on a wide variety of projects over the years. Below is a sampling of
-things I've built (that I'm allowed to talk about), mostly done for fun and
-creativity's sake. ⚒
+Below is a sampling of some interesting things I've built over the years; at
+least, those that I'm permitted to publicly discuss. ⚒
 
 ## [tower-lsp] \(2019–Present)
 

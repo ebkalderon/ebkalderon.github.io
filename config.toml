@@ -33,7 +33,7 @@ logo_text = "eyal kalderon"
 
 main_menu = [
     { url = "/about/", name = "about" },
-    { url = "/portfolio/", name = "portfolio" },
+    { url = "/projects/", name = "projects" },
     { url = "/resume.pdf", name = "résumé" },
     { url = "/rss.xml", name = "rss" },
 ]
