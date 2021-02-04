@@ -1,0 +1,29 @@
+{% extends "zerm/templates/page.html" -%}
+
+{%- block main -%}
+    <div class="post">
+        <h1 class="post-title">
+            <a href="{{ page.permalink  }}">{{ page.title }}</a>
+        </h1>
+        {{ posts::meta(page=page, author=config.extra.show_author) }}
+
+
+        {#- Skipping logic for cover as was in original Terminal theme -#}
+
+        <div class="post-content">
+            {{ page.content | safe }}
+        </div>
+
+        <div class="post">
+            <hr/>
+            <h1>Comments</h1>
+            <script src="https://utteranc.es/client.js"
+                  repo="ebkalderon/ebkalderon.github.io"
+                  issue-term="pathname"
+                  theme="github-dark-orange"
+                  crossorigin="anonymous"
+                  async>
+            </script>
+        </div>
+    </div>
+{%- endblock main -%}
