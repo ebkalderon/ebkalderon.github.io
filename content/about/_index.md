@@ -22,9 +22,9 @@ Basic**, and [**ladder logic**](https://en.wikipedia.org/wiki/Ladder_logic).
 I regulate my body temperature by pumping liquid coolant though my veins, and my
 eyes directly take 24-pin DVI from my video card.
 
-If that sounds interesting to you, take a look at [my portfolio](@/projects.md) and
-[résumé](/resume.pdf). You can also find me on any of the services below.
-I'm usually down for a cup of coffee!
+If that sounds interesting to you, take a look at
+[my portfolio](@/projects/_index.md) and [résumé](/resume.pdf). You can also
+find me on any of the services below. I'm usually down for a cup of coffee!
 
 * [GitHub (@ebkalderon)](https://github.com/ebkalderon)
 * [LinkedIn (ebkalderon)](https://www.linkedin.com/in/ebkalderon)
