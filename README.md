@@ -25,7 +25,7 @@ by GitHub Pages.
 ## Building locally
 
 1. [Install Zola](https://www.getzola.org/documentation/getting-started/installation/)
-2. `git clone https://github.com/ebkalderon/ebkalderon.github.io`
+2. `git clone --recursive https://github.com/ebkalderon/ebkalderon.github.io`
 3. `cd ebkalderon.github.io`
 4. `zola serve`
 5. Access the site in a browser at `http://127.0.0.1:1111`.
