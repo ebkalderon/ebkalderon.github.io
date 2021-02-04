@@ -130,7 +130,7 @@ often than not. This means that halting parsing and bailing with an error
 message whenever the first error is encountered, like many traditional parsers
 do, is _simply not an option_.
 
-{{ figure(src="https://user-images.githubusercontent.com/1711539/76758522-1ee9ad80-678a-11ea-84cd-111739ecd379.gif",
+{{ figure(src="rust-analyzer.gif",
           alt="rust-analyzer in action"
           caption="Parser producing a best-effort syntax tree from incomplete code ([credit](https://rust-analyzer.github.io/thisweek/2020/03/16/changelog-16.html))") }}
 
