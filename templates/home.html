@@ -1,0 +1,15 @@
+{% extends "zerm/templates/index.html" -%}
+
+{%- block header -%}
+    {{ header::header() }}
+
+    {%- if section -%}
+        {{ section.content | safe }}
+    {%- endif -%}
+{%- endblock header -%}
+
+{%-  block main -%}
+    <div class="post">
+        {{ lists::list_pages() }}
+    </div>
+{%- endblock main -%}
