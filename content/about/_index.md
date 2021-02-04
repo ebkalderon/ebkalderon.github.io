@@ -8,8 +8,8 @@ not about to stop anytime soon.
 
 I'm deeply fascinated by hard problems of all kinds, from large-scale
 distributed systems to highly constrained embedded and real-time systems. I care
-about open source software, censorship resistance, data distribution and
-integrity at scale, cybersecurity, and safe systems programming.
+about open source software, distributed systems, censorship resistance, build
+system reproducibility, cybersecurity, and safe systems programming.
 
 I develop largely in **Rust** and **TypeScript** these days and manage my own
 infrastructure using **Kubernetes**, **Docker**, **Google Cloud Platform**, and
