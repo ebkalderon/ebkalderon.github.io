@@ -1,12 +1,12 @@
 # Personal Website
 
-[![Build Status][gbadge]][glink] [![MIT License][lbadge]][llink]
+[![Build Status][gbadge]][glink] [![CC BY-SA License][lbadge]][llink]
 
 [gbadge]: https://github.com/ebkalderon/ebkalderon.github.io/workflows/zola/badge.svg?branch=master
 [glink]: https://github.com/ebkalderon/ebkalderon.github.io/actions
 
-[lbadge]: https://img.shields.io/badge/license-MIT-blue.svg
-[llink]: ./LICENSE
+[lbadge]: https://img.shields.io/badge/license-CC_BY--SA-blue.svg
+[llink]: https://creativecommons.org/licenses/by-sa/4.0/
 
 This is the source code for my personal website. Built by [Zola], deployed
 automatically through [GitHub Actions], and hosted on [GitHub Pages].
@@ -32,5 +32,11 @@ by GitHub Pages.
 
 ## License
 
-This website is free and open source software distributed under the terms of the
-[MIT License](./LICENSE).
+Copyright © 2021 Eyal Kalderon. All rights reserved, except for the parts
+enumerated below:
+
+* The page content, i.e. the `content` directory, is licensed under the terms of
+  the [Creative Commons Attribution/ShareAlike 4.0 License][llink].
+
+* The website source code, excluding the visual design, is licensed under the
+  terms of the [MIT License](./LICENSE).
