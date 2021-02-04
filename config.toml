@@ -1,6 +1,5 @@
 base_url = "https://eyalkalderon.com"
 compile_sass = false
-build_search_index = false
 theme = "zerm"
 
 title = "Eyal Kalderon"
