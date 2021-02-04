@@ -55,12 +55,18 @@ value   ← [0-9]+ / '(' expr ')'
 These PEG rules would then be able to describe the rules to a simple arithmetic
 language that behaves like this:
 
+<style>.table-auto > table { table-layout: auto }</style>
+
+<div class="table-auto">
+
 Input             | Parsed syntax tree
 ------------------|-------------------------------------------------
 ```123```         | ```Value(123)```
 ```1 + 2```       | ```Sum(Value(1), Value(2))```
 ```1 + 2 * 3```   | ```Sum(Value(1), Product(Value(2), Value(3)))```
 ```(1 + 2) * 3``` | ```Product(Sum(Value(1), Value(2)), Value(3))```
+
+</div>
 
 Any PEG expression can be converted directly into a [recursive descent parser],
 either automatically using a parser generator or crafted by hand in the
@@ -466,6 +472,8 @@ enum Expr {
 
 The following outputs were produced by calling `parse()`:
 
+<div class="table-auto">
+
 Input          | Produced syntax tree             | Errors
 ---------------|----------------------------------|---------------------------------------------------------------------------------
 `foo`          | ```Ident(Ident("foo"))```        | ```[]```
@@ -476,6 +484,8 @@ Input          | Produced syntax tree             | Errors
 `%`            | ```Error```                      | ```[Error(0..1, "unexpected `%`")]```
 `()`           | ```Paren(Error)```               | ```[Error(1..2, "expected expression after `(`")]```
 (empty string) | ```Error```                      | ```[]```
+
+</div>
 
 These results are markedly better than what I had gotten with `nom` previously
 when I was relying on the built-in [custom error management] facilities, and the
