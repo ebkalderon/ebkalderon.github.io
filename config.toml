@@ -30,7 +30,7 @@ show_tags = true
 theme_color = "orange"
 center = true
 favicon = "/img/favicon.png"
-copyright = "If you listen to a UNIX shell, can you hear the C?"
+copyright = "© 2021 Eyal Kalderon<br>:: If you listen to a UNIX shell, can you hear the C?"
 logo_text = "eyal kalderon"
 
 main_menu = [
