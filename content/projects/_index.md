@@ -14,7 +14,7 @@ Convenient framework for writing [Language Server Protocol] (LSP) servers.
 [tower-lsp]: https://github.com/ebkalderon/tower-lsp
 [Language Server Protocol]: https://microsoft.github.io/language-server-protocol/
 
-## [cargo2nix] \(2018–Present)
+## [cargo2nix] \(2019–Present)
 
 Wrapper for [Cargo] crates to be built with the binary reproducible
 [Nix build system]. Originally written at [TenX] and released under the MIT
