@@ -45,7 +45,7 @@ describing other languages in terms of string pattern matching. That is, PEG
 allows the parser author to declare the grammar of the language they wish to
 parse using sets of expressions like those shown below:
 
-```text
+```
 expr    ← sum
 sum     ← product (('+' / '-') product)*
 product ← value (('*' / '/') value)*
