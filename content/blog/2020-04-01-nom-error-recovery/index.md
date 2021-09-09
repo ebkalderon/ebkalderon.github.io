@@ -59,12 +59,12 @@ language that behaves like this:
 
 <div class="table-auto">
 
-Input             | Parsed syntax tree
-------------------|-------------------------------------------------
-```123```         | ```Value(123)```
-```1 + 2```       | ```Sum(Value(1), Value(2))```
-```1 + 2 * 3```   | ```Sum(Value(1), Product(Value(2), Value(3)))```
-```(1 + 2) * 3``` | ```Product(Sum(Value(1), Value(2)), Value(3))```
+Input       | Parsed syntax tree
+------------|-------------------------------------------------
+123         | `Value(123)`
+1 + 2       | `Sum(Value(1), Value(2))`
+1 + 2 * 3   | `Sum(Value(1), Product(Value(2), Value(3)))`
+(1 + 2) * 3 | `Product(Sum(Value(1), Value(2)), Value(3))`
 
 </div>
 
@@ -474,16 +474,16 @@ The following outputs were produced by calling `parse()`:
 
 <div class="table-auto">
 
-Input          | Produced syntax tree             | Errors
----------------|----------------------------------|---------------------------------------------------------------------------------
-`foo`          | ```Ident(Ident("foo"))```        | ```[]```
-`(foo)`        | ```Paren(Ident(Ident("foo")))``` | ```[]```
-`(foo))`       | ```Paren(Ident(Ident("foo")))``` | ```[Error(5..6, "expected EOF")]```
-`(%`           | ```Paren(Error)```               | ```[Error(1..2, "unexpected `%`"), Error(2..2, "missing `)`")]```
-`(`            | ```Paren(Error)```               | ```[Error(1..1, "expected expression after `(`"), Error(1..1, "missing `)`")]```
-`%`            | ```Error```                      | ```[Error(0..1, "unexpected `%`")]```
-`()`           | ```Paren(Error)```               | ```[Error(1..2, "expected expression after `(`")]```
-(empty string) | ```Error```                      | ```[]```
+Input  | Produced syntax tree         | Errors
+-------|------------------------------|---------------------------------------------------------------------------------
+foo    | `Ident(Ident("foo"))`        | ```[]```
+(foo)  | `Paren(Ident(Ident("foo")))` | ```[]```
+(foo)) | `Paren(Ident(Ident("foo")))` | ```[Error(5..6, "expected EOF")]```
+(%     | `Paren(Error)`               | ```[Error(1..2, "unexpected `%`"), Error(2..2, "missing `)`")]```
+(      | `Paren(Error)`               | ```[Error(1..1, "expected expression after `(`"), Error(1..1, "missing `)`")]```
+%      | `Error`                      | ```[Error(0..1, "unexpected `%`")]```
+()     | `Paren(Error)`               | ```[Error(1..2, "expected expression after `(`")]```
+&nbsp; | `Error`                      | ```[]```
 
 </div>
 
