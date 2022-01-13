@@ -29,5 +29,6 @@ find me on any of the services below. I'm usually down for a cup of coffee!
 
 * [GitHub (@ebkalderon)](https://github.com/ebkalderon)
 * [LinkedIn (ebkalderon)](https://www.linkedin.com/in/ebkalderon)
+* [Twitter (ebkalderon)](https://twitter.com/ebkalderon)
 * [Keybase (ebkalderon)](https://keybase.io/ebkalderon)
 * [Say hello via email](mailto:ebkalderon@gmail.com?subject=hi) (PGP: 00AB4C0942DCBA25)
