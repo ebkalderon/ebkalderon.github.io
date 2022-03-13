@@ -1,5 +1,11 @@
 {% extends "zerm/templates/page.html" -%}
 
+{%- block math -%}
+  {% if page.extra.math %}
+  {{ head::katex() }}
+  {% endif %}
+{%- endblock math -%}
+
 {%- block main -%}
     <article class="post">
         <header>
@@ -7,6 +13,12 @@
                 <a href="{{ page.permalink  }}">{{ page.title }}</a>
             </h1>
             {{ posts::meta(page=page, author=config.extra.show_author) }}
+
+            {%- block ToC -%}
+                {%- if page.extra.ToC or config.extra.ToC -%}
+                    {{ toc::toc(t=page.toc) }}
+                {%- endif -%}
+            {%- endblock ToC -%}
         </header>
 
 
