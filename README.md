@@ -29,6 +29,13 @@ by GitHub Pages.
 3. `cd ebkalderon.github.io`
 4. `zola serve --open`
 
+## Generating résumé
+
+1. Install [TeX Live](https://www.tug.org/texlive/) and the extra fonts package
+   which contains [Font Awesome](https://fontawesome.com/)
+2. `cd resume`
+3. `xelatex resume.tex`
+
 ## License
 
 Copyright © 2021 Eyal Kalderon. All rights reserved, except for the parts

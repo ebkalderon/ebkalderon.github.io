@@ -1,0 +1,114 @@
+% !TEX TS-program = xelatex
+
+\documentclass[letterpaper]{resume}
+
+\begin{document}
+    \header{Eyal}{Kalderon}{Software Engineer II}{
+        \faMapMarker \hspace{.5pt} \textbf{Vienna, VA}\par
+        \faPhone \hspace{.5pt} \href{tel:+1 571-355-9778}{571-355-9778}\par
+        \faAt \hspace{.5pt} \href{mailto:ebkalderon@gmail.com}{ebkalderon@gmail.com}\par
+        \faGlobe \hspace{.5pt} \href{https://eyalkalderon.com}{eyalkalderon.com}\par
+        \faLinkedin \hspace{.5pt} \href{https://www.linkedin.com/in/ebkalderon}{ebkalderon}\par
+        \faGithub \hspace{.5pt} \href{https://github.com/ebkalderon}{ebkalderon}\par
+    }
+
+    \section{Skills}
+    \begin{blockquote}
+        \begin{itemize}[topsep=0mm, leftmargin=4mm]
+            \item \textbf{Programming Languages:} Rust, Python (proficient), C,
+                  C++, Java, TypeScript (past experience) 
+            \item \textbf{Soft Skills:} Communication, technical writing, public
+                  speaking
+        \end{itemize}
+    \end{blockquote}
+
+    \section{Work Experience}
+    \begin{timeline}
+        \entry{Disney Streaming}{04/2021 -- Current}{Software Engineer II}{
+            \begin{itemize}[noitemsep, topsep=0mm, leftmargin=4mm]
+                \item Working with team of engineers to improve, optimize, and
+                      debug the \textbf{Rust} framework for
+                      \textbf{WebAssembly} underlying the Disney+ ADK.
+                \item Decreased app startup time on slowest devices by 45\%
+                      (\textasciitilde5 seconds) by loading button icons and
+                      most static images from spritesheets. 
+                \item Migrated the ADK Disney+ and Star+ apps from Content API
+                      V3 to V5, delivering ahead of schedule without any
+                      breakage or downtime. 
+            \end{itemize}
+        }
+        \entry{TenX}{02/2018 -- 02/2021}{Software Engineer}{
+            \begin{itemize}[noitemsep, topsep=0mm, leftmargin=4mm]
+                \item Helped scale card business from \textasciitilde100K users
+                      to >250K+ users.
+                \item Worked on card payments service (ISO 8583), card shipment
+                      service, and card settlement processing service
+                      (\textbf{Rust}).
+                \item Developed logout microservice to facilitate migration of
+                      of user session management to JSON Web Tokens
+                      (\textbf{Rust}).
+                \item Built continuous delivery pipelines for deploying
+                      \textbf{Rust} and \textbf{TypeScript} services to
+                      \textbf{Kubernetes} using Concourse, Nix, and ArgoCD.
+                \item Worked on real-time metrics and monitoring system using
+                      Prometheus, Sentry, and Grafana.
+                \item Participated in on-call rotation, responding promptly to
+                      instances of downtime or impacted service around the
+                      clock.
+            \end{itemize}
+        }
+        \entry{Kajeet}{05/2016 -- 08/2017}{Engineering Intern}{
+            \begin{itemize}[noitemsep, topsep=0mm, leftmargin=4mm]
+                \item Refactored, documented, and packaged the web content
+                      filtering service, written in \textbf{C89} as a netfilter
+                      module for Linux.
+                \item Improved stability and total uptime by fixing memory leaks
+                      and concurrency bugs, greatly reducing the risk of service
+                      outages.
+                \item Wrote technical and user documentation in Confluence wiki
+                      to ensure smooth project handoff.
+            \end{itemize}
+        }
+    \end{timeline}
+
+    \section{Projects}
+    \begin{timeline}
+        \entry{Amethyst Engine}{12/2015 -- 01/2019}{Founder, Maintainer}{
+            \begin{itemize}[noitemsep, topsep=0mm, leftmargin=4mm]
+                \item Developed an open source general-purpose 3D game engine in
+                      \textbf{Rust}.
+                \item Built prototype, wrote documentation, launched website,
+                      reviewed community contributions, moderated chat rooms.
+                \item Amassed 7K+ stars on GitHub and attracted >200
+                      contributors.
+                \item Project stewardship now managed by 501(c)(3) non-profit
+                      organization.
+            \end{itemize}
+        }
+        \entry{tower-lsp}{01/2019 -- Current}{Maintainer}{
+            \begin{itemize}[noitemsep, topsep=0mm, leftmargin=4mm]
+                \item Developed an open source framework implementing the
+                      Language Server Protocol (LSP) in \textbf{Rust}.
+                \item Implemented library, wrote documentation, reviewed
+                      community pull requests.
+                \item Adopted by five (5) popular language servers (Deno,
+                      WebAssembly, SystemVerilog, Tremor, Clarity, Solidity).
+            \end{itemize}
+        }
+    \end{timeline}
+
+    \section{Education}
+    \begin{blockquote}
+        B.S. Computer Science\par
+        George Mason University\par
+        Completed 3 years (52 credits)
+    \end{blockquote}
+
+    \section{Awards}
+    \begin{blockquote}
+        Major League Hacking · Second Place Winner - VT Hacks III\par
+        02/2016\par
+        Won 2\textsuperscript{nd} place out of 54 teams in the third Virginia Tech Hackathon. Awarded
+        for the creation and presentation of PushBuddy in \textbf{Java}.
+    \end{blockquote}
+\end{document}
