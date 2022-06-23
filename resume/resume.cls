@@ -22,6 +22,12 @@
 
 \usetikzlibrary{arrows.meta, chains, positioning}
 
+\hypersetup{
+    colorlinks = true, % Color links instead of ugly boxes
+    urlcolor = black, % Color for external hyperlinks
+    linkcolor = black, % Color of internal links
+}
+
 % Override the main font.
 \setmainfont[Path = fonts/raleway/, BoldFont = Raleway-Bold]{Raleway-Light}
 
