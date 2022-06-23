@@ -59,7 +59,6 @@
 
     \vspace{2em}\par
     \rule{\linewidth}{.5pt}\par
-    \vspace{1em}\par
 }}
 
 % Customize `\section` format and before/after spacing.
@@ -70,7 +69,7 @@
     {}
     [{\rule[5pt]{30pt}{1pt}}]
 \titlespacing*{\section}
-    {0pt}{1em}{1em}
+    {0pt}{2em}{0em}
 
 % Utility macro which indents all lines evenly.
 \newenvironment{blockquote}
@@ -84,12 +83,12 @@
     }
 
 % Draws a dotted vertical bar. Used as implementation detail of `timeline`.
-\newcommand{\dottedline}{\color{gray} \makebox[8pt]{{\LARGE $\bullet$}}\hskip-4.75pt\vrule width 1.25pt height 8mm\hspace{8mm}}
+\newcommand{\dottedline}{\color{gray} \makebox[0pt]{{\LARGE $\bullet$}}\hskip-0.5pt\vrule width 1pt height 8mm\hspace{8mm}}
 
 % Creates a vertical timeline of job experience entries.
 \newenvironment{timeline}
     {
-        \begin{longtable}{@{\,}!{\dottedline} @{\,} c <{\hskip 2pt} >{\raggedright\arraybackslash}l}
+        \begin{longtable}{!{\dottedline} @{\,} l l}
     }
     {
         \end{longtable}
