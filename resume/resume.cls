@@ -83,7 +83,7 @@
     }
 
 % Draws a dotted vertical bar. Used as implementation detail of `timeline`.
-\newcommand{\dottedline}{\color{gray} \makebox[0pt]{{\LARGE $\bullet$}}\hskip-0.5pt\vrule width 1pt height 8mm\hspace{8mm}}
+\newcommand{\dottedline}{\makebox[0pt]{\tikz[baseline=-4pt]\draw[gray,fill=gray] (0,0) circle (0.5ex);}\color{gray}\hskip-0.5pt\vrule width 1pt height 8mm\hspace{8mm}}
 
 % Creates a vertical timeline of job experience entries.
 \newenvironment{timeline}
