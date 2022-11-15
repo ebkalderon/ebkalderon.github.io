@@ -1,3 +1,5 @@
+% vi: ft=tex
+
 \ProvidesClass{resume}[2022/06/22 Resume LaTeX class]
 \NeedsTeXFormat{LaTeX2e}
 \DeclareOption*{\PassOptionsToClass{\CurrentOption}{article}}
@@ -8,6 +10,7 @@
 \pagestyle{empty}
 
 % Import all required packages.
+\RequirePackage{accsupp, etoolbox}
 \RequirePackage{array}
 \RequirePackage{changepage}
 \RequirePackage{enumitem}
@@ -38,20 +41,22 @@
 %     % Item to put in right header section, e.g. location, phone, website...
 % }
 % ```
-\newcommand{\header}[4]{{
+\newcommand{\header}[4]{
     \setlength{\parindent}{0em}
 
     % Draw name and position on left, contact details on right
-    \begin{minipage}{2.8in}
-        \addfontfeatures{LetterSpace=20.0}
-        \setlength{\parskip}{1em}
+    \BeginAccSupp{method=pdfstringdef=true,ActualText=#1 #2\unichar{"000A}#3\unichar{"000A}}
+        \begin{minipage}{2.8in}
+            \addfontfeatures{LetterSpace=10.0}
+            \setlength{\parskip}{1em}
 
-        {\fontsize{28}{28} \selectfont \uppercase{\textbf{#1}\par\textbf{#2}}}
+            {\fontsize{28}{28} \selectfont \uppercase{\textbf{#1}\par\textbf{#2}}}
 
-        {\fontspec[Path=fonts/raleway/, LetterSpace=20.0, WordSpace=1.5]{Raleway-Medium} \selectfont \uppercase{#3}}
-    \end{minipage}
+            {\fontspec[Path=fonts/raleway/, LetterSpace=14.0, WordSpace=1.75]{Raleway-Medium} \selectfont \uppercase{#3}}
+        \end{minipage}
+    \EndAccSupp{}
     \hfill
-    \begin{minipage}{1.8in}
+    \begin{minipage}{2.2in}
         \begin{flushleft}
             #4
         \end{flushleft}
@@ -59,17 +64,29 @@
 
     \vspace{2em}\par
     \rule{\linewidth}{.5pt}\par
-}}
+}
+
+% Creates a contact info link with an icon, alt text, display text, and URL.
+\newcommand{\contact}[4]{%
+    \BeginAccSupp{method=pdfstringdef,unicode=false,ActualText=#2:}#1\EndAccSupp{} \hspace{1pt}\href{#4}{#3}%
+}
+
+% Define convenient shorthand forms of the `\contact` command.
+\newcommand{\phone}[1]{\contact{\faPhone}{Phone}{#1}{tel:+1 #1}}
+\newcommand{\email}[1]{\contact{\faAt}{Email}{#1}{mailto:#1}}
+\newcommand{\website}[1]{\contact{\faGlobe}{Website}{#1}{https://#1}}
+\newcommand{\linkedin}[1]{\contact{\faLinkedin}{LinkedIn}{#1}{https://www.linkedin.com/in/#1}}
+\newcommand{\github}[1]{\contact{\faGithub}{GitHub}{#1}{https://github.com/#1}}
 
 % Customize `\section` format and before/after spacing.
 \titleformat{\section}
-    {\fontspec[Path=fonts/raleway/, LetterSpace=20.0, WordSpace=1.5]{Raleway-Bold} \fontsize{14}{14} \selectfont}
+    {\fontspec[Path=fonts/raleway/, LetterSpace=16.0, WordSpace=1.75]{Raleway-Bold} \fontsize{14}{14} \selectfont}
     {\MakeUppercase{#1}}
     {1em}
     {}
     [{\rule[5pt]{30pt}{1pt}}]
 \titlespacing*{\section}
-    {0pt}{2em}{0em}
+    {0pt}{1.5em}{0em}
 
 % Utility macro which indents all lines evenly.
 \newenvironment{blockquote}
@@ -82,8 +99,15 @@
         \end{adjustwidth}
     }
 
+% Utility macro which draws a gray horizontal rule.
+\newcommand{\sectionrule}{
+    \begin{flushleft}
+        \textcolor{lightgray}{\rule{\linewidth}{.5pt}}
+    \end{flushleft}
+}
+
 % Draws a dotted vertical bar. Used as implementation detail of `timeline`.
-\newcommand{\dottedline}{\makebox[0pt]{\tikz[baseline=-4pt]\draw[gray,fill=gray] (0,0) circle (0.5ex);}\color{gray}\hskip-0.5pt\vrule width 1pt height 8mm\hspace{8mm}}
+\newcommand{\dottedline}{\makebox[0pt]{\tikz[baseline=-4pt]\draw[gray,fill=gray] (0,0) circle (0.5ex);}\color{gray}\hskip-0.5pt\vrule width 1pt height 7mm\hspace{8mm}}
 
 % Creates a vertical timeline of job experience entries.
 \newenvironment{timeline}
@@ -96,7 +120,7 @@
 
 % Defines a job experience entry in the timeline containing the company name,
 % start/end dates, position name, and job description.
-\newcommand{\entry}[4] {
+\newcommand{\entry}[4]{
     {\parbox[t]{1.5in}{
         {\fontspec[Path=fonts/raleway/]{Raleway-Medium} \fontsize{12}{12} \selectfont #1}\par
         \medskip
