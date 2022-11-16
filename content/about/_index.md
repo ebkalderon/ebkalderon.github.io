@@ -2,6 +2,8 @@
 title = "This is me..."
 +++
 
+<img src="/about/photo.jpg" alt="photo" style="border-radius: 50%; max-width: 30%; float: right; margin-left: 1em;"/>
+
 Software engineer, Linux user, bookworm, and programming enthusiast. I have been
 voiding warranties since age 9 and writing my own software since age 11, and I’m
 not about to stop anytime soon.
