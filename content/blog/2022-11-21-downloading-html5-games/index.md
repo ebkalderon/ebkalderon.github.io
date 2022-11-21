@@ -439,6 +439,10 @@ game and get it to run on my machine:
 
 ## Footnotes
 
+<!-- HACK: Until backreferences are supported in `Zola` -->
+<!-- https://github.com/raphlinus/pulldown-cmark/issues/142 -->
+<script src="/footnotes.js"></script>
+
 [^1]: The Wayback Machine uses [Wombat](https://github.com/webrecorder/wombat)
       for all its client-side URL rewriting needs.
 
