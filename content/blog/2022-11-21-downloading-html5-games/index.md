@@ -414,8 +414,8 @@ Now, if you'll excuse me, I'm off to play some [Line Rider 2].
 
 ## TL;DR
 
-Below is a summary of all the steps it ultimately took to downoload the HTML5
-game and get it to run on my machine:
+Below is a summary of the steps it ultimately took to download the HTML5 game
+and get it to run locally on my machine:
 
 1. Install Python 3 and Ruby, if you don't already have them on your machine.
 2. Confirm there exists a [Wayback Machine] capture of the HTML5 game you would
