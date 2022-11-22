@@ -74,16 +74,17 @@ in the inline JavaScript and didn't rewrite it to
 Fixing this and reloading the page doesn't seem to do any good.
 
 This `flambe.js` script that's being loaded alongside `main-html.js` looks
-interesting, though. This seems to refer to [Flambe](https://github.com/aduros/flambe),
-a 2D game engine written in [Haxe](https://haxe.org) that deploys to HTML5.
+interesting, though. The name seems to refer to
+[Flambe](https://github.com/aduros/flambe), a 2D game engine written in
+[Haxe](https://haxe.org) that deploys to HTML5.
 
 Going back into the devtools again, let's switch to the debugger and inspect the
-source code for `main-html.js`. I believe this is where the actual game logic
-lives, where `flambe.js` would presumably contain the base game engine.
+source code for `main-html.js`. This is probably where the actual game logic
+lives, since I presume `flambe.js` contains the base game engine.
 
 {{ resize_image(path="messy-source.png", alt="Messy JavaScript" width=785, height=0, op="fit_width") }}
 
-Ouch, that's hard to read. Let's pretty-print the source code...
+Ouch, that's hard to read. Let's pretty-print that code...
 
 {{ resize_image(path="pretty-printed-source.png", alt="Pretty-printed JavaScript", width=785, height=0, op="fit_width") }}
 
@@ -414,8 +415,8 @@ Now, if you'll excuse me, I'm off to play some [Line Rider 2].
 
 ## TL;DR
 
-Below is a summary of the steps it ultimately took to download the HTML5 game
-and get it to run locally on my machine:
+Below is the final set of steps I eventually arrived at to download and run the
+game offline:
 
 1. Install Python 3 and Ruby, if you don't already have them on your machine.
 2. Confirm there exists a [Wayback Machine] capture of the HTML5 game you would
