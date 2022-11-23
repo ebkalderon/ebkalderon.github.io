@@ -2,35 +2,30 @@
 title = "This is me..."
 +++
 
-<img src="/about/photo.jpg" alt="photo" style="border-radius: 50%; max-width: 30%; float: right; margin-left: 1em;"/>
+<img src="/about/photo.jpg" alt="photo" style="border-radius: 50%; max-width: 30%; float: right; margin-left: 0.5em; margin-bottom: 0.5em;"/>
 
-Software engineer, Linux user, bookworm, and programming enthusiast. I have been
-voiding warranties since age 9 and writing my own software since age 11, and I’m
-not about to stop anytime soon.
+Engineer, tinkerer, bookworm, tech enthusiast.
 
-I'm deeply fascinated by hard problems of all kinds, from large-scale
-distributed systems to highly constrained embedded and real-time systems. I care
-about open source software, distributed systems, censorship resistance, build
-system reproducibility, cybersecurity, and safe systems programming.
+I'm based in the United States, currently working as a software engineer at
+Disney Streaming. I am the founder of the [Amethyst](https://github.com/amethyst)
+game engine project and a couple other popular open source projects. I also have
+5+ years of work experience at companies large and small; you can get the full
+story on my [LinkedIn](https://www.linkedin.com/in/ebkalderon).
 
-I develop largely in **Rust** and **TypeScript** these days and manage my own
-infrastructure using **Kubernetes**, **Docker**, **Google Cloud Platform**, and
-**ArgoCD**.
+I'm fascinated by hard problems of all kinds, including (but not limited to)
+distributed and decentralized systems, embedded systems programming, computer
+graphics, programming language and compiler design, and cryptography. I care
+about free and open source software, healthy and thriving communities, and
+leaving this world in a better state than I found it.
 
-I have experience with **C**, **C++ (98 and modern)**, **C#**, **HTML/CSS/JS**,
-**Java**, **Nix**, **Processing**, **SQL**, **VBA (Microsoft Access)**, **Visual
-Basic**, and [**ladder logic**](https://en.wikipedia.org/wiki/Ladder_logic).
-
-I regulate my body temperature by pumping liquid coolant though my veins, and my
-eyes directly take 24-pin DVI from my video card.
-
-If all that sounds interesting to you, take a look at
+If any of that sounds interesting to you, check out
 [my portfolio](@/projects/_index.md) and [résumé](/resume.pdf). You can also
-find me on any of the services below. I'm usually down for a cup of coffee!
-:coffee:
+contact me via one of the communication channels below. I'm usually down for a
+cup of coffee! :coffee:
 
 * [GitHub (@ebkalderon)](https://github.com/ebkalderon)
 * [LinkedIn (ebkalderon)](https://www.linkedin.com/in/ebkalderon)
-* [Twitter (ebkalderon)](https://twitter.com/ebkalderon)
+* [Mastodon (@ebkalderon@hachyderm.io)](https://hachyderm.io/@ebkalderon)
+* [Twitter (@ebkalderon)](https://twitter.com/ebkalderon)
 * [Keybase (ebkalderon)](https://keybase.io/ebkalderon)
 * [Say hello via email](mailto:ebkalderon@gmail.com?subject=hi) (PGP: 00AB4C0942DCBA25)
