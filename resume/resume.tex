@@ -39,60 +39,62 @@
 	
 	% Print the content
 	\begin{cvsection}{Employment}
-		\begin{cvsubsection}{Software Engineer, Intern}{Apple Computer}{Summer 2004}
-			iChat AV			
+		\begin{cvsubsection}{Software Engineer II}{Disney Streaming}{Apr 2021 -- Present}
+            Disney+ Application Development Framework (ADK)
 			\begin{itemize}
-				\item Reduced time to render the user’s buddy list by 75\% by implementing prediction algorithm.
-				\item Implemented iChat integration with OS X Spotlight Search by creating tool which extracts metadata from saved chat transcripts and provides metadata to a system-wide search database.
-				\item Redesigned chat file format and implemented backwards compatibility for search.
+                \item Works with team of engineers to improve, maintain, and optimize the \textbf{Rust} embedded media app framework.
+				\item Decreased app startup time on slowest devices by 45\% (\sim5 seconds) by loading button icons and most static images from spritesheets.
+				\item Migrated Disney+ and Star+ from Content API V3 to V5 ahead of schedule without breakage or downtime.
 			\end{itemize}
 		\end{cvsubsection}
 		
-		\begin{cvsubsection}{Lead Student Ambassador}{Microsoft Corporation}{Fall 2003 -- Spring 2005}	
+        \begin{cvsubsection}{Software Engineer}{TenX}{Feb 2018 -- Feb 2021}
 			\begin{itemize}
-				\item Promoted to Lead Student Ambassador in Fall 2004; supervised 10 -- 15 Student Ambassadors.
-				\item Created and taught Computer Science course, CSE 099: Software Design and Development.
+				\item Helped scale card business from \sim100K users to >250K+ users.
+                \item Worked on card payments service (ISO 8583), card shipment service, card settlement processing service (\textbf{Rust}).
+                \item Implemented logout microservice to migrate user session management to JSON Web Tokens (\textbf{Rust}).
+                \item Built continuous delivery pipelines to deploy \textbf{Rust} and \textbf{TypeScript} services to Kubernetes with Concourse CI.
+                \item Worked on in-house real-time monitoring system using Prometheus, Sentry, and Grafana.
+                \item Participated in on-call rotation, responding promptly to downtime or impacted service around the clock.
 			\end{itemize}
 		\end{cvsubsection}
-		
-		\begin{cvsubsection}{Head Teaching Assistant}{University of Pennsylvania}{Fall 2001 -- Spring 2005}		
-			\begin{itemize}
-				\item Courses: Advanced Java III, Software Engineering, Mathematical Foundations of Computer Science I \& II.
-				\item Promoted to Head TA in Fall 2004; led weekly meetings and supervised four other TAs.
-			\end{itemize}
-		\end{cvsubsection}
-		
-		\begin{cvsubsection}{Software Design Engineer, Intern}{Microsoft Corporation}{Summers 2001 -- 2003}
-			Visual Studio Core (Summer 2003)		
-			\begin{itemize}
-				\item Implemented a user interface for the VS open file switcher (ctrl-tab) and extended it to tool windows.
-				\item Created service to provide gradient across VS and VS add-ins. Optimized service via caching.
-			\end{itemize}
-			Programmer Productivity Research Center (Summers 2001, 2002)
-			\begin{itemize}
-				\item Built app to compute similarity of all methods in a code base; reduced time from $O(n^2)$ to $O(n\ log\ n)$. 
-				\item Created test case generation tool which creates random XML docs from XML Schema.
-			\end{itemize}
-		\end{cvsubsection}
+
+        \begin{cvsubsection}{Engineering Intern}{Kajeet}{May 2016 -- Aug 2017}
+            KART -- Network packet filtering service
+            \begin{itemize}
+                \item Refactored Web content filtering service and associated \texttt{netfilter} Linux kernel module (\textbf{C89}).
+                \item Improved stability by fixing memory safety and concurrency bugs. Identified and fixed several memory leaks.
+                \item Prepared technical documentation in Atlassian Confluence wiki to facilitate smooth project hand-off.
+            \end{itemize}
+        \end{cvsubsection}
 	\end{cvsection}
 	
 	\begin{cvsection}{Education}
-		\begin{cvsubsection}{Philadelphia, PA}{University of Pennsylvania}{Fall 2000 -- May 2005}
+		\begin{cvsubsection}{Fairfax, VA}{George Mason University}{2015 -- 2018}
 			\begin{itemize}
-				\item M.S.E. in Computer and Information Science, May 2005. GPA: 3.6
-				\item B.S.E. in Computer Science Engineering with Minor in Mathematics, May 2005.  In-major GPA: 3.4.
-				\item Graduate Coursework: Software Foundations; Computer Architecture; Algorithms; Artificial Intelligence; Comparison of Learning Algorithms; Computational Theory.
-				\item Undergraduate Coursework: Operating Systems; Databases; Algorithms; Programming Languages; Comp. Architecture; Engineering Entrepreneurship; Calculus III.
+                \item Computer Science (Completed 52 credits)
+                \item Undergraduate Coursework: Data Structures; Object Oriented Programming; Low-Level Programming.
 			\end{itemize}
 		\end{cvsubsection}
 	\end{cvsection}
 	
-	\begin{cvsection}{Technical Experience}
-		\begin{cvsubsection}{Projects}{}{}
+	\begin{cvsection}{Projects}
+		\begin{cvsubsection}{tower-lsp}{}{Aug 2019 -- Present}
+            \textit{\url{https://github.com/ebkalderon/tower-lsp}}
+            \begin{itemize}
+                \item Developed an open source framework implementing the Language Server Protocol (LSP) written in \textbf{Rust}.
+                \item Maintaining library, writing documentation, reviewing community contributions.
+                \item Relied upon by over 20 language servers (including Deno, SystemVerilog, Solidity, Tremor, Sway).
+            \end{itemize}
+        \end{cvsubsection}
+
+		\begin{cvsubsection}{Amethyst Engine}{}{Dec 2015 -- Jan 2019}
+            \textit{\url{https://amethyst.rs}}
 			\begin{itemize}
-				\item \textbf{Multi-User Drawing Tool} (2004). Electronic classroom where multiple users can view and simultaneously draw on a “chalkboard” with each person’s edits synchronized.  C++, MFC
-				\item \textbf{Synchronized Calendar} (2003 – 2004). Desktop calendar with globally shared and synchronized calendars, allowing users to schedule meetings with other users.  C\#.NET, SQL, XML
-				\item \textbf{Operating System} (2002).  UNIX-style OS with scheduler, file system, text editor and calculator. C
+                \item Developed an open source general-purpose 3D game engine written in \textbf{Rust}.
+                \item Launched project, wrote documentation, launched website, reviewed public contributions, moderated chat rooms.
+                \item Amassed significant following on GitHub (7K+ stars) and attracted over 200 contributors.
+                \item Stewardship transferred to 501(c)(3) non-profit organization in 2018.
 			\end{itemize}
 		\end{cvsubsection}
 	\end{cvsection}
@@ -100,20 +102,19 @@
 	\begin{cvsection}{Additional Experience and Awards}
 		\begin{cvsubsection}{}{}{}	
 			\begin{itemize}
-				\item \textbf{Instructor (2003 – 2005):} Taught two full-credit Computer Science courses; average ratings of 4.8 out of 5.0.
-				\item \textbf{Third Prize, Senior Design Projects:} Awarded 3rd prize for Synchronized Calendar project, out of 100 projects.
+                \item \textbf{Second Place, Major League Hacking, VT Hacks III (Feb 2016):} Placed 2\textsuperscript{nd} out of 54 teams in the third Virginia Tech hackathon. Awarded for PushBuddy, a cloud file storage synchronization tool written in \textbf{Java}.
 			\end{itemize}
 		\end{cvsubsection}
 	\end{cvsection}
 	
-	\begin{cvsection}{Languages and Technologies}
+	\begin{cvsection}{Technical Skills}
 		\begin{cvsubsection}{}{}{}	
 			\begin{itemize}
-				\item C++; C; Java; Objective-C; C\#.NET; SQL; JavaScript; XSLT; XML (XSD) Schema 
-				\item Visual Studio; Microsoft SQL Server; Eclipse; XCode; Interface Builder
+                \item Languages \textit{(Proficient)}: Rust, Bash
+                \item Languages \textit{(Familiar)}: C++, C, Java, SQL, Python, JavaScript, HTML, CSS, Lua
+                \item Tools: Git, Linux, Docker, CI/CD, Kubernetes, Google Cloud Platform, Postgres
 			\end{itemize}
 		\end{cvsubsection}
 	\end{cvsection}
 	
 \end{document}
-
