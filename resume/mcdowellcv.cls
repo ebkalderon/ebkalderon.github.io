@@ -144,14 +144,14 @@ Ligatures={TeX, NoCommon, NoDiscretionary}]{\mainfontface}
 %                            Header Setup and Printing                          -
 %--------------------------------------------------------------------------------
 
-% Address
+% Socials
 \makeatletter
 
-\newcommand\address[1]{\def\@address{#1}}
-\address{}
+\newcommand\socials[1]{\def\@socials{#1}}
+\socials{}
 
-\newcommand\printaddress{
-  \small{\@address}
+\newcommand\printsocials{
+  \small{\@socials}
 }
 
 \makeatother
@@ -159,7 +159,7 @@ Ligatures={TeX, NoCommon, NoDiscretionary}]{\mainfontface}
 % Name
 \makeatletter
 
-\newcommand\name[1]{\def\@name{#1}}
+\newcommand\name[2]{\def\@name{#1} \def\@website{#2}}
 \name{}
 
 \newcommand\printname{
@@ -167,6 +167,7 @@ Ligatures={TeX, NoCommon, NoDiscretionary}]{\mainfontface}
   \typeout \spaceskip
   \spaceskip \namespaceskip \relax
   \textbf{\LARGE\textls[110]{\textsc{\@name}}}
+  \linebreak \@website
 }
 
 \makeatother
@@ -187,7 +188,7 @@ Ligatures={TeX, NoCommon, NoDiscretionary}]{\mainfontface}
 \newcommand\makeheader{
   \begin{center}
     \begin{tabu} to 1\textwidth { X[l,m] X[2,c,m] X[r,m] }
-      \printaddress & \printname & \printcontacts \\
+      \printsocials & \printname & \printcontacts \\
     \end{tabu}
   \end{center}
   \vspace*{\afterheaderspace}
