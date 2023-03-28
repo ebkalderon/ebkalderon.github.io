@@ -17,7 +17,7 @@ jobs:
     - name: 'Compile resume.tex'
       uses: xu-cheng/latex-action@v2
       with:
-        root_file: resume/resume.tex
+        root_file: resume.tex
         working_directory: resume/
         latexmk_use_lualatex: true
         post_compile: |
@@ -38,7 +38,7 @@ jobs:
     - name: 'Compile resume.tex'
       uses: xu-cheng/latex-action@v2
       with:
-        root_file: resume/resume.tex
+        root_file: resume.tex
         working_directory: resume/
         latexmk_use_lualatex: true
         post_compile: |
