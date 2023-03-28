@@ -1,5 +1,6 @@
 %% The MIT License (MIT)
 %%
+%% Copyright (c) 2023 Eyal Kalderon
 %% Copyright (c) 2015 Daniil Belyakov
 %%
 %% Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -24,7 +25,7 @@
 
 % Set up the fonts according to options
 \def\mainfontsize{11pt}
-\def\mainfontface{Times New Roman}
+\def\mainfontface{FreeSerif}
 
 \DeclareOption{calibri}{%
   \def\mainfontface{Calibri}
