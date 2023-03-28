@@ -29,6 +29,12 @@ by GitHub Pages.
 3. `cd ebkalderon.github.io`
 4. `zola serve --open`
 
+## Generating résumé
+
+1. Install [TeX Live](https://www.tug.org/texlive/) and the GNU FreeSerif font.
+2. `cd resume/`
+3. `lualatex resume.tex`
+
 ## License
 
 Copyright © 2022 Eyal Kalderon. All rights reserved, except for the parts
