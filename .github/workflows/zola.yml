@@ -14,6 +14,14 @@ jobs:
     steps:
     - name: 'Checkout'
       uses: actions/checkout@master
+    - name: 'Compile resume.tex'
+      uses: xu-cheng/latex-action@v2
+      with:
+        root_file: resume/resume.tex
+        working_directory: resume/
+        latexmk_use_lualatex: true
+        post_compile: |
+          cp ./resume.pdf ../static/
     - name: 'Build only'
       uses: shalzz/zola-deploy-action@master
       env:
@@ -27,6 +35,14 @@ jobs:
     steps:
     - name: 'Checkout'
       uses: actions/checkout@master
+    - name: 'Compile resume.tex'
+      uses: xu-cheng/latex-action@v2
+      with:
+        root_file: resume/resume.tex
+        working_directory: resume/
+        latexmk_use_lualatex: true
+        post_compile: |
+          cp ./resume.pdf ../static/
     - name: 'Build and deploy'
       uses: shalzz/zola-deploy-action@master
       env:

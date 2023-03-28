@@ -1,5 +1,6 @@
 public
 static/processed_images/
+static/resume.pdf
 
 resume/*
 !resume/mcdowellcv.cls
