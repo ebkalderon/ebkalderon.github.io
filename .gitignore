@@ -2,5 +2,5 @@ public
 static/processed_images/
 
 resume/*
-!resume/McDowell_CV_Template.tex
 !resume/mcdowellcv.cls
+!resume/resume.tex
