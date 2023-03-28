@@ -86,13 +86,18 @@ Ligatures={TeX, NoCommon, NoDiscretionary}]{\mainfontface}
 \usepackage{ifthen}
 \usepackage{ifplatform}
 
-% For spcaed small caps
+% For spaced small caps
 \usepackage{microtype}
 
 \DeclareMicrotypeSet*{smallcapsi} {
   encoding = {OT1,T1,T2A,LY1,OT4,QX,T5,TS1,EU1,EU2},
   shape = {sc*,si,scit}
 }
+
+% For Web hyperlinks
+\usepackage{hyperref}
+\hypersetup{colorlinks=true, linkcolor=black, urlcolor=black}
+\urlstyle{tt}
 
 %--------------------------------------------------------------------------------
 %                                   Constants                                   -
@@ -147,11 +152,14 @@ Ligatures={TeX, NoCommon, NoDiscretionary}]{\mainfontface}
 % Socials
 \makeatletter
 
-\newcommand\socials[1]{\def\@socials{#1}}
-\socials{}
+\newcommand\github[1]{\def\@github{\href{https://github.com/#1}{GitHub: #1}}}
+\github{}
+
+\newcommand\linkedin[1]{\def\@linkedin{\href{https://linkedin.com/in/#1}{LinkedIn: #1}}}
+\linkedin{}
 
 \newcommand\printsocials{
-  \small{\@socials}
+  \small{\@github \linebreak \@linkedin}
 }
 
 \makeatother
@@ -159,7 +167,7 @@ Ligatures={TeX, NoCommon, NoDiscretionary}]{\mainfontface}
 % Name
 \makeatletter
 
-\newcommand\name[2]{\def\@name{#1} \def\@website{#2}}
+\newcommand\name[2]{\def\@name{#1} \def\@website{\href{https://#2}{\nolinkurl{#2}}}}
 \name{}
 
 \newcommand\printname{
@@ -175,11 +183,14 @@ Ligatures={TeX, NoCommon, NoDiscretionary}]{\mainfontface}
 % Contacts
 \makeatletter
 
-\newcommand\contacts[1]{\def\@contacts{#1}}
-\contacts{}
+\newcommand\email[1]{\def\@email{\href{mailto:#1}{#1}}}
+\email{}
+
+\newcommand\phone[1]{\def\@phone{\href{tel:#1}{#1}}}
+\phone{}
 
 \newcommand\printcontacts{
-  \small{\@contacts}
+  \small{\@email \linebreak \@phone}
 }
 
 \makeatother
