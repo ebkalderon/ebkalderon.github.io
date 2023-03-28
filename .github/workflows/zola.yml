@@ -12,9 +12,9 @@ jobs:
     runs-on: ubuntu-latest
     if: github.ref != 'refs/heads/master'
     steps:
-    - name: 'Checkout'
+    - name: Checkout
       uses: actions/checkout@master
-    - name: 'Compile resume.tex'
+    - name: Compile resume.tex
       uses: xu-cheng/latex-action@v2
       with:
         root_file: resume.tex
@@ -22,13 +22,13 @@ jobs:
         latexmk_use_lualatex: true
         post_compile: |
           cp ./resume.pdf ../static/
-    - name: 'Build only'
+    - name: Build only
       uses: shalzz/zola-deploy-action@master
       env:
         BUILD_DIR: .
         TOKEN: ${{ secrets.TOKEN }}
         BUILD_ONLY: true
-    - name: 'Upload preview resume.pdf'
+    - name: Upload preview resume.pdf
       uses: actions/upload-artifact@v3
       with:
         name: resume-pdf-preview
@@ -39,9 +39,9 @@ jobs:
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/master'
     steps:
-    - name: 'Checkout'
+    - name: Checkout
       uses: actions/checkout@master
-    - name: 'Compile resume.tex'
+    - name: Compile resume.tex
       uses: xu-cheng/latex-action@v2
       with:
         root_file: resume.tex
@@ -49,7 +49,7 @@ jobs:
         latexmk_use_lualatex: true
         post_compile: |
           cp ./resume.pdf ../static/
-    - name: 'Build and deploy'
+    - name: Build and deploy
       uses: shalzz/zola-deploy-action@master
       env:
         PAGES_BRANCH: gh-pages
