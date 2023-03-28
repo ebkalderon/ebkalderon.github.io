@@ -1,0 +1,120 @@
+%% The MIT License (MIT)
+%%
+%% Copyright (c) 2023 Eyal Kalderon
+%% Copyright (c) 2015 Daniil Belyakov
+%%
+%% Permission is hereby granted, free of charge, to any person obtaining a copy
+%% of this software and associated documentation files (the "Software"), to deal
+%% in the Software without restriction, including without limitation the rights
+%% to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+%% copies of the Software, and to permit persons to whom the Software is
+%% furnished to do so, subject to the following conditions:
+%%
+%% The above copyright notice and this permission notice shall be included in all
+%% copies or substantial portions of the Software.
+%%
+%% THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+%% IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+%% FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+%% AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+%% LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+%% OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+%% SOFTWARE.
+
+% The font could be set to Windows-specific Calibri by using the 'calibri' option
+\documentclass[]{mcdowellcv}
+
+% For mathematical symbols
+\usepackage{amsmath}
+
+% Set applicant's personal data for header
+\name{Eyal Kalderon}{eyalkalderon.com}
+\github{ebkalderon} \linkedin{ebkalderon}
+\email{ebkalderon@gmail.com} \phone{(571) 355-9778}
+
+\begin{document}
+
+	% Print the header
+	\makeheader
+	
+	% Print the content
+	\begin{cvsection}{Employment}
+		\begin{cvsubsection}{Software Engineer II}{Disney Streaming}{Apr 2021 -- Present}
+            Disney+ Application Development Framework (ADK)
+			\begin{itemize}
+                \item Works with team of engineers to improve, maintain, and optimize the \textbf{Rust} embedded media app framework.
+				\item Decreased app startup time on slowest devices by 45\% (\sim5 seconds) by loading button icons and most static images from spritesheets.
+				\item Migrated Disney+ and Star+ from Content API V3 to V5 ahead of schedule without breakage or downtime.
+			\end{itemize}
+		\end{cvsubsection}
+		
+        \begin{cvsubsection}{Software Engineer}{TenX}{Feb 2018 -- Feb 2021}
+			\begin{itemize}
+				\item Helped scale card business from \sim100K users to >250K+ users.
+                \item Worked on card payments service (ISO 8583), card shipment service, card settlement processing service (\textbf{Rust}).
+                \item Implemented logout microservice to migrate user session management to JSON Web Tokens (\textbf{Rust}).
+                \item Built continuous delivery pipelines to deploy \textbf{Rust} and \textbf{TypeScript} services to Kubernetes with Concourse CI.
+                \item Worked on in-house real-time monitoring system using Prometheus, Sentry, and Grafana.
+                \item Participated in on-call rotation, responding promptly to downtime or impacted service around the clock.
+			\end{itemize}
+		\end{cvsubsection}
+
+        \begin{cvsubsection}{Engineering Intern}{Kajeet}{May 2016 -- Aug 2017}
+            KART -- Network packet filtering service
+            \begin{itemize}
+                \item Refactored Web content filtering service and associated \texttt{netfilter} Linux kernel module (\textbf{C89}).
+                \item Improved stability by fixing memory safety and concurrency bugs. Identified and fixed several memory leaks.
+                \item Prepared technical documentation in Atlassian Confluence wiki to facilitate smooth project hand-off.
+            \end{itemize}
+        \end{cvsubsection}
+	\end{cvsection}
+	
+	\begin{cvsection}{Education}
+		\begin{cvsubsection}{Fairfax, VA}{George Mason University}{2015 -- 2018}
+			\begin{itemize}
+                \item Computer Science (Completed 52 credits)
+                \item Undergraduate Coursework: Data Structures; Object Oriented Programming; Low-Level Programming.
+			\end{itemize}
+		\end{cvsubsection}
+	\end{cvsection}
+	
+	\begin{cvsection}{Projects}
+		\begin{cvsubsection}{tower-lsp}{}{Aug 2019 -- Present}
+            \textit{\url{https://github.com/ebkalderon/tower-lsp}}
+            \begin{itemize}
+                \item Developed an open source framework implementing the Language Server Protocol (LSP) written in \textbf{Rust}.
+                \item Maintaining library, writing documentation, reviewing community contributions.
+                \item Relied upon by over 20 language servers (including Deno, SystemVerilog, Solidity, Tremor, Sway).
+            \end{itemize}
+        \end{cvsubsection}
+
+		\begin{cvsubsection}{Amethyst Engine}{}{Dec 2015 -- Jan 2019}
+            \textit{\url{https://amethyst.rs}}
+			\begin{itemize}
+                \item Developed an open source general-purpose 3D game engine written in \textbf{Rust}.
+                \item Launched project, wrote documentation, launched website, reviewed public contributions, moderated chat rooms.
+                \item Amassed significant following on GitHub (7K+ stars) and attracted over 200 contributors.
+                \item Stewardship transferred to 501(c)(3) non-profit organization in 2018.
+			\end{itemize}
+		\end{cvsubsection}
+	\end{cvsection}
+	
+	\begin{cvsection}{Additional Experience and Awards}
+		\begin{cvsubsection}{}{}{}	
+			\begin{itemize}
+                \item \textbf{Second Place, Major League Hacking, VT Hacks III (Feb 2016):} Placed 2\textsuperscript{nd} out of 54 teams in the third Virginia Tech hackathon. Awarded for PushBuddy, a cloud file storage synchronization tool written in \textbf{Java}.
+			\end{itemize}
+		\end{cvsubsection}
+	\end{cvsection}
+	
+	\begin{cvsection}{Technical Skills}
+		\begin{cvsubsection}{}{}{}	
+			\begin{itemize}
+                \item Languages \textit{(Proficient)}: Rust, Bash
+                \item Languages \textit{(Familiar)}: C++, C, Java, SQL, Python, JavaScript, HTML, CSS, Lua
+                \item Tools: Git, Linux, Docker, CI/CD, Kubernetes, Google Cloud Platform, Postgres
+			\end{itemize}
+		\end{cvsubsection}
+	\end{cvsection}
+	
+\end{document}
