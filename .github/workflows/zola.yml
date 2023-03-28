@@ -28,6 +28,12 @@ jobs:
         BUILD_DIR: .
         TOKEN: ${{ secrets.TOKEN }}
         BUILD_ONLY: true
+    - name: 'Upload preview resume.pdf'
+      uses: actions/upload-artifact@v3
+      with:
+        name: resume-pdf-preview
+        path: static/resume.pdf
+        retention-days: 5
   build_and_deploy:
     name: Build and deploy
     runs-on: ubuntu-latest
