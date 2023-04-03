@@ -1,0 +1,857 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+      <title>Eyal Kalderon</title>
+      <link>https://eyalkalderon.com</link>
+      <description>If you listen to a UNIX shell, can you hear the C?</description>
+      <generator>Zola</generator>
+      <language>en</language>
+      <atom:link href="https://eyalkalderon.com/rss.xml" rel="self" type="application/rss+xml"/>
+      <lastBuildDate>Mon, 21 Nov 2022 00:00:00 +0000</lastBuildDate>
+      <item>
+          <title>Downloading HTML5 games for offline play</title>
+          <pubDate>Mon, 21 Nov 2022 00:00:00 +0000</pubDate>
+          <author>Unknown</author>
+          <link>https://eyalkalderon.com/blog/downloading-html5-games/</link>
+          <guid>https://eyalkalderon.com/blog/downloading-html5-games/</guid>
+          <description>&lt;p&gt;So, I was &lt;a href=&quot;https:&#x2F;&#x2F;www.urbandictionary.com&#x2F;define.php?term=nerd-snipe&quot;&gt;nerd-sniped&lt;&#x2F;a&gt;
+on Reddit a bit over a week ago.&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;a href=&quot;https:&#x2F;&#x2F;www.reddit.com&#x2F;r&#x2F;webdev&#x2F;comments&#x2F;ypxyyb&#x2F;comment&#x2F;ivn0o5w&#x2F;?context=8&amp;amp;depth=9&quot;&gt;Someone posted on &lt;strong&gt;r&#x2F;webdev&lt;&#x2F;strong&gt;&lt;&#x2F;a&gt; asking whether it would be possible
+to archive a certain HTML5 game locally for offline play, similar to how folks
+used to &lt;a href=&quot;https:&#x2F;&#x2F;www.makeuseof.com&#x2F;tag&#x2F;download-run-flash-games&#x2F;&quot;&gt;archive Flash games&lt;&#x2F;a&gt; by downloading the embedded &lt;code&gt;.swf&lt;&#x2F;code&gt; file, back in
+the early days of the Web. None of the other answers seemed particularly helpful
+at the time, so I decided to take a stab at it.&lt;&#x2F;p&gt;
+&lt;p&gt;Below is a recounting of my original thought process while approaching this
+problem, from beginning to end.&lt;&#x2F;p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;Disclaimer:&lt;&#x2F;strong&gt; This post is intended for educational and non-commercial
+&lt;a href=&quot;https:&#x2F;&#x2F;ogc.harvard.edu&#x2F;pages&#x2F;copyright-and-fair-use&quot;&gt;fair use&lt;&#x2F;a&gt; purposes only. If you’re impatient,
+&lt;a href=&quot;https:&#x2F;&#x2F;eyalkalderon.com&#x2F;blog&#x2F;downloading-html5-games&#x2F;#tl-dr&quot;&gt;skip ahead to the TL;DR section&lt;&#x2F;a&gt; for a list of steps.&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;h2 id=&quot;a-first-attempt&quot;&gt;A first attempt&lt;a class=&quot;zola-anchor&quot; href=&quot;#a-first-attempt&quot; aria-label=&quot;Anchor link for: a-first-attempt&quot;&gt;§&lt;&#x2F;a&gt;
+&lt;&#x2F;h2&gt;
+&lt;p&gt;First, let’s take a brief look at &lt;a href=&quot;https:&#x2F;&#x2F;games.gameboss.com&#x2F;bubbleshooterclassic&#x2F;index.html&quot;&gt;the game itself&lt;&#x2F;a&gt;:&lt;&#x2F;p&gt;
+
+    &lt;img src=&quot;https:&amp;#x2F;&amp;#x2F;eyalkalderon.com&amp;#x2F;processed_images&amp;#x2F;the-game.e65dbe18b5376b20.png&quot;  alt=&quot;Bubble Shooter Classic&quot; &#x2F;&gt;
+&lt;p&gt;Seems like a simple enough single-player game with no server-side networking
+features. This should be an easy task, then!&lt;&#x2F;p&gt;
+&lt;p&gt;I’ll hit &lt;kbd&gt;Ctrl+S&lt;&#x2F;kbd&gt; in Firefox to save the entire Web page, including any
+referenced assets, open the &lt;code&gt;index.html&lt;&#x2F;code&gt;, and… &lt;&#x2F;p&gt;
+
+    &lt;img src=&quot;https:&amp;#x2F;&amp;#x2F;eyalkalderon.com&amp;#x2F;processed_images&amp;#x2F;white-page.89f615b49122508c.png&quot;  alt=&quot;Empty white page&quot; &#x2F;&gt;
+&lt;p&gt;A blank page. That’s odd. I wonder why?&lt;&#x2F;p&gt;
+&lt;p&gt;Popping open the debug console with &lt;kbd&gt;F12&lt;&#x2F;kbd&gt; reveals that the game is
+missing a bunch of resources.&lt;&#x2F;p&gt;
+
+    &lt;img src=&quot;https:&amp;#x2F;&amp;#x2F;eyalkalderon.com&amp;#x2F;processed_images&amp;#x2F;missing-resources.b367d897c3048b19.png&quot;  alt=&quot;Console full of errors&quot; &#x2F;&gt;
+&lt;p&gt;&lt;abbr title=&quot;Cross-Origin Resource Sharing&quot;&gt;CORS&lt;&#x2F;abbr&gt; errors aside, the
+resources aren’t even loading in from the &lt;code&gt;~&#x2F;Downloads&#x2F;GameBoss_files&lt;&#x2F;code&gt; directory
+that Firefox had created; their paths are instead relative to &lt;code&gt;~&#x2F;Downloads&lt;&#x2F;code&gt;.&lt;&#x2F;p&gt;
+&lt;p&gt;Looking through the &lt;code&gt;index.html&lt;&#x2F;code&gt; source, I see the following &lt;code&gt;&amp;lt;script&amp;gt;&lt;&#x2F;code&gt; tags:&lt;&#x2F;p&gt;
+&lt;style&gt;pre &gt; code { color: var(--color); }&lt;&#x2F;style&gt;
+&lt;pre data-lang=&quot;html&quot; style=&quot;background-color:#2b2c2f;color:#cccece;&quot; class=&quot;language-html &quot;&gt;&lt;code class=&quot;language-html&quot; data-lang=&quot;html&quot;&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;&amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#eb606b;&quot;&gt;div &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bb80b3;&quot;&gt;...&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;&amp;gt;&lt;&#x2F;span&gt;&lt;span&gt;...&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;&amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#eb606b;&quot;&gt;script &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bb80b3;&quot;&gt;async&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;=&amp;quot;&amp;quot; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bb80b3;&quot;&gt;src&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;=&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#99c794;&quot;&gt;GameBoss_files&#x2F;main-html.js&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;&amp;quot;&amp;gt;&amp;lt;&#x2F;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#eb606b;&quot;&gt;script&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;&amp;gt;&amp;lt;&#x2F;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#eb606b;&quot;&gt;div&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;&amp;gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;&amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#eb606b;&quot;&gt;script &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bb80b3;&quot;&gt;src&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;=&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#99c794;&quot;&gt;GameBoss_files&#x2F;flambe.js&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;&amp;quot;&amp;gt;&amp;lt;&#x2F;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#eb606b;&quot;&gt;script&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;&amp;gt; 
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;&amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#eb606b;&quot;&gt;script&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;&amp;gt;
+&lt;&#x2F;span&gt;&lt;span&gt;  flambe&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#6699cc;&quot;&gt;embed&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;([&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#99c794;&quot;&gt;targets&#x2F;main-html.js&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;&amp;quot;], &amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#99c794;&quot;&gt;content&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;&amp;quot;);
+&lt;&#x2F;span&gt;&lt;span&gt;  
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;&amp;lt;&#x2F;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#eb606b;&quot;&gt;script&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;&amp;gt;
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;That’s not right. Looks like Firefox failed to detect &lt;code&gt;&amp;quot;targets&#x2F;main-html.js&amp;quot;&lt;&#x2F;code&gt;
+in the inline JavaScript and didn’t rewrite it to
+&lt;code&gt;&amp;quot;GameBoss_files&#x2F;main-html.js&amp;quot;&lt;&#x2F;code&gt; when saving the webpage with &lt;kbd&gt;Ctrl+S&lt;&#x2F;kbd&gt;.
+Fixing this and reloading the page doesn’t seem to do any good.&lt;&#x2F;p&gt;
+&lt;p&gt;This &lt;code&gt;flambe.js&lt;&#x2F;code&gt; script that’s being loaded alongside &lt;code&gt;main-html.js&lt;&#x2F;code&gt; looks
+interesting, though. The name seems to refer to
+&lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;aduros&#x2F;flambe&quot;&gt;Flambe&lt;&#x2F;a&gt;, a 2D game engine written in
+&lt;a href=&quot;https:&#x2F;&#x2F;haxe.org&quot;&gt;Haxe&lt;&#x2F;a&gt; that deploys to HTML5.&lt;&#x2F;p&gt;
+&lt;p&gt;Going back into the devtools again, let’s switch to the debugger and inspect the
+source code for &lt;code&gt;main-html.js&lt;&#x2F;code&gt;. This is probably where the actual game logic
+lives, since I presume &lt;code&gt;flambe.js&lt;&#x2F;code&gt; contains the base game engine.&lt;&#x2F;p&gt;
+
+    &lt;img src=&quot;https:&amp;#x2F;&amp;#x2F;eyalkalderon.com&amp;#x2F;processed_images&amp;#x2F;messy-source.4142a3160d130055.png&quot;  alt=&quot;Messy JavaScript&quot; &#x2F;&gt;
+&lt;p&gt;Ouch, that’s hard to read. Let’s pretty-print that code…&lt;&#x2F;p&gt;
+
+    &lt;img src=&quot;https:&amp;#x2F;&amp;#x2F;eyalkalderon.com&amp;#x2F;processed_images&amp;#x2F;pretty-printed-source.934f5c25bbd5febc.png&quot;  alt=&quot;Pretty-printed JavaScript&quot; &#x2F;&gt;
+&lt;p&gt;Much better! 👍 Searching for the word “assets” in the open file, I find a
+promising-looking section towards the bottom:&lt;&#x2F;p&gt;
+
+    &lt;img src=&quot;https:&amp;#x2F;&amp;#x2F;eyalkalderon.com&amp;#x2F;processed_images&amp;#x2F;asset-map-identified.994e3245e6d2804c.png&quot;  alt=&quot;Asset map identified in code&quot; &#x2F;&gt;
+&lt;p&gt;This nested &lt;code&gt;__meta__&lt;&#x2F;code&gt; object field appears to contain all the game assets, and
+is organized into the following structure:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;txt&quot; style=&quot;background-color:#2b2c2f;color:#cccece;&quot; class=&quot;language-txt &quot;&gt;&lt;code class=&quot;language-txt&quot; data-lang=&quot;txt&quot;&gt;&lt;span&gt;assets
+&lt;&#x2F;span&gt;&lt;span&gt;├── bootstrap
+&lt;&#x2F;span&gt;&lt;span&gt;│   └── ...
+&lt;&#x2F;span&gt;&lt;span&gt;└── hd_assets
+&lt;&#x2F;span&gt;&lt;span&gt;    └── ...
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Each entry contains the asset’s path (relative to the game’s root URL), its size
+in bytes, and an MD5 hash digest, presumably for verifying the file’s integrity.
+Below is an example entry:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;js&quot; style=&quot;background-color:#2b2c2f;color:#cccece;&quot; class=&quot;language-js &quot;&gt;&lt;code class=&quot;language-js&quot; data-lang=&quot;js&quot;&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;  bytes&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f99157;&quot;&gt;18446&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;,
+&lt;&#x2F;span&gt;&lt;span&gt;  md5&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;: &amp;#39;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#99c794;&quot;&gt;d64869dc1df0d1b0f27f38835250e4d1&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;&amp;#39;,
+&lt;&#x2F;span&gt;&lt;span&gt;  name&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;: &amp;#39;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#99c794;&quot;&gt;buttonfont&#x2F;font.fnt&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;&amp;#39;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;}
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Honestly, the task of downloading each and every file by hand and arranging it
+into the correct folder structure seems daunting. There may also be other broken
+paths in the code or assets that I’m unaware of, complicating things. Fixing all
+this up would be tedious enough on its own, much less teaching an Internet
+stranger how to do it.&lt;&#x2F;p&gt;
+&lt;p&gt;I decided to leave a comment directed at the OP explaining the complexity of the
+task at hand and asked “why not use a &lt;a href=&quot;https:&#x2F;&#x2F;web.archive.org&#x2F;&quot;&gt;Wayback Machine&lt;&#x2F;a&gt; capture of the game
+instead?” It seems perfectly functional, and this link is guaranteed to last as
+long as &lt;a href=&quot;https:&#x2F;&#x2F;archive.org&#x2F;.&quot;&gt;Archive.org&lt;&#x2F;a&gt; itself exists as an organization (which is hopefully a
+good long while; please donate to them).&lt;&#x2F;p&gt;
+&lt;p&gt;It turns out it was OP who created this particular Wayback Machine capture in
+the first place! This was done prior to posting their question in &lt;strong&gt;r&#x2F;webdev&lt;&#x2F;strong&gt;.
+While this does indeed preserve the game for the future, they didn’t like how
+slowly the archived page loaded and were wondering if totally offline play was
+possible. So we’re back to square one: how can we archive this game?&lt;&#x2F;p&gt;
+&lt;p&gt;Wait a minute… If downloading the game files directly from the publisher’s
+website is unreliable due to broken paths and missing assets, then maybe we
+could download it from the Wayback Machine instead? Its client-side URL
+rewriting capabilities are very advanced&lt;sup class=&quot;footnote-reference&quot;&gt;&lt;a href=&quot;#1&quot;&gt;1&lt;&#x2F;a&gt;&lt;&#x2F;sup&gt;, so surely it will have managed to
+capture all the necessary files. Perhaps this approach might work better?&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;starting-again-a-new-lead&quot;&gt;Starting again, a new lead&lt;a class=&quot;zola-anchor&quot; href=&quot;#starting-again-a-new-lead&quot; aria-label=&quot;Anchor link for: starting-again-a-new-lead&quot;&gt;§&lt;&#x2F;a&gt;
+&lt;&#x2F;h2&gt;
+&lt;p&gt;Rather than naively downloading the Wayback Machine capture of the game using
+&lt;kbd&gt;Ctrl+S&lt;&#x2F;kbd&gt; again and potentially suffer the same issues as before, I
+want to try a third-party tool named &lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;hartator&#x2F;wayback-machine-downloader&quot;&gt;&lt;code&gt;wayback-machine-downloader&lt;&#x2F;code&gt;&lt;&#x2F;a&gt; instead.
+This seems to do exactly what I need!&lt;&#x2F;p&gt;
+&lt;p&gt;Switching to a new directory in the terminal, let’s install the Ruby gem and run
+it against the live website, being careful to leave off the &lt;code&gt;index.html&lt;&#x2F;code&gt; at the
+end so it fetches the whole &lt;code&gt;bubbleshooterclassic&lt;&#x2F;code&gt; directory rather than just
+the one file.&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#2b2c2f;color:#cccece;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span style=&quot;color:#6699cc;&quot;&gt;gem install wayback_machine_downloader
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#6699cc;&quot;&gt;wayback_machine_downloader https:&#x2F;&#x2F;games.gameboss.com&#x2F;bubbleshooterclassic&#x2F;
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Success! Looks like it found the capture and is grabbing the files.&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;txt&quot; style=&quot;background-color:#2b2c2f;color:#cccece;&quot; class=&quot;language-txt &quot;&gt;&lt;code class=&quot;language-txt&quot; data-lang=&quot;txt&quot;&gt;&lt;span&gt;Downloading https:&#x2F;&#x2F;games.gameboss.com&#x2F;bubbleshooterclassic&#x2F; to websites&#x2F;games.gameboss.com&#x2F; from Wayback Machine archives.
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;Getting snapshot pages.. found 92 snaphots to consider.
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;79 files to download:
+&lt;&#x2F;span&gt;&lt;span&gt;https:&#x2F;&#x2F;games.gameboss.com&#x2F;bubbleshooterclassic&#x2F; -&amp;gt; websites&#x2F;games.gameboss.com&#x2F;bubbleshooterclassic&#x2F;index.html (1&#x2F;79)
+&lt;&#x2F;span&gt;&lt;span&gt;...
+&lt;&#x2F;span&gt;&lt;span&gt;Download completed in 111.17s, saved in websites&#x2F;games.gameboss.com&#x2F; (79 files)
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Okay, now that the download has finished, let’s see what we’ve got here:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;txt&quot; style=&quot;background-color:#2b2c2f;color:#cccece;&quot; class=&quot;language-txt &quot;&gt;&lt;code class=&quot;language-txt&quot; data-lang=&quot;txt&quot;&gt;&lt;span&gt;$ tree .&#x2F;websites&#x2F;games.gameboss.com&#x2F;
+&lt;&#x2F;span&gt;&lt;span&gt;websites&#x2F;games.gameboss.com&#x2F;
+&lt;&#x2F;span&gt;&lt;span&gt;└── bubbleshooterclassic
+&lt;&#x2F;span&gt;&lt;span&gt;    ├── assets
+&lt;&#x2F;span&gt;&lt;span&gt;    │   ├── bootstrap
+&lt;&#x2F;span&gt;&lt;span&gt;    │   │   ├── buttonfont
+&lt;&#x2F;span&gt;&lt;span&gt;    │   │   │   ├── font.fnt?v=d64869dc1df0d1b0f27f38835250e4d1
+&lt;&#x2F;span&gt;&lt;span&gt;    │   │   │   └── font.png?v=6c598ce10f2bdaf6bcdd721cd6b0b4d0
+&lt;&#x2F;span&gt;&lt;span&gt;    ... ... ...
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Alright, looks promising. Let’s try to open the &lt;code&gt;index.html&lt;&#x2F;code&gt; in the browser
+again…&lt;&#x2F;p&gt;
+
+    &lt;img src=&quot;https:&amp;#x2F;&amp;#x2F;eyalkalderon.com&amp;#x2F;processed_images&amp;#x2F;black-page.989ef44fde5ed2e6.png&quot;  alt=&quot;Empty black screen&quot; &#x2F;&gt;
+&lt;p&gt;Well, a black screen instead of a white screen is an improvement, I guess. I
+suppose I should’ve expected something to still be wrong.&lt;&#x2F;p&gt;
+&lt;p&gt;Let’s check the console again…&lt;&#x2F;p&gt;
+
+    &lt;img src=&quot;https:&amp;#x2F;&amp;#x2F;eyalkalderon.com&amp;#x2F;processed_images&amp;#x2F;cross-origin-errors.f0479b3da3f57cca.png&quot;  alt=&quot;Console errors similar to before&quot; &#x2F;&gt;
+&lt;p&gt;Ah, right. We still haven’t resolved the cross-origin &lt;code&gt;GET&lt;&#x2F;code&gt; errors we were
+seeing before. There are two possible ways to approach this problem:&lt;&#x2F;p&gt;
+&lt;ol&gt;
+&lt;li&gt;Disable CORS enforcement at the browser level.&lt;&#x2F;li&gt;
+&lt;li&gt;Serve the game locally on an HTTP server that attaches a
+&lt;code&gt;Access-Control-Allow-Origin: *&lt;&#x2F;code&gt; header to every response sent.&lt;sup class=&quot;footnote-reference&quot;&gt;&lt;a href=&quot;#2&quot;&gt;2&lt;&#x2F;a&gt;&lt;&#x2F;sup&gt;&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;p&gt;The first option would be nice in theory, since it would allow anyone to
+double-click on the &lt;code&gt;index.html&lt;&#x2F;code&gt; in their file browser to open and play the
+game. However, this is infeasible in practice: the process of disabling CORS
+enforcement works slightly differently for every major browser. Some, like
+Mozilla Firefox, don’t even allow users to broadly disable CORS checks anymore
+for security reasons (the &lt;code&gt;security.fileuri.strict_origin_policy&lt;&#x2F;code&gt; key still
+exists in &lt;code&gt;about:config&lt;&#x2F;code&gt;, but its scope is too narrow to be useful here).
+Besides, we don’t want to persistently override CORS for all sites; that could
+be a security risk.&lt;&#x2F;p&gt;
+&lt;p&gt;That leaves option two. While more complex than option one, this is a more
+targeted solution that is guaranteed to work equally across all major browsers,
+isn’t a potential security risk, and is nonetheless easy enough to do.&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;a href=&quot;https:&#x2F;&#x2F;gist.github.com&#x2F;mkows&#x2F;cd2122f427ea722bf41aa169ef762001&quot;&gt;This short Python script&lt;&#x2F;a&gt;
+should do nicely in a pinch. It does exactly what it says on the tin: it serves
+all the files present in the current working directory on &lt;code&gt;http:&#x2F;&#x2F;0.0.0.0:8000&lt;&#x2F;code&gt;,
+and crucially, it appends an &lt;code&gt;Access-Control-Allow-Origin: *&lt;&#x2F;code&gt; header to every
+outgoing response, which should nullify those CORS checks currently preventing
+the game from loading.&lt;&#x2F;p&gt;
+&lt;p&gt;Let’s save the script as &lt;code&gt;launch_game.py&lt;&#x2F;code&gt; in the
+&lt;code&gt;websites&#x2F;games.gamesboss.com&#x2F;bubbleshooterclassic&#x2F;&lt;&#x2F;code&gt; directory, which contains
+the &lt;code&gt;index.html&lt;&#x2F;code&gt; and all the files we want to serve. We can then start the Web
+server, like so:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#2b2c2f;color:#cccece;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span style=&quot;color:#6699cc;&quot;&gt;python3 launch_game.py
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;This prints the following prompt and then hangs:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;txt&quot; style=&quot;background-color:#2b2c2f;color:#cccece;&quot; class=&quot;language-txt &quot;&gt;&lt;code class=&quot;language-txt&quot; data-lang=&quot;txt&quot;&gt;&lt;span&gt;serving at port 8000
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Okay, the server should now be listening on port 8000 on &lt;code&gt;0.0.0.0&lt;&#x2F;code&gt;, which
+effectively means all available network interfaces, including the loopback
+device. Let’s nagivate to &lt;code&gt;http:&#x2F;&#x2F;127.0.0.1:8000&lt;&#x2F;code&gt; in a browser window, then, and
+see what we have.&lt;&#x2F;p&gt;
+
+    &lt;img src=&quot;https:&amp;#x2F;&amp;#x2F;eyalkalderon.com&amp;#x2F;processed_images&amp;#x2F;black-page-with-404-errors.694b6082a1f078f9.png&quot;  alt=&quot;Black screen with 404 errors in console&quot; &#x2F;&gt;
+&lt;p&gt;Darn. Thankfully, those pesky CORS errors are gone, but they have been replaced
+with &lt;code&gt;404 File not found&lt;&#x2F;code&gt; responses instead. Attempting to navigate to one of
+the failing resource URLs in a new browser tab, such as:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;txt&quot; style=&quot;background-color:#2b2c2f;color:#cccece;&quot; class=&quot;language-txt &quot;&gt;&lt;code class=&quot;language-txt&quot; data-lang=&quot;txt&quot;&gt;&lt;span&gt;http:&#x2F;&#x2F;127.0.0.1:8000&#x2F;assets&#x2F;bootstrap&#x2F;buttonfont&#x2F;font.fnt?v=d64869dc1df0d1b0f27f38835250e4d1
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;(predictably) results in a &lt;code&gt;404&lt;&#x2F;code&gt; error as well.&lt;&#x2F;p&gt;
+&lt;p&gt;But if we check the &lt;code&gt;websites&#x2F;games.gameboss.com&#x2F;bubbleshooterclassic&#x2F;&lt;&#x2F;code&gt;
+directory again, we see that the &lt;code&gt;font.fnt?v=d64869dc1df0d1b0f27f38835250e4d1&lt;&#x2F;code&gt;
+file we’re looking for is indeed present and in the right place.&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;txt&quot; style=&quot;background-color:#2b2c2f;color:#cccece;&quot; class=&quot;language-txt &quot;&gt;&lt;code class=&quot;language-txt&quot; data-lang=&quot;txt&quot;&gt;&lt;span&gt;$ tree .&#x2F;websites&#x2F;games.gameboss.com&#x2F;
+&lt;&#x2F;span&gt;&lt;span&gt;websites&#x2F;games.gameboss.com&#x2F;
+&lt;&#x2F;span&gt;&lt;span&gt;└── bubbleshooterclassic
+&lt;&#x2F;span&gt;&lt;span&gt;    ├── assets
+&lt;&#x2F;span&gt;&lt;span&gt;    │   ├── bootstrap
+&lt;&#x2F;span&gt;&lt;span&gt;    │   │   ├── buttonfont
+&lt;&#x2F;span&gt;&lt;span&gt;    │   │   │   ├── font.fnt?v=d64869dc1df0d1b0f27f38835250e4d1
+&lt;&#x2F;span&gt;&lt;span&gt;    │   │   │   └── font.png?v=6c598ce10f2bdaf6bcdd721cd6b0b4d0
+&lt;&#x2F;span&gt;&lt;span&gt;    ... ... ...
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;So what’s going on? The destination files exist, so why aren’t they loading?&lt;&#x2F;p&gt;
+&lt;p&gt;Wait a minute… I think the literal &lt;code&gt;?v=...&lt;&#x2F;code&gt; suffixes in the filenames
+generated by &lt;code&gt;wayback_machine_downloader&lt;&#x2F;code&gt; are causing the &lt;code&gt;GET&lt;&#x2F;code&gt; requests to
+fail. That is, any attempt to &lt;code&gt;GET&lt;&#x2F;code&gt; a file called
+&lt;code&gt;font.fnt?v=d64869dc1df0d1b0f27f38835250e4d1&lt;&#x2F;code&gt; would result in a server-side
+lookup of a file called &lt;code&gt;font.fnt&lt;&#x2F;code&gt; with the query string
+&lt;code&gt;v=d64869dc1df0d1b0f27f38835250e4d1&lt;&#x2F;code&gt;.&lt;sup class=&quot;footnote-reference&quot;&gt;&lt;a href=&quot;#3&quot;&gt;3&lt;&#x2F;a&gt;&lt;&#x2F;sup&gt; Since there is no file named
+&lt;code&gt;font.fnt&lt;&#x2F;code&gt; at that location, the server responds with a &lt;code&gt;404&lt;&#x2F;code&gt; error.&lt;&#x2F;p&gt;
+&lt;p&gt;In that case, what if we were to &lt;a href=&quot;https:&#x2F;&#x2F;en.wikipedia.org&#x2F;wiki&#x2F;Percent-encoding&quot;&gt;percent-encode&lt;&#x2F;a&gt; the &lt;code&gt;font.fnt?v=...&lt;&#x2F;code&gt; portion
+of the URL and try to &lt;code&gt;wget&lt;&#x2F;code&gt; that in the terminal?&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;txt&quot; style=&quot;background-color:#2b2c2f;color:#cccece;&quot; class=&quot;language-txt &quot;&gt;&lt;code class=&quot;language-txt&quot; data-lang=&quot;txt&quot;&gt;&lt;span&gt;$ wget http:&#x2F;&#x2F;127.0.0.1:8000&#x2F;assets&#x2F;bootstrap&#x2F;buttonfont&#x2F;font.fnt%3Fv%3Dd64869dc1df0d1b0f27f38835250e4d1
+&lt;&#x2F;span&gt;&lt;span&gt;--2022-11-20 23:23:33--  http:&#x2F;&#x2F;127.0.0.1:8000&#x2F;assets&#x2F;bootstrap&#x2F;buttonfont&#x2F;font.fnt%3Fv%3Dd64869dc1df0d1b0f27f38835250e4d1
+&lt;&#x2F;span&gt;&lt;span&gt;Connecting to 127.0.0.1:8000... connected.
+&lt;&#x2F;span&gt;&lt;span&gt;HTTP request sent, awaiting response... 200 OK
+&lt;&#x2F;span&gt;&lt;span&gt;Length: 184466 (180K) [application&#x2F;octet-stream]
+&lt;&#x2F;span&gt;&lt;span&gt;Saving to: ‘font.fnt?v=d64869dc1df0d1b0f27f38835250e4d1’
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;font.fnt?v=d64869dc1df0d 100%[================================&amp;gt;] 180.14K  --.-KB&#x2F;s    in 0s      
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;2022-11-20 23:23:33 (458 MB&#x2F;s) - ‘font.fnt?v=d64869dc1df0d1b0f27f38835250e4d1’ saved [184466&#x2F;184466]
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Aha! That works. So that confirms the hypothesis appears to be correct. Let’s
+strip off all the &lt;code&gt;?v=...&lt;&#x2F;code&gt; suffixes from all the filenames and see if that fixes
+the issues we’re seeing.&lt;&#x2F;p&gt;
+&lt;p&gt;So how should I do this? Back in my terminal window, I can recursively list all
+game files that contain a literal &lt;code&gt;?&lt;&#x2F;code&gt; in their names using a bit of Bash:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#2b2c2f;color:#cccece;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span style=&quot;color:#6699cc;&quot;&gt;$ cd .&#x2F;websites&#x2F;games.gameboss.com&#x2F;bubbleshooterclassic&#x2F;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#6699cc;&quot;&gt;$ find .&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt; -&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f99157;&quot;&gt;name &lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#99c794;&quot;&gt;*\?*&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;&amp;quot; -&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f99157;&quot;&gt;type&lt;&#x2F;span&gt;&lt;span style=&quot;color:#6699cc;&quot;&gt; f
+&lt;&#x2F;span&gt;&lt;span&gt;.&#x2F;index.html?lang&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;=&lt;&#x2F;span&gt;&lt;span style=&quot;color:#99c794;&quot;&gt;ru
+&lt;&#x2F;span&gt;&lt;span&gt;.&#x2F;index.html?lang&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;=&lt;&#x2F;span&gt;&lt;span style=&quot;color:#99c794;&quot;&gt;en&amp;amp;gp=1
+&lt;&#x2F;span&gt;&lt;span&gt;.&#x2F;index.html?lang&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;=&lt;&#x2F;span&gt;&lt;span style=&quot;color:#99c794;&quot;&gt;fr
+&lt;&#x2F;span&gt;&lt;span&gt;.&#x2F;assets&#x2F;hd_assets&#x2F;prompt_bg.png?v&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;=&lt;&#x2F;span&gt;&lt;span style=&quot;color:#99c794;&quot;&gt;bdd07c452aa91dd9309717032b9a30d1
+&lt;&#x2F;span&gt;&lt;span&gt;.&#x2F;assets&#x2F;hd_assets&#x2F;button_prompt_over.png?v&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;=&lt;&#x2F;span&gt;&lt;span style=&quot;color:#99c794;&quot;&gt;1c7d1e960c33bc02819c19b5c39e3673
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#6699cc;&quot;&gt;...
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;I’d like to chop off every character from the &lt;code&gt;?&lt;&#x2F;code&gt; character onward. Given this
+list of filenames, we can pipe it through &lt;code&gt;cut -d? -f1&lt;&#x2F;code&gt; to do exactly that.&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#2b2c2f;color:#cccece;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span style=&quot;color:#6699cc;&quot;&gt;$ find .&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt; -&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f99157;&quot;&gt;name &lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#99c794;&quot;&gt;*\?*&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;&amp;quot; -&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f99157;&quot;&gt;type&lt;&#x2F;span&gt;&lt;span style=&quot;color:#6699cc;&quot;&gt; f &lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;| &lt;&#x2F;span&gt;&lt;span style=&quot;color:#6699cc;&quot;&gt;cut&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt; -&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f99157;&quot;&gt;d&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;? -&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f99157;&quot;&gt;f1
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#6699cc;&quot;&gt;.&#x2F;index.html
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#6699cc;&quot;&gt;.&#x2F;index.html
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#6699cc;&quot;&gt;.&#x2F;index.html
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#6699cc;&quot;&gt;.&#x2F;assets&#x2F;hd_assets&#x2F;prompt_bg.png
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#6699cc;&quot;&gt;.&#x2F;assets&#x2F;hd_assets&#x2F;button_prompt_over.png
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#6699cc;&quot;&gt;...
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Now I’d like &lt;code&gt;find&lt;&#x2F;code&gt; to execute the &lt;code&gt;mv&lt;&#x2F;code&gt; command on each of those files, renaming
+each one to the &lt;code&gt;cut&lt;&#x2F;code&gt; down version. Here’s the working solution I came up with:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#2b2c2f;color:#cccece;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span style=&quot;color:#6699cc;&quot;&gt;find .&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt; -&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f99157;&quot;&gt;name &lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;&amp;#39;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#99c794;&quot;&gt;*\?*&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;&amp;#39; -&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f99157;&quot;&gt;type&lt;&#x2F;span&gt;&lt;span style=&quot;color:#6699cc;&quot;&gt; f&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt; -&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f99157;&quot;&gt;exec&lt;&#x2F;span&gt;&lt;span style=&quot;color:#6699cc;&quot;&gt; bash&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt; -&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f99157;&quot;&gt;c &lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;&amp;#39;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#99c794;&quot;&gt;mv $1 $(echo $1 | cut -d? -f1)&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;&amp;#39;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#6699cc;&quot;&gt; bash &lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;{} \;
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Well, there seem to be no errors. Let’s check the output of &lt;code&gt;tree&lt;&#x2F;code&gt; to confirm.&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;txt&quot; style=&quot;background-color:#2b2c2f;color:#cccece;&quot; class=&quot;language-txt &quot;&gt;&lt;code class=&quot;language-txt&quot; data-lang=&quot;txt&quot;&gt;&lt;span&gt;$ tree
+&lt;&#x2F;span&gt;&lt;span&gt;.
+&lt;&#x2F;span&gt;&lt;span&gt;├── assets
+&lt;&#x2F;span&gt;&lt;span&gt;│   ├── bootstrap
+&lt;&#x2F;span&gt;&lt;span&gt;│   │   ├── buttonfont
+&lt;&#x2F;span&gt;&lt;span&gt;│   │   │   ├── font.fnt
+&lt;&#x2F;span&gt;&lt;span&gt;│   │   │   └── font.png
+&lt;&#x2F;span&gt;&lt;span&gt;... ... ...
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Sweet! Looks like all the filenames have been fixed, and not a single file with
+&lt;code&gt;?&lt;&#x2F;code&gt; in its name is in sight. With the HTTP server still running, let’s switch
+back to Firefox, refresh the page for &lt;code&gt;http:&#x2F;&#x2F;127.0.0.1:8000&lt;&#x2F;code&gt;, and see what
+happens…&lt;&#x2F;p&gt;
+&lt;p&gt;
+    &lt;img src=&quot;https:&amp;#x2F;&amp;#x2F;eyalkalderon.com&amp;#x2F;processed_images&amp;#x2F;locally-served-game-1.5bb3de00e11f5d6b.png&quot;  alt=&quot;Game start page&quot; &#x2F;&gt;
+
+
+    &lt;img src=&quot;https:&amp;#x2F;&amp;#x2F;eyalkalderon.com&amp;#x2F;processed_images&amp;#x2F;locally-served-game-2.0a489e427cdc4654.png&quot;  alt=&quot;Game board&quot; &#x2F;&gt;
+&lt;&#x2F;p&gt;
+&lt;p&gt;Finally! 🎉 Now &lt;em&gt;that’s&lt;&#x2F;em&gt; what I like to see. The game seems to be working.&lt;&#x2F;p&gt;
+&lt;p&gt;Popping open the devtools once more and switching to the “network” tab, I can
+confirm there are zero requests reaching out to the broader Internet and the
+game is running 100% locally:&lt;&#x2F;p&gt;
+
+    &lt;img src=&quot;https:&amp;#x2F;&amp;#x2F;eyalkalderon.com&amp;#x2F;processed_images&amp;#x2F;examining-network-requests.00d505eec2e1ef8e.png&quot;  alt=&quot;Examining network requests&quot; &#x2F;&gt;
+&lt;p&gt;That was so much fun! Now to relay what I’ve learned back to OP…&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;conclusion&quot;&gt;Conclusion&lt;a class=&quot;zola-anchor&quot; href=&quot;#conclusion&quot; aria-label=&quot;Anchor link for: conclusion&quot;&gt;§&lt;&#x2F;a&gt;
+&lt;&#x2F;h2&gt;
+&lt;p&gt;Well… that was certainly more complicated than hitting &lt;kbd&gt;Ctrl+S&lt;&#x2F;kbd&gt;.
+😅 Still, I had a lot of fun working through this project, and I
+learned a lot along the way.&lt;&#x2F;p&gt;
+&lt;p&gt;These deeply satisfying rabbit holes and the occasional success story remind me
+of why I love computers in the first place. This also takes me back to formative
+childhood experiences playing Flash games on early 2000s sites like
+&lt;a href=&quot;https:&#x2F;&#x2F;web.archive.org&#x2F;web&#x2F;20131229072630&#x2F;http:&#x2F;&#x2F;weebls-stuff.com&#x2F;&quot;&gt;Weebl’s Stuff&lt;&#x2F;a&gt;, &lt;a href=&quot;https:&#x2F;&#x2F;www.newgrounds.com&#x2F;&quot;&gt;Newgrounds&lt;&#x2F;a&gt;, &lt;a href=&quot;https:&#x2F;&#x2F;web.archive.org&#x2F;web&#x2F;20181231224550&#x2F;https:&#x2F;&#x2F;www.miniclip.com&#x2F;games&#x2F;en&#x2F;&quot;&gt;Miniclip&lt;&#x2F;a&gt;, &lt;a href=&quot;https:&#x2F;&#x2F;www.albinoblacksheep.com&#x2F;&quot;&gt;Albino Blacksheep&lt;&#x2F;a&gt;, &lt;a href=&quot;https:&#x2F;&#x2F;www.deviantart.com&#x2F;&quot;&gt;DeviantArt&lt;&#x2F;a&gt;,
+and so on. Such moments are fleeting, and it’s hard to relive them today due to
+all the broken links, abandoned sites, and obsolete media formats.&lt;&#x2F;p&gt;
+&lt;p&gt;When &lt;a href=&quot;https:&#x2F;&#x2F;www.adobe.com&#x2F;products&#x2F;flashplayer&#x2F;end-of-life.html&quot;&gt;Adobe formally dropped support for Flash Player in 2020&lt;&#x2F;a&gt;, it
+sent ripples through these online communities. Everyone knew this was a long
+time coming, and &lt;a href=&quot;https:&#x2F;&#x2F;en.wikipedia.org&#x2F;wiki&#x2F;Adobe_Flash_Player&quot;&gt;Shockwave Flash&lt;&#x2F;a&gt; was on its deathbed for years, but at least
+those old Flash games were still easy to preserve: all you needed to do was grab
+the &lt;code&gt;.swf&lt;&#x2F;code&gt;, get yourself an old copy of Flash player or a modern emulator like
+&lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;ruffle-rs&#x2F;ruffle&quot;&gt;Ruffle&lt;&#x2F;a&gt;, and you’re ready to go.&lt;&#x2F;p&gt;
+&lt;p&gt;Modern HTML5 games are significantly more complicated to preserve due to all the
+added complexity, and this particular example I described, while ultimately
+successful, is hardly the norm. Today, it is the responsibility of Web game
+developers and game engine developers to design their games with historical
+preservation in mind, or else risk one day being forever lost to history.&lt;&#x2F;p&gt;
+&lt;p&gt;Now, if you’ll excuse me, I’m off to play some &lt;a href=&quot;https:&#x2F;&#x2F;www.crazygames.com&#x2F;game&#x2F;line-rider-2&quot;&gt;Line Rider 2&lt;&#x2F;a&gt;.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;tl-dr&quot;&gt;TL;DR&lt;a class=&quot;zola-anchor&quot; href=&quot;#tl-dr&quot; aria-label=&quot;Anchor link for: tl-dr&quot;&gt;§&lt;&#x2F;a&gt;
+&lt;&#x2F;h2&gt;
+&lt;p&gt;Below is the final set of steps I eventually arrived at to download and run the
+game offline:&lt;&#x2F;p&gt;
+&lt;ol&gt;
+&lt;li&gt;Install Python 3 and Ruby, if you don’t already have them on your machine.&lt;&#x2F;li&gt;
+&lt;li&gt;Confirm there exists a &lt;a href=&quot;https:&#x2F;&#x2F;web.archive.org&#x2F;&quot;&gt;Wayback Machine&lt;&#x2F;a&gt; capture of the HTML5 game you would
+like to archive.&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;code&gt;gem install wayback_machine_downloader&lt;&#x2F;code&gt;&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;code&gt;wayback_machine_downloader &amp;lt;live game url&amp;gt;&lt;&#x2F;code&gt;
+&lt;ul&gt;
+&lt;li&gt;This saves everything to &lt;code&gt;websites&#x2F;&amp;lt;domain&amp;gt;&#x2F;path&#x2F;to&#x2F;game&#x2F;&lt;&#x2F;code&gt;.&lt;&#x2F;li&gt;
+&lt;li&gt;Make sure to grab &lt;code&gt;&#x2F;&lt;&#x2F;code&gt; rather than &lt;code&gt;&#x2F;index.html&lt;&#x2F;code&gt;. This ensures all the
+capture files get fetched and not just the &lt;code&gt;index.html&lt;&#x2F;code&gt; file.&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;Strip the &lt;code&gt;?v=&lt;&#x2F;code&gt; suffixes off all the filenames, if there are any.&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#2b2c2f;color:#cccece;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span style=&quot;color:#6699cc;&quot;&gt;find .&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt; -&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f99157;&quot;&gt;name &lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;&amp;#39;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#99c794;&quot;&gt;*\?*&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;&amp;#39; -&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f99157;&quot;&gt;type&lt;&#x2F;span&gt;&lt;span style=&quot;color:#6699cc;&quot;&gt; f&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt; -&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f99157;&quot;&gt;exec&lt;&#x2F;span&gt;&lt;span style=&quot;color:#6699cc;&quot;&gt; bash&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt; -&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f99157;&quot;&gt;c &lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;&amp;#39;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#99c794;&quot;&gt;mv $1 $(echo $1 | cut -d? -f1)&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;&amp;#39;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#6699cc;&quot;&gt; bash &lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;{} \;
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;Save &lt;a href=&quot;https:&#x2F;&#x2F;gist.github.com&#x2F;mkows&#x2F;cd2122f427ea722bf41aa169ef762001&quot;&gt;this GitHub Gist&lt;&#x2F;a&gt;
+in &lt;code&gt;websites&#x2F;&amp;lt;domain&amp;gt;&#x2F;path&#x2F;to&#x2F;game&#x2F;&lt;&#x2F;code&gt; as &lt;code&gt;launch_game.py&lt;&#x2F;code&gt;.&lt;&#x2F;li&gt;
+&lt;li&gt;Serve the game files locally: &lt;code&gt;python3 launch_game.py&lt;&#x2F;code&gt;
+&lt;ul&gt;
+&lt;li&gt;If you are on Linux or macOS, feel free to add a &lt;code&gt;#!&#x2F;usr&#x2F;bin&#x2F;env python3&lt;&#x2F;code&gt;
+shebang to the top of the file and &lt;code&gt;chmod +x launch_game.py&lt;&#x2F;code&gt;. This lets you
+launch the server more conveniently&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;Navigate to &lt;code&gt;http:&#x2F;&#x2F;127.0.0.1:8000&lt;&#x2F;code&gt; in a Web browser to play.&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;h2 id=&quot;footnotes&quot;&gt;Footnotes&lt;a class=&quot;zola-anchor&quot; href=&quot;#footnotes&quot; aria-label=&quot;Anchor link for: footnotes&quot;&gt;§&lt;&#x2F;a&gt;
+&lt;&#x2F;h2&gt;
+&lt;!-- HACK: Until backreferences are supported in `Zola` --&gt;
+&lt;!-- https:&#x2F;&#x2F;github.com&#x2F;raphlinus&#x2F;pulldown-cmark&#x2F;issues&#x2F;142 --&gt;
+&lt;script src=&quot;&#x2F;footnotes.js&quot;&gt;&lt;&#x2F;script&gt;
+&lt;div class=&quot;footnote-definition&quot; id=&quot;1&quot;&gt;&lt;sup class=&quot;footnote-definition-label&quot;&gt;1&lt;&#x2F;sup&gt;
+&lt;p&gt;The Wayback Machine uses &lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;webrecorder&#x2F;wombat&quot;&gt;Wombat&lt;&#x2F;a&gt;
+for all its client-side URL rewriting needs.&lt;&#x2F;p&gt;
+&lt;&#x2F;div&gt;
+&lt;div class=&quot;footnote-definition&quot; id=&quot;2&quot;&gt;&lt;sup class=&quot;footnote-definition-label&quot;&gt;2&lt;&#x2F;sup&gt;
+&lt;p&gt;See the &lt;a href=&quot;https:&#x2F;&#x2F;developer.mozilla.org&#x2F;en-US&#x2F;docs&#x2F;Web&#x2F;HTTP&#x2F;Headers&#x2F;Access-Control-Allow-Origin&quot;&gt;MDN Web Docs entry for &lt;code&gt;Access-Control-Allow-Origin&lt;&#x2F;code&gt;&lt;&#x2F;a&gt;
+for details.&lt;&#x2F;p&gt;
+&lt;&#x2F;div&gt;
+&lt;div class=&quot;footnote-definition&quot; id=&quot;3&quot;&gt;&lt;sup class=&quot;footnote-definition-label&quot;&gt;3&lt;&#x2F;sup&gt;
+&lt;p&gt;In the real published game, this query string corresponds to the &lt;code&gt;md5sum&lt;&#x2F;code&gt;
+of the game asset we’re trying to retrieve. This doesn’t matter to us,
+though; our dumb Python Web server ignores and discards the query string
+anyway.&lt;&#x2F;p&gt;
+&lt;&#x2F;div&gt;
+</description>
+      </item>
+      <item>
+          <title>Error recovery with parser combinators (using nom)</title>
+          <pubDate>Wed, 01 Apr 2020 00:00:00 +0000</pubDate>
+          <author>Unknown</author>
+          <link>https://eyalkalderon.com/blog/nom-error-recovery/</link>
+          <guid>https://eyalkalderon.com/blog/nom-error-recovery/</guid>
+          <description>&lt;p&gt;As the COVID-19 pandemic continues to ravage the globe, lots of people are stuck
+at home, either working remotely or sitting around without much to do. The
+previous afternoon, I had stumbled across an online announcement that the
+&lt;a href=&quot;https:&#x2F;&#x2F;www.acm.org&#x2F;articles&#x2F;bulletins&#x2F;2020&#x2F;march&#x2F;dl-access-during-covid-19&quot;&gt;ACM Digital Library has been made free to all to read and download&lt;&#x2F;a&gt; to
+help foster research, discovery, and learning during this time of crisis.
+Feeling curious, and having previously wanted to read certain research papers
+from the ACM DL previously, I took the opportunity to peruse through its library
+and read as much content as I could. As I was doing so, I stumbled across a very
+useful paper called &lt;a href=&quot;https:&#x2F;&#x2F;dl.acm.org&#x2F;doi&#x2F;10.1145&#x2F;3167132.3167261&quot;&gt;&lt;strong&gt;“Syntax error recovery in parsing expression
+grammars”&lt;&#x2F;strong&gt;&lt;&#x2F;a&gt; by (Medeiros, S. and Fabio Mascarenhas, 2018) that I would
+like to share, and I’ll be testing some of its concepts using a prototype parser
+written in &lt;a href=&quot;https:&#x2F;&#x2F;www.rust-lang.org&quot;&gt;Rust&lt;&#x2F;a&gt; with the help of the &lt;a href=&quot;https:&#x2F;&#x2F;docs.rs&#x2F;nom&quot;&gt;&lt;code&gt;nom&lt;&#x2F;code&gt;&lt;&#x2F;a&gt; crate.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;some-background&quot;&gt;Some background&lt;a class=&quot;zola-anchor&quot; href=&quot;#some-background&quot; aria-label=&quot;Anchor link for: some-background&quot;&gt;§&lt;&#x2F;a&gt;
+&lt;&#x2F;h2&gt;
+&lt;p&gt;Language parsing is a very broad and interesting topic, with a swathe of varying
+approaches and tools to choose from depending on the requirements of the task at
+hand, but the basic premise is simple: the goal of a parser is to consume some
+data as input, break it down into its component parts according to some grammar,
+and derive meaning or understanding from it (&lt;a href=&quot;https:&#x2F;&#x2F;en.wikipedia.org&#x2F;wiki&#x2F;Parsing&quot;&gt;wiki&lt;&#x2F;a&gt;). I personally happen to
+enjoy working with &lt;em&gt;parsing expression grammars&lt;&#x2F;em&gt; (PEGs) and &lt;em&gt;parser combinators&lt;&#x2F;em&gt;
+when writing my own projects.&lt;&#x2F;p&gt;
+&lt;p&gt;In case you are not familiar, PEG is a kind of declarative formal language for
+describing other languages in terms of string pattern matching. That is, PEG
+allows the parser author to declare the grammar of the language they wish to
+parse using sets of expressions like those shown below:&lt;&#x2F;p&gt;
+&lt;style&gt;pre &gt; code { color: var(--color); }&lt;&#x2F;style&gt;
+&lt;pre style=&quot;background-color:#2b2c2f;color:#cccece;&quot;&gt;&lt;code&gt;&lt;span&gt;expr    ← sum
+&lt;&#x2F;span&gt;&lt;span&gt;sum     ← product ((&amp;#39;+&amp;#39; &#x2F; &amp;#39;-&amp;#39;) product)*
+&lt;&#x2F;span&gt;&lt;span&gt;product ← value ((&amp;#39;*&amp;#39; &#x2F; &amp;#39;&#x2F;&amp;#39;) value)*
+&lt;&#x2F;span&gt;&lt;span&gt;value   ← [0-9]+ &#x2F; &amp;#39;(&amp;#39; expr &amp;#39;)&amp;#39;
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;These PEG rules would then be able to describe the rules to a simple arithmetic
+language that behaves like this:&lt;&#x2F;p&gt;
+&lt;style&gt;.table-auto &gt; table { table-layout: auto }&lt;&#x2F;style&gt;
+&lt;div class=&quot;table-auto&quot;&gt;
+&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th&gt;Input&lt;&#x2F;th&gt;&lt;th&gt;Parsed syntax tree&lt;&#x2F;th&gt;&lt;&#x2F;tr&gt;&lt;&#x2F;thead&gt;&lt;tbody&gt;
+&lt;tr&gt;&lt;td&gt;123&lt;&#x2F;td&gt;&lt;td&gt;&lt;code&gt;Value(123)&lt;&#x2F;code&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;1 + 2&lt;&#x2F;td&gt;&lt;td&gt;&lt;code&gt;Sum(Value(1), Value(2))&lt;&#x2F;code&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;1 + 2 * 3&lt;&#x2F;td&gt;&lt;td&gt;&lt;code&gt;Sum(Value(1), Product(Value(2), Value(3)))&lt;&#x2F;code&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;(1 + 2) * 3&lt;&#x2F;td&gt;&lt;td&gt;&lt;code&gt;Product(Sum(Value(1), Value(2)), Value(3))&lt;&#x2F;code&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;&#x2F;tbody&gt;&lt;&#x2F;table&gt;
+&lt;&#x2F;div&gt;
+&lt;p&gt;Any PEG expression can be converted directly into a &lt;a href=&quot;https:&#x2F;&#x2F;en.wikipedia.org&#x2F;wiki&#x2F;Recursive_descent_parser&quot;&gt;recursive descent parser&lt;&#x2F;a&gt;,
+either automatically using a parser generator or crafted by hand in the
+programming language of your choice.&lt;&#x2F;p&gt;
+&lt;p&gt;I really enjoy using parser combinator frameworks like &lt;a href=&quot;https:&#x2F;&#x2F;docs.rs&#x2F;nom&quot;&gt;&lt;code&gt;nom&lt;&#x2F;code&gt;&lt;&#x2F;a&gt; as a nice middle
+ground between the two options, since they grant you the freedom and flexibility
+of writing your parser fully in the host language (in this example, Rust), but
+the resulting code is succinct, fairly declarative, and looks somewhat PEG-ish,
+if you tilt your head and squint hard enough.&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;rust&quot; style=&quot;background-color:#2b2c2f;color:#cccece;&quot; class=&quot;language-rust &quot;&gt;&lt;code class=&quot;language-rust&quot; data-lang=&quot;rust&quot;&gt;&lt;span style=&quot;color:#c594c5;&quot;&gt;fn &lt;&#x2F;span&gt;&lt;span style=&quot;color:#6699cc;&quot;&gt;expr&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f99157;&quot;&gt;input&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;: &amp;amp;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c594c5;&quot;&gt;str&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;) -&amp;gt; &lt;&#x2F;span&gt;&lt;span&gt;IResult&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;&amp;lt;&amp;amp;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c594c5;&quot;&gt;str&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;&amp;amp;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c594c5;&quot;&gt;str&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;&amp;gt; {
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#6699cc;&quot;&gt;sum&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;(&lt;&#x2F;span&gt;&lt;span&gt;input&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;)
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;}
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c594c5;&quot;&gt;fn &lt;&#x2F;span&gt;&lt;span style=&quot;color:#6699cc;&quot;&gt;sum&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f99157;&quot;&gt;input&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;: &amp;amp;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c594c5;&quot;&gt;str&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;) -&amp;gt; &lt;&#x2F;span&gt;&lt;span&gt;IResult&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;&amp;lt;&amp;amp;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c594c5;&quot;&gt;str&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;&amp;amp;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c594c5;&quot;&gt;str&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;&amp;gt; {
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c594c5;&quot;&gt;let&lt;&#x2F;span&gt;&lt;span&gt; op &lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#6699cc;&quot;&gt;alt&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;((&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c594c5;&quot;&gt;char&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;(&amp;#39;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#99c794;&quot;&gt;+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;&amp;#39;), &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c594c5;&quot;&gt;char&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;(&amp;#39;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#99c794;&quot;&gt;-&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;&amp;#39;)));
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#6699cc;&quot;&gt;recognize&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#6699cc;&quot;&gt;pair&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;(&lt;&#x2F;span&gt;&lt;span&gt;product&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#6699cc;&quot;&gt;many0&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#6699cc;&quot;&gt;pair&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;(&lt;&#x2F;span&gt;&lt;span&gt;op&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;,&lt;&#x2F;span&gt;&lt;span&gt; product&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;))))(&lt;&#x2F;span&gt;&lt;span&gt;input&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;)
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;}
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c594c5;&quot;&gt;fn &lt;&#x2F;span&gt;&lt;span style=&quot;color:#6699cc;&quot;&gt;product&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f99157;&quot;&gt;input&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;: &amp;amp;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c594c5;&quot;&gt;str&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;) -&amp;gt; &lt;&#x2F;span&gt;&lt;span&gt;IResult&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;&amp;lt;&amp;amp;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c594c5;&quot;&gt;str&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;&amp;amp;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c594c5;&quot;&gt;str&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;&amp;gt; {
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c594c5;&quot;&gt;let&lt;&#x2F;span&gt;&lt;span&gt; op &lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#6699cc;&quot;&gt;alt&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;((&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c594c5;&quot;&gt;char&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;(&amp;#39;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#99c794;&quot;&gt;*&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;&amp;#39;), &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c594c5;&quot;&gt;char&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;(&amp;#39;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#99c794;&quot;&gt;&#x2F;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;&amp;#39;)));
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#6699cc;&quot;&gt;recognize&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#6699cc;&quot;&gt;pair&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;(&lt;&#x2F;span&gt;&lt;span&gt;value&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#6699cc;&quot;&gt;many0&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#6699cc;&quot;&gt;pair&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;(&lt;&#x2F;span&gt;&lt;span&gt;op&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;,&lt;&#x2F;span&gt;&lt;span&gt; value&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;))))(&lt;&#x2F;span&gt;&lt;span&gt;input&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;)
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;}
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c594c5;&quot;&gt;fn &lt;&#x2F;span&gt;&lt;span style=&quot;color:#6699cc;&quot;&gt;value&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f99157;&quot;&gt;input&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;: &amp;amp;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c594c5;&quot;&gt;str&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;) -&amp;gt; &lt;&#x2F;span&gt;&lt;span&gt;IResult&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;&amp;lt;&amp;amp;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c594c5;&quot;&gt;str&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;&amp;amp;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c594c5;&quot;&gt;str&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;&amp;gt; {
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#6699cc;&quot;&gt;recognize&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#6699cc;&quot;&gt;alt&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;((&lt;&#x2F;span&gt;&lt;span&gt;digit1&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#6699cc;&quot;&gt;delimited&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c594c5;&quot;&gt;char&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;(&amp;#39;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#99c794;&quot;&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;&amp;#39;),&lt;&#x2F;span&gt;&lt;span&gt; expr&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c594c5;&quot;&gt;char&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;(&amp;#39;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#99c794;&quot;&gt;)&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;&amp;#39;)))))(&lt;&#x2F;span&gt;&lt;span&gt;input&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;)
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;}
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Each of the four parsers above corresponds to a PEG rule, and since each one is
+represented as a pure function, they compose nicely in code and each one can
+easily be tested in isolation from the others, e.g. with inline unit tests. All
+in all, I enjoy working with PEG and parser combinators!&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;motivation&quot;&gt;Motivation&lt;a class=&quot;zola-anchor&quot; href=&quot;#motivation&quot; aria-label=&quot;Anchor link for: motivation&quot;&gt;§&lt;&#x2F;a&gt;
+&lt;&#x2F;h2&gt;
+&lt;p&gt;I’ve been hacking on a parser and &lt;a href=&quot;https:&#x2F;&#x2F;microsoft.github.io&#x2F;language-server-protocol&#x2F;&quot;&gt;language server&lt;&#x2F;a&gt; for the &lt;a href=&quot;https:&#x2F;&#x2F;nixos.org&#x2F;nix&#x2F;&quot;&gt;Nix programming
+language&lt;&#x2F;a&gt; as a side project (&lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;ebkalderon&#x2F;nix-language-server&quot;&gt;GitHub&lt;&#x2F;a&gt;) for some time now, and this extended
+period of being stuck at home renewed my interest in working on it. This
+language server aims to supply code analysis, and auto-completion for compatible
+third-party text editors and IDEs. This project has been very challenging for me
+to work on, in a good way, because language servers tend to have very strict
+requirements of their underlying parsers.&lt;&#x2F;p&gt;
+&lt;p&gt;Most compilers and static analysis tools are &lt;a href=&quot;https:&#x2F;&#x2F;en.wikipedia.org&#x2F;wiki&#x2F;Batch_program&quot;&gt;batch programs&lt;&#x2F;a&gt; which act like a
+dumb pipe, consuming source code in one end and spitting an executable out the
+other (yes, incremental compilation and artifact caching bends this analogy a
+bit, but the basic premise still holds). This means that their parsers and
+resulting &lt;a href=&quot;https:&#x2F;&#x2F;en.wikipedia.org&#x2F;wiki&#x2F;Abstract_syntax_tree&quot;&gt;abstract syntax trees&lt;&#x2F;a&gt; are optimized for very different things than
+what an interactive IDE would want.&lt;&#x2F;p&gt;
+&lt;p&gt;Since the user is continuously modifying the source text and entering keystrokes
+into their editor, the parser providing syntax checking for their editor is very
+frequently exposed to incomplete or downright invalid snippets of code more
+often than not. This means that halting parsing and bailing with an error
+message whenever the first error is encountered, like many traditional parsers
+do, is &lt;em&gt;simply not an option&lt;&#x2F;em&gt;.&lt;&#x2F;p&gt;
+
+  &lt;figure class=&quot;center&quot; &gt;
+    &lt;img src=&quot;rust-analyzer.gif&quot; alt=&quot;rust-analyzer in action&quot; &#x2F;&gt;
+    
+      &lt;figcaption class=&quot;center&quot;&gt;Parser producing a best-effort syntax tree from incomplete code (&lt;a href=&quot;https:&#x2F;&#x2F;rust-analyzer.github.io&#x2F;thisweek&#x2F;2020&#x2F;03&#x2F;16&#x2F;changelog-16.html&quot;&gt;credit&lt;&#x2F;a&gt;)&lt;&#x2F;figcaption&gt;
+    
+  &lt;&#x2F;figure&gt;
+
+&lt;p&gt;Instead, the parser needs to be as fault-tolerant as possible, always producing
+a syntax tree of some kind on every single parse and deriving as much syntactic
+and semantic meaning as it can from user input, however malformed it might be.
+Your editor should still be able to provide meaningful code completion, hover
+documentation, go-to-definition, and symbol searching regardless of whether
+there is a missing semicolon somewhere halfway down the page.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;a-naive-approach&quot;&gt;A naive approach&lt;a class=&quot;zola-anchor&quot; href=&quot;#a-naive-approach&quot; aria-label=&quot;Anchor link for: a-naive-approach&quot;&gt;§&lt;&#x2F;a&gt;
+&lt;&#x2F;h2&gt;
+&lt;p&gt;When I first started working on this project, I had chosen to implement my Nix
+parser in Rust using &lt;code&gt;nom&lt;&#x2F;code&gt; 5.0, since that was the tool I was most comfortable
+using for writing parsers at the time.&lt;&#x2F;p&gt;
+&lt;p&gt;As I was writing up my parsers, I very quickly realized that bailing early from
+parsing with an &lt;code&gt;Err(nom::Err::Error(_))&lt;&#x2F;code&gt; or &lt;code&gt;Err(nom::Error::Failure(_))&lt;&#x2F;code&gt;
+wasn’t a good idea for emitting errors. The former triggers a backtrack, which I
+didn’t always want, and the latter would halt parsing altogether with an error,
+which I never wanted. &lt;code&gt;Err(nom::Error::Incomplete(_))&lt;&#x2F;code&gt; sounded promising due to
+the name, but it too ended up being useless given the design constraints I had
+in mind. I needed some way to log that a non-fatal parse error had been
+encountered and resume parsing as though nothing had happened, but
+unfortunately, there seemed to be nothing in the vast &lt;code&gt;nom&lt;&#x2F;code&gt; parser combinator
+toolbox that could help me deal with this.&lt;&#x2F;p&gt;
+&lt;p&gt;Given that &lt;code&gt;nom&lt;&#x2F;code&gt; parser combinators are pure functions whose signatures are
+structured like this:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;rust&quot; style=&quot;background-color:#2b2c2f;color:#cccece;&quot; class=&quot;language-rust &quot;&gt;&lt;code class=&quot;language-rust&quot; data-lang=&quot;rust&quot;&gt;&lt;span style=&quot;color:#c594c5;&quot;&gt;impl &lt;&#x2F;span&gt;&lt;span&gt;Fn(Input) -&amp;gt; IResult&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;&amp;lt;&lt;&#x2F;span&gt;&lt;span&gt;Input, Output, Error&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;&amp;gt;
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;which maps to:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;rust&quot; style=&quot;background-color:#2b2c2f;color:#cccece;&quot; class=&quot;language-rust &quot;&gt;&lt;code class=&quot;language-rust&quot; data-lang=&quot;rust&quot;&gt;&lt;span style=&quot;color:#c594c5;&quot;&gt;impl &lt;&#x2F;span&gt;&lt;span&gt;Fn(Input) -&amp;gt; Result&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;&amp;lt;(&lt;&#x2F;span&gt;&lt;span&gt;Remaining, Output&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;)&lt;&#x2F;span&gt;&lt;span&gt;, Error&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;&amp;gt;
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;I decided to carry these non-fatal parse errors through the &lt;code&gt;Output&lt;&#x2F;code&gt; instead of
+returning them through &lt;code&gt;Result::Err(nom::Error::Error(_))&lt;&#x2F;code&gt; using a custom data
+structure which I had named &lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;ebkalderon&#x2F;nix-language-server&#x2F;blob&#x2F;master&#x2F;nix-parser&#x2F;src&#x2F;parser&#x2F;partial.rs#L64-L68&quot;&gt;&lt;code&gt;Partial&lt;&#x2F;code&gt;&lt;&#x2F;a&gt;. This was a monadic data structure which
+was essentially:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;rust&quot; style=&quot;background-color:#2b2c2f;color:#cccece;&quot; class=&quot;language-rust &quot;&gt;&lt;code class=&quot;language-rust&quot; data-lang=&quot;rust&quot;&gt;&lt;span style=&quot;color:#c594c5;&quot;&gt;pub struct &lt;&#x2F;span&gt;&lt;span&gt;Partial&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;&amp;lt;&lt;&#x2F;span&gt;&lt;span&gt;T&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;&amp;gt; {
+&lt;&#x2F;span&gt;&lt;span&gt;    value&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#fac863;&quot;&gt;Option&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;&amp;lt;&lt;&#x2F;span&gt;&lt;span&gt;T&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;&amp;gt;&lt;&#x2F;span&gt;&lt;span&gt;,
+&lt;&#x2F;span&gt;&lt;span&gt;    errors&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#fac863;&quot;&gt;Vec&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;&amp;lt;&lt;&#x2F;span&gt;&lt;span&gt;Error&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;&amp;gt;&lt;&#x2F;span&gt;&lt;span&gt;,
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;}
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c594c5;&quot;&gt;impl&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;&amp;lt;&lt;&#x2F;span&gt;&lt;span&gt;T&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;&amp;gt; &lt;&#x2F;span&gt;&lt;span&gt;Partial&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;&amp;lt;&lt;&#x2F;span&gt;&lt;span&gt;T&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;&amp;gt; {
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c594c5;&quot;&gt;pub fn &lt;&#x2F;span&gt;&lt;span style=&quot;color:#6699cc;&quot;&gt;map&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;&amp;lt;&lt;&#x2F;span&gt;&lt;span&gt;U, F&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;&amp;gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f99157;&quot;&gt;self&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f99157;&quot;&gt;f&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;:&lt;&#x2F;span&gt;&lt;span&gt; F&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;) -&amp;gt; &lt;&#x2F;span&gt;&lt;span&gt;Partial&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;&amp;lt;&lt;&#x2F;span&gt;&lt;span&gt;U&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;&amp;gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c594c5;&quot;&gt;where
+&lt;&#x2F;span&gt;&lt;span&gt;        F&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;:&lt;&#x2F;span&gt;&lt;span&gt; FnOnce&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;(&lt;&#x2F;span&gt;&lt;span&gt;T&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;)&lt;&#x2F;span&gt;&lt;span&gt; -&amp;gt; U
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;{ ... }
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c594c5;&quot;&gt;pub fn &lt;&#x2F;span&gt;&lt;span style=&quot;color:#6699cc;&quot;&gt;flat_map&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;&amp;lt;&lt;&#x2F;span&gt;&lt;span&gt;U, F&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;&amp;gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c594c5;&quot;&gt;mut &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f99157;&quot;&gt;self&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f99157;&quot;&gt;f&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;:&lt;&#x2F;span&gt;&lt;span&gt; F&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;) -&amp;gt; &lt;&#x2F;span&gt;&lt;span&gt;Partial&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;&amp;lt;&lt;&#x2F;span&gt;&lt;span&gt;U&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;&amp;gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c594c5;&quot;&gt;where
+&lt;&#x2F;span&gt;&lt;span&gt;        F&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;:&lt;&#x2F;span&gt;&lt;span&gt; FnOnce&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;(&lt;&#x2F;span&gt;&lt;span&gt;T&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;)&lt;&#x2F;span&gt;&lt;span&gt; -&amp;gt; Partial&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;&amp;lt;&lt;&#x2F;span&gt;&lt;span&gt;U&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;&amp;gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;{ ... }
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c594c5;&quot;&gt;pub fn &lt;&#x2F;span&gt;&lt;span style=&quot;color:#6699cc;&quot;&gt;value&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;(&amp;amp;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f99157;&quot;&gt;self&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;) -&amp;gt; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#fac863;&quot;&gt;Option&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;&amp;lt;&amp;amp;&lt;&#x2F;span&gt;&lt;span&gt;T&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;&amp;gt; {
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;...
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;}
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c594c5;&quot;&gt;pub fn &lt;&#x2F;span&gt;&lt;span style=&quot;color:#6699cc;&quot;&gt;errors&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;(&amp;amp;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f99157;&quot;&gt;self&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;) -&amp;gt; &amp;amp;[&lt;&#x2F;span&gt;&lt;span&gt;Error&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;] {
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;...
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;}
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c594c5;&quot;&gt;pub fn &lt;&#x2F;span&gt;&lt;span style=&quot;color:#6699cc;&quot;&gt;verify&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f99157;&quot;&gt;self&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;) -&amp;gt; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#fac863;&quot;&gt;Result&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;&amp;lt;&lt;&#x2F;span&gt;&lt;span&gt;T, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#fac863;&quot;&gt;Vec&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;&amp;lt;&lt;&#x2F;span&gt;&lt;span&gt;Error&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;&amp;gt;&amp;gt; {
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;...
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;}
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;}
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;This data structure was complemented with a bunch of custom &lt;code&gt;nom&lt;&#x2F;code&gt; combinators,
+e.g. &lt;code&gt;map_partial()&lt;&#x2F;code&gt;, &lt;code&gt;expect_terminated()&lt;&#x2F;code&gt;, and &lt;code&gt;skip_if_err()&lt;&#x2F;code&gt;, which would
+allow me to compose these fault-tolerant parsers together while accumulating
+errors in the &lt;code&gt;errors&lt;&#x2F;code&gt; field.&lt;&#x2F;p&gt;
+&lt;p&gt;The consumer of this data structure would then choose to either:&lt;&#x2F;p&gt;
+&lt;ol&gt;
+&lt;li&gt;Assert that they need a valid AST without errors by calling &lt;code&gt;expr.verify()&lt;&#x2F;code&gt;,
+transforming the &lt;code&gt;Partial&amp;lt;T&amp;gt;&lt;&#x2F;code&gt; into a &lt;code&gt;Result&amp;lt;T, Vec&amp;lt;Error&amp;gt;&amp;gt;&lt;&#x2F;code&gt;. This option
+would be useful for traditonal batch compiler authors, as well as for testing
+and debugging.&lt;&#x2F;li&gt;
+&lt;li&gt;Extract and examine the contents of the &lt;code&gt;value&lt;&#x2F;code&gt; and &lt;code&gt;errors&lt;&#x2F;code&gt; field
+separately. This is what the language server would do: publish the
+accumulated errors to the user’s editor in the form of diagnostics and then
+perform further analysis on the syntax tree contained in &lt;code&gt;value&lt;&#x2F;code&gt;.&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;p&gt;All the parser combinators would have this function signature instead:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;rust&quot; style=&quot;background-color:#2b2c2f;color:#cccece;&quot; class=&quot;language-rust &quot;&gt;&lt;code class=&quot;language-rust&quot; data-lang=&quot;rust&quot;&gt;&lt;span style=&quot;color:#c594c5;&quot;&gt;impl &lt;&#x2F;span&gt;&lt;span&gt;Fn(Input) -&amp;gt; IResult&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;&amp;lt;&lt;&#x2F;span&gt;&lt;span&gt;Input, Partial&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;&amp;lt;&lt;&#x2F;span&gt;&lt;span&gt;Output&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;&amp;gt;&lt;&#x2F;span&gt;&lt;span&gt;, Error&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;&amp;gt;
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;While this approach seemed to work well initially, it spiralled out of control
+once the parser grew beyond a certain size. The number of &lt;code&gt;Partial&lt;&#x2F;code&gt; specific
+combinators grew, the parser logic got hairier, more imperative, and trickier to
+debug, and the performance implications of carrying around a heavy stack of
+errors from function to function &lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;ebkalderon&#x2F;nix-language-server&#x2F;commit&#x2F;4cd939a2917709a527bd1967f4a29bfd9f2767cc&quot;&gt;were astonishingly awful&lt;&#x2F;a&gt;. It didn’t
+look and feel that much like PEG anymore.&lt;&#x2F;p&gt;
+&lt;p&gt;I will admit I learned a lot about a breadth of topics during this time, from
+benchmarking functions with &lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;bheisler&#x2F;criterion.rs&quot;&gt;&lt;code&gt;criterion&lt;&#x2F;code&gt;&lt;&#x2F;a&gt; to generating flamegraphs with
+&lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;ferrous-systems&#x2F;flamegraph&quot;&gt;&lt;code&gt;cargo-flamegraph&lt;&#x2F;code&gt;&lt;&#x2F;a&gt;, and going to extreme lengths to avoid heap allocations to
+make the parser as fast as possible. I used &lt;a href=&quot;https:&#x2F;&#x2F;docs.rs&#x2F;nom_locate&quot;&gt;&lt;code&gt;nom_locate&lt;&#x2F;code&gt;&lt;&#x2F;a&gt; to retain string span
+information and be as zero-copy as possible when constructing the syntax tree.
+But ultimately, I couldn’t fix all the warts and fundamental flaws. I needed a
+new approach.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;the-paper-s-solution&quot;&gt;The paper’s solution&lt;a class=&quot;zola-anchor&quot; href=&quot;#the-paper-s-solution&quot; aria-label=&quot;Anchor link for: the-paper-s-solution&quot;&gt;§&lt;&#x2F;a&gt;
+&lt;&#x2F;h2&gt;
+&lt;p&gt;Finally, back to the paper that originally inspired this article! I shelved this
+project some months ago due to work and personal life matters, but came back
+to it last month with some fresh ideas and a better intuition of where to look.
+Discouraged by the previous setbacks, I was questioning whether parser
+combinators in general were flexible enough to express parsers which were both
+permissive and fault-tolerant, while also emitting good hand-crafted
+diagnostics. But then I stumbled upon the &lt;a href=&quot;https:&#x2F;&#x2F;dl.acm.org&#x2F;doi&#x2F;10.1145&#x2F;3167132.3167261&quot;&gt;“Syntax error recovery in parsing
+expression grammars” (2018)&lt;&#x2F;a&gt; paper while scouring the ACM DL search
+engine for interesting articles last night.&lt;&#x2F;p&gt;
+&lt;p&gt;The authors of this paper actually managed to get pretty great results parsing
+the &lt;a href=&quot;https:&#x2F;&#x2F;www.lua.org&#x2F;&quot;&gt;Lua programming language&lt;&#x2F;a&gt; using a set of extended PEGs, producing excellent
+tailor-made diagnostics rivaling the automatic error recovering capabilities of
+their control, a top-down &lt;a href=&quot;https:&#x2F;&#x2F;en.wikipedia.org&#x2F;wiki&#x2F;LL_parser&quot;&gt;LL parser&lt;&#x2F;a&gt; generated by &lt;a href=&quot;https:&#x2F;&#x2F;www.antlr.org&#x2F;&quot;&gt;ANTLR&lt;&#x2F;a&gt;. Their techniques are
+similar to those outlined in &lt;a href=&quot;https:&#x2F;&#x2F;matklad.github.io&#x2F;2018&#x2F;06&#x2F;06&#x2F;modern-parser-generator.html&quot;&gt;this excellent blog post by @matklad&lt;&#x2F;a&gt;,
+prominent author of &lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;rust-analyzer&#x2F;rust-analyzer&quot;&gt;&lt;code&gt;rust-analyzer&lt;&#x2F;code&gt;&lt;&#x2F;a&gt; and &lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;matklad&#x2F;rowan&quot;&gt;&lt;code&gt;rowan&lt;&#x2F;code&gt;&lt;&#x2F;a&gt;, a library for lossless
+&lt;a href=&quot;https:&#x2F;&#x2F;en.wikipedia.org&#x2F;wiki&#x2F;Parse_tree&quot;&gt;concrete syntax trees&lt;&#x2F;a&gt;.&lt;&#x2F;p&gt;
+&lt;p&gt;And they managed to do all of this while not bailing out on the first parse
+error and still producing some kind of syntax tree &lt;em&gt;100% of the time&lt;&#x2F;em&gt; in all the
+cases they tested. And the final result still looks and feels like PEG. Quite
+promising stuff! 😍&lt;&#x2F;p&gt;
+&lt;p&gt;I was immediately excited by this paper since I knew that any error recovery
+strategy for PEG could potentially be applicable in a parser combinator library
+like &lt;code&gt;nom&lt;&#x2F;code&gt;, given that both approaches employ recursive descent. If you’re
+interested in the specific error recovery strategies used, I would strongly
+recommend you read the entire paper for yourself.&lt;&#x2F;p&gt;
+&lt;p&gt;I would also recommend looking at &lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;sqmedeiros&#x2F;lpeglabel&quot;&gt;LPegLabel&lt;&#x2F;a&gt;, a reference implementation of a
+PEG parser generator using these techniques developed by authors Medeiros and
+Mascarenhas, if you’d like a more concrete example.&lt;&#x2F;p&gt;
+&lt;p&gt;In general, though, it boils down to a few key principles:&lt;&#x2F;p&gt;
+&lt;ol&gt;
+&lt;li&gt;Parsing should &lt;em&gt;never&lt;&#x2F;em&gt; fail. If some kind of syntax tree isn’t produced, it’s
+considered a bug. Basically, the output of the top-level parser should be a
+&lt;code&gt;(T, Vec&amp;lt;Error&amp;gt;)&lt;&#x2F;code&gt;, not &lt;code&gt;Result&amp;lt;T, Vec&amp;lt;Error&amp;gt;&amp;gt;&lt;&#x2F;code&gt;. Also, your syntax tree should
+provide a fallback &lt;code&gt;Error&lt;&#x2F;code&gt; node type for representing invalid, unparseable
+expressions.&lt;&#x2F;li&gt;
+&lt;li&gt;The PEG rules describing your language are loosened and extended to include
+recovery expressions annotated by “labels” which basically ensures that
+parsing never fails. These recovery expressions emit error messages when
+evaluated but will silently allow parsing to continue unabated. Sometimes
+they skip forward a few tokens, but often the cursor just stays where it is.
+I’ll demonstrate a very basic recovery expression with implemented with &lt;code&gt;nom&lt;&#x2F;code&gt;
+later on.&lt;&#x2F;li&gt;
+&lt;li&gt;Synchronization tokens like &lt;code&gt;)&lt;&#x2F;code&gt;, &lt;code&gt;}&lt;&#x2F;code&gt;, and &lt;code&gt;;&lt;&#x2F;code&gt; are used to skip ahead through
+the text when necessary to avoid recovery expressions emitting spurious
+errors down the line after an earlier one has already fired.&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;p&gt;The first and third concepts aren’t really anything new in the academic space.
+Infallible parsing, special syntax tree nodes for marking errors, and the use of
+synchronization tokens for error recovery are common tactics used to great
+effect in hand-written recursive descent parsers, but this paper applies them
+nicely to PEG parsers (which in turn, I would apply to parser combinators)
+without sacrificing their declarative nature. It also provides a small library
+of handy recovery expressions you can use in different situations to either emit
+high quality errors or suppress them.&lt;&#x2F;p&gt;
+&lt;p&gt;Let’s take a look at a real world example of a fault-tolerant parser written
+in Rust using the &lt;code&gt;nom&lt;&#x2F;code&gt; 5.0 parser combinator library.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;demonstration&quot;&gt;Demonstration&lt;a class=&quot;zola-anchor&quot; href=&quot;#demonstration&quot; aria-label=&quot;Anchor link for: demonstration&quot;&gt;§&lt;&#x2F;a&gt;
+&lt;&#x2F;h2&gt;
+&lt;p&gt;The full source code for this demo can be found &lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;ebkalderon&#x2F;example-fault-tolerant-parser&quot;&gt;here&lt;&#x2F;a&gt; if you’d like to
+read the whole thing, but the idea is to apply the most basic error recovery
+strategies outlined in the paper for PEGs using parser combinators.&lt;&#x2F;p&gt;
+&lt;p&gt;Below are some Rust types and traits that we will use throughout our example:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;rust&quot; style=&quot;background-color:#2b2c2f;color:#cccece;&quot; class=&quot;language-rust &quot;&gt;&lt;code class=&quot;language-rust&quot; data-lang=&quot;rust&quot;&gt;&lt;span style=&quot;color:#c594c5;&quot;&gt;use &lt;&#x2F;span&gt;&lt;span&gt;std&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span&gt;ops&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span&gt;Range&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5f6364;&quot;&gt;&#x2F;&#x2F;&#x2F; This used in place of `&amp;amp;str` or `&amp;amp;[u8]` in our `nom` parsers.
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c594c5;&quot;&gt;type &lt;&#x2F;span&gt;&lt;span&gt;LocatedSpan&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;&amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c594c5;&quot;&gt;&amp;#39;a&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;&amp;gt; = &lt;&#x2F;span&gt;&lt;span&gt;nom_locate&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span&gt;LocatedSpan&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;&amp;lt;&amp;amp;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c594c5;&quot;&gt;&amp;#39;a str&lt;&#x2F;span&gt;&lt;span&gt;, State&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;&amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c594c5;&quot;&gt;&amp;#39;a&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;&amp;gt;&amp;gt;;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5f6364;&quot;&gt;&#x2F;&#x2F;&#x2F; Convenient type alias for `nom::IResult&amp;lt;I, O&amp;gt;` reduced to `IResult&amp;lt;O&amp;gt;`.
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c594c5;&quot;&gt;type &lt;&#x2F;span&gt;&lt;span&gt;IResult&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;&amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c594c5;&quot;&gt;&amp;#39;a&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;,&lt;&#x2F;span&gt;&lt;span&gt; T&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;&amp;gt; = &lt;&#x2F;span&gt;&lt;span&gt;nom&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span&gt;IResult&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;&amp;lt;&lt;&#x2F;span&gt;&lt;span&gt;LocatedSpan&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;&amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c594c5;&quot;&gt;&amp;#39;a&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;&amp;gt;&lt;&#x2F;span&gt;&lt;span&gt;, T&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;&amp;gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c594c5;&quot;&gt;trait &lt;&#x2F;span&gt;&lt;span&gt;ToRange &lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c594c5;&quot;&gt;fn &lt;&#x2F;span&gt;&lt;span style=&quot;color:#6699cc;&quot;&gt;to_range&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;(&amp;amp;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f99157;&quot;&gt;self&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;) -&amp;gt; &lt;&#x2F;span&gt;&lt;span&gt;Range&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;&amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c594c5;&quot;&gt;usize&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;&amp;gt;;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;}
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c594c5;&quot;&gt;impl&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;&amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c594c5;&quot;&gt;&amp;#39;a&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;&amp;gt;&lt;&#x2F;span&gt;&lt;span&gt; ToRange &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c594c5;&quot;&gt;for &lt;&#x2F;span&gt;&lt;span&gt;LocatedSpan&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;&amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c594c5;&quot;&gt;&amp;#39;a&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;&amp;gt; {
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c594c5;&quot;&gt;fn &lt;&#x2F;span&gt;&lt;span style=&quot;color:#6699cc;&quot;&gt;to_range&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;(&amp;amp;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f99157;&quot;&gt;self&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;) -&amp;gt; &lt;&#x2F;span&gt;&lt;span&gt;Range&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;&amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c594c5;&quot;&gt;usize&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;&amp;gt; {
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c594c5;&quot;&gt;let&lt;&#x2F;span&gt;&lt;span&gt; start &lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ec5f67;&quot;&gt;self&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#6699cc;&quot;&gt;location_offset&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;();
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c594c5;&quot;&gt;let&lt;&#x2F;span&gt;&lt;span&gt; end &lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;=&lt;&#x2F;span&gt;&lt;span&gt; start &lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;+ &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ec5f67;&quot;&gt;self&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#6699cc;&quot;&gt;fragment&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;().&lt;&#x2F;span&gt;&lt;span style=&quot;color:#6699cc;&quot;&gt;len&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;();
+&lt;&#x2F;span&gt;&lt;span&gt;        start&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;..&lt;&#x2F;span&gt;&lt;span&gt;end
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;}
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;}
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5f6364;&quot;&gt;&#x2F;&#x2F;&#x2F; Error containing a text span and an error message to display.
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;#[&lt;&#x2F;span&gt;&lt;span&gt;derive&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;(&lt;&#x2F;span&gt;&lt;span&gt;Debug&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;)]
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c594c5;&quot;&gt;struct &lt;&#x2F;span&gt;&lt;span&gt;Error&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;(&lt;&#x2F;span&gt;&lt;span&gt;Range&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;&amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c594c5;&quot;&gt;usize&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;&amp;gt;&lt;&#x2F;span&gt;&lt;span&gt;, String&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;);
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5f6364;&quot;&gt;&#x2F;&#x2F;&#x2F; Carried around in the `LocatedSpan::extra` field in
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5f6364;&quot;&gt;&#x2F;&#x2F;&#x2F; between `nom` parsers.
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;#[&lt;&#x2F;span&gt;&lt;span&gt;derive&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;(&lt;&#x2F;span&gt;&lt;span&gt;Clone&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;,&lt;&#x2F;span&gt;&lt;span&gt; Debug&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;)]
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c594c5;&quot;&gt;struct &lt;&#x2F;span&gt;&lt;span&gt;State&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;&amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c594c5;&quot;&gt;&amp;#39;a&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;&amp;gt;(&amp;amp;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c594c5;&quot;&gt;&amp;#39;a &lt;&#x2F;span&gt;&lt;span&gt;RefCell&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;&amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#fac863;&quot;&gt;Vec&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;&amp;lt;&lt;&#x2F;span&gt;&lt;span&gt;Error&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;&amp;gt;&amp;gt;);
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c594c5;&quot;&gt;impl&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;&amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c594c5;&quot;&gt;&amp;#39;a&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;&amp;gt; &lt;&#x2F;span&gt;&lt;span&gt;State&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;&amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c594c5;&quot;&gt;&amp;#39;a&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;&amp;gt; {
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#5f6364;&quot;&gt;&#x2F;&#x2F;&#x2F; Pushes an error onto the errors stack from within a `nom`
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#5f6364;&quot;&gt;&#x2F;&#x2F;&#x2F; parser combinator while still allowing parsing to continue.
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c594c5;&quot;&gt;pub fn &lt;&#x2F;span&gt;&lt;span style=&quot;color:#6699cc;&quot;&gt;report_error&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;(&amp;amp;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f99157;&quot;&gt;self&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f99157;&quot;&gt;error&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;:&lt;&#x2F;span&gt;&lt;span&gt; Error&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;) {
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ec5f67;&quot;&gt;self&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f99157;&quot;&gt;0.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#6699cc;&quot;&gt;borrow_mut&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;().&lt;&#x2F;span&gt;&lt;span style=&quot;color:#6699cc;&quot;&gt;push&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;(&lt;&#x2F;span&gt;&lt;span&gt;error&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;);
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;}
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;}
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Our top-level &lt;code&gt;parse()&lt;&#x2F;code&gt; function is defined as follows:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;rust&quot; style=&quot;background-color:#2b2c2f;color:#cccece;&quot; class=&quot;language-rust &quot;&gt;&lt;code class=&quot;language-rust&quot; data-lang=&quot;rust&quot;&gt;&lt;span style=&quot;color:#c594c5;&quot;&gt;pub fn &lt;&#x2F;span&gt;&lt;span style=&quot;color:#6699cc;&quot;&gt;parse&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f99157;&quot;&gt;source&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;: &amp;amp;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c594c5;&quot;&gt;str&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;) -&amp;gt; (&lt;&#x2F;span&gt;&lt;span&gt;Expr, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#fac863;&quot;&gt;Vec&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;&amp;lt;&lt;&#x2F;span&gt;&lt;span&gt;Error&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;&amp;gt;) {
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#5f6364;&quot;&gt;&#x2F;&#x2F;&#x2F; Store our error stack external to our `nom` parser here. It
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#5f6364;&quot;&gt;&#x2F;&#x2F;&#x2F; is wrapped in a `RefCell` so parser functions down the line
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#5f6364;&quot;&gt;&#x2F;&#x2F;&#x2F; can remotely push errors onto it as they run.
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c594c5;&quot;&gt;let&lt;&#x2F;span&gt;&lt;span&gt; errors &lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span&gt;RefCell&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span&gt;new&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#fac863;&quot;&gt;Vec&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span&gt;new&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;());
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c594c5;&quot;&gt;let&lt;&#x2F;span&gt;&lt;span&gt; input &lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span&gt;LocatedSpan&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span&gt;new_extra&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;(&lt;&#x2F;span&gt;&lt;span&gt;source&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;,&lt;&#x2F;span&gt;&lt;span&gt; State&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;(&amp;amp;&lt;&#x2F;span&gt;&lt;span&gt;errors&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;));
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c594c5;&quot;&gt;let &lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;(_,&lt;&#x2F;span&gt;&lt;span&gt; expr&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;) = &lt;&#x2F;span&gt;&lt;span style=&quot;color:#6699cc;&quot;&gt;all_consuming&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;(&lt;&#x2F;span&gt;&lt;span&gt;source_file&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;)(&lt;&#x2F;span&gt;&lt;span&gt;input&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;).&lt;&#x2F;span&gt;&lt;span style=&quot;color:#6699cc;&quot;&gt;expect&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;(&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#99c794;&quot;&gt;parser cannot fail&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;&amp;quot;);
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;(&lt;&#x2F;span&gt;&lt;span&gt;expr&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;,&lt;&#x2F;span&gt;&lt;span&gt; errors&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#6699cc;&quot;&gt;into_inner&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;())
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;}
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Notice how we &lt;code&gt;.expect()&lt;&#x2F;code&gt; on our all-consuming &lt;code&gt;source_file()&lt;&#x2F;code&gt; parser. Remember,
+if we fail to produce some kind of syntax tree and consume all of the input 100%
+of the time, that’s considered a bug in the parser.&lt;&#x2F;p&gt;
+&lt;p&gt;For the sake of example, I’ve implemented only one recovery expression outlined
+in the paper in the form of a custom parser combinator I call &lt;code&gt;expect()&lt;&#x2F;code&gt;. It
+looks like this:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;rust&quot; style=&quot;background-color:#2b2c2f;color:#cccece;&quot; class=&quot;language-rust &quot;&gt;&lt;code class=&quot;language-rust&quot; data-lang=&quot;rust&quot;&gt;&lt;span style=&quot;color:#5f6364;&quot;&gt;&#x2F;&#x2F;&#x2F; Evaluate `parser` and wrap the result in a `Some(_)`. Otherwise,
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5f6364;&quot;&gt;&#x2F;&#x2F;&#x2F; emit the  provided `error_msg` and return a `None` while allowing
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5f6364;&quot;&gt;&#x2F;&#x2F;&#x2F; parsing to continue.
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c594c5;&quot;&gt;fn &lt;&#x2F;span&gt;&lt;span style=&quot;color:#6699cc;&quot;&gt;expect&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;&amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c594c5;&quot;&gt;&amp;#39;a&lt;&#x2F;span&gt;&lt;span&gt;, F, E, T&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;&amp;gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f99157;&quot;&gt;parser&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;:&lt;&#x2F;span&gt;&lt;span&gt; F, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f99157;&quot;&gt;error_msg&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;:&lt;&#x2F;span&gt;&lt;span&gt; E&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;) -&amp;gt;&lt;&#x2F;span&gt;&lt;span&gt; impl Fn&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;(&lt;&#x2F;span&gt;&lt;span&gt;LocatedSpan&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;&amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c594c5;&quot;&gt;&amp;#39;a&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;&amp;gt;) -&amp;gt; &lt;&#x2F;span&gt;&lt;span&gt;IResult&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;&amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#fac863;&quot;&gt;Option&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;&amp;lt;&lt;&#x2F;span&gt;&lt;span&gt;T&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;&amp;gt;&amp;gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c594c5;&quot;&gt;where
+&lt;&#x2F;span&gt;&lt;span&gt;    F&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;:&lt;&#x2F;span&gt;&lt;span&gt; Fn&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;(&lt;&#x2F;span&gt;&lt;span&gt;LocatedSpan&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;&amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c594c5;&quot;&gt;&amp;#39;a&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;&amp;gt;)&lt;&#x2F;span&gt;&lt;span&gt; -&amp;gt; IResult&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;&amp;lt;&lt;&#x2F;span&gt;&lt;span&gt;T&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;&amp;gt;&lt;&#x2F;span&gt;&lt;span&gt;,
+&lt;&#x2F;span&gt;&lt;span&gt;    E&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;:&lt;&#x2F;span&gt;&lt;span&gt; ToString,
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c594c5;&quot;&gt;move &lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;|&lt;&#x2F;span&gt;&lt;span&gt;input&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;| &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c594c5;&quot;&gt;match &lt;&#x2F;span&gt;&lt;span style=&quot;color:#6699cc;&quot;&gt;parser&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;(&lt;&#x2F;span&gt;&lt;span&gt;input&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;) {
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#fac863;&quot;&gt;Ok&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;((&lt;&#x2F;span&gt;&lt;span&gt;remaining&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;,&lt;&#x2F;span&gt;&lt;span&gt; out&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;)) =&amp;gt; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#fac863;&quot;&gt;Ok&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;((&lt;&#x2F;span&gt;&lt;span&gt;remaining&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#fac863;&quot;&gt;Some&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;(&lt;&#x2F;span&gt;&lt;span&gt;out&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;))),
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#fac863;&quot;&gt;Err&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;(&lt;&#x2F;span&gt;&lt;span&gt;nom&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span&gt;Err&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span&gt;Error&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;((&lt;&#x2F;span&gt;&lt;span&gt;input&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;, _))) | &lt;&#x2F;span&gt;&lt;span style=&quot;color:#fac863;&quot;&gt;Err&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;(&lt;&#x2F;span&gt;&lt;span&gt;nom&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span&gt;Err&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span&gt;Failure&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;((&lt;&#x2F;span&gt;&lt;span&gt;input&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;, _))) =&amp;gt; {
+&lt;&#x2F;span&gt;&lt;span&gt;            &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c594c5;&quot;&gt;let&lt;&#x2F;span&gt;&lt;span&gt; err &lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;=&lt;&#x2F;span&gt;&lt;span&gt; Error&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;(&lt;&#x2F;span&gt;&lt;span&gt;input&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#6699cc;&quot;&gt;to_range&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;(),&lt;&#x2F;span&gt;&lt;span&gt; error_msg&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#6699cc;&quot;&gt;to_string&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;());
+&lt;&#x2F;span&gt;&lt;span&gt;            input&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;.&lt;&#x2F;span&gt;&lt;span&gt;extra&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#6699cc;&quot;&gt;report_error&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;(&lt;&#x2F;span&gt;&lt;span&gt;err&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;); &lt;&#x2F;span&gt;&lt;span style=&quot;color:#5f6364;&quot;&gt;&#x2F;&#x2F; Push error onto stack.
+&lt;&#x2F;span&gt;&lt;span&gt;            &lt;&#x2F;span&gt;&lt;span style=&quot;color:#fac863;&quot;&gt;Ok&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;((&lt;&#x2F;span&gt;&lt;span&gt;input&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#fac863;&quot;&gt;None&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;)) &lt;&#x2F;span&gt;&lt;span style=&quot;color:#5f6364;&quot;&gt;&#x2F;&#x2F; Parsing failed, but keep going.
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;}
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#fac863;&quot;&gt;Err&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;(&lt;&#x2F;span&gt;&lt;span&gt;err&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;) =&amp;gt; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#fac863;&quot;&gt;Err&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;(&lt;&#x2F;span&gt;&lt;span&gt;err&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;),
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;}
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;}
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;This is the realm where parser combinator libraries really shine. This
+&lt;code&gt;expect()&lt;&#x2F;code&gt; combinator can be composed with other parser functions and produce
+results which closely map to their PEG counterparts. Below is an example parser
+capable of parsing a parenthesized expression which uses &lt;code&gt;expect()&lt;&#x2F;code&gt; to report
+errors:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;rust&quot; style=&quot;background-color:#2b2c2f;color:#cccece;&quot; class=&quot;language-rust &quot;&gt;&lt;code class=&quot;language-rust&quot; data-lang=&quot;rust&quot;&gt;&lt;span style=&quot;color:#c594c5;&quot;&gt;fn &lt;&#x2F;span&gt;&lt;span style=&quot;color:#6699cc;&quot;&gt;paren&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f99157;&quot;&gt;input&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;:&lt;&#x2F;span&gt;&lt;span&gt; LocatedSpan&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;) -&amp;gt; &lt;&#x2F;span&gt;&lt;span&gt;IResult&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;&amp;lt;&lt;&#x2F;span&gt;&lt;span&gt;Expr&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;&amp;gt; {
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#5f6364;&quot;&gt;&#x2F;&#x2F; This approach of using `expect()` to annotate a parser
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#5f6364;&quot;&gt;&#x2F;&#x2F; with a message follows the original paper&amp;#39;s definition of
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#5f6364;&quot;&gt;&#x2F;&#x2F; labels annotating certain parts of the PEG grammar.
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c594c5;&quot;&gt;let&lt;&#x2F;span&gt;&lt;span&gt; paren &lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#6699cc;&quot;&gt;delimited&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;(
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c594c5;&quot;&gt;char&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;(&amp;#39;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#99c794;&quot;&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;&amp;#39;),
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#6699cc;&quot;&gt;expect&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;(&lt;&#x2F;span&gt;&lt;span&gt;expr&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;, &amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#99c794;&quot;&gt;expected expression after `(`&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;&amp;quot;),
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#6699cc;&quot;&gt;expect&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c594c5;&quot;&gt;char&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;(&amp;#39;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#99c794;&quot;&gt;)&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;&amp;#39;), &amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#99c794;&quot;&gt;missing `)`&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;&amp;quot;),
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;);
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#6699cc;&quot;&gt;map&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;(&lt;&#x2F;span&gt;&lt;span&gt;paren&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;, |&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f99157;&quot;&gt;inner&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;| {
+&lt;&#x2F;span&gt;&lt;span&gt;        Expr&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span&gt;Paren&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#fac863;&quot;&gt;Box&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span&gt;new&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;(&lt;&#x2F;span&gt;&lt;span&gt;inner&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#6699cc;&quot;&gt;unwrap_or&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;(&lt;&#x2F;span&gt;&lt;span&gt;Expr&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span&gt;Error&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;)))
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;})(&lt;&#x2F;span&gt;&lt;span&gt;input&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;)
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;}
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h2 id=&quot;results&quot;&gt;Results&lt;a class=&quot;zola-anchor&quot; href=&quot;#results&quot; aria-label=&quot;Anchor link for: results&quot;&gt;§&lt;&#x2F;a&gt;
+&lt;&#x2F;h2&gt;
+&lt;p&gt;The final results of this toy implementation were quite striking, consistently
+producing some very pretty parse results. Given a very trivial AST that looks
+like this:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;rust&quot; style=&quot;background-color:#2b2c2f;color:#cccece;&quot; class=&quot;language-rust &quot;&gt;&lt;code class=&quot;language-rust&quot; data-lang=&quot;rust&quot;&gt;&lt;span style=&quot;color:#5f6364;&quot;&gt;&#x2F;&#x2F;&#x2F; `foo`, `foo_bar`, `foo123`
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;#[&lt;&#x2F;span&gt;&lt;span&gt;derive&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;(&lt;&#x2F;span&gt;&lt;span&gt;Debug&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;)]
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c594c5;&quot;&gt;struct &lt;&#x2F;span&gt;&lt;span&gt;Ident&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;(&lt;&#x2F;span&gt;&lt;span&gt;String&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;);
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;#[&lt;&#x2F;span&gt;&lt;span&gt;derive&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;(&lt;&#x2F;span&gt;&lt;span&gt;Debug&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;)]
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c594c5;&quot;&gt;enum &lt;&#x2F;span&gt;&lt;span&gt;Expr &lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#5f6364;&quot;&gt;&#x2F;&#x2F;&#x2F; `(foo)`
+&lt;&#x2F;span&gt;&lt;span&gt;    Paren&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#fac863;&quot;&gt;Box&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;&amp;lt;&lt;&#x2F;span&gt;&lt;span&gt;Expr&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;&amp;gt;),
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#5f6364;&quot;&gt;&#x2F;&#x2F;&#x2F; `foo`
+&lt;&#x2F;span&gt;&lt;span&gt;    Ident&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;(&lt;&#x2F;span&gt;&lt;span&gt;Ident&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;),
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#5f6364;&quot;&gt;&#x2F;&#x2F;&#x2F; An unparseable, invalid expression.
+&lt;&#x2F;span&gt;&lt;span&gt;    Error&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;,
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5fb3b3;&quot;&gt;}
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;The following outputs were produced by calling &lt;code&gt;parse()&lt;&#x2F;code&gt;:&lt;&#x2F;p&gt;
+&lt;div class=&quot;table-auto&quot;&gt;
+&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th&gt;Input&lt;&#x2F;th&gt;&lt;th&gt;Produced syntax tree&lt;&#x2F;th&gt;&lt;th&gt;Errors&lt;&#x2F;th&gt;&lt;&#x2F;tr&gt;&lt;&#x2F;thead&gt;&lt;tbody&gt;
+&lt;tr&gt;&lt;td&gt;foo&lt;&#x2F;td&gt;&lt;td&gt;&lt;code&gt;Ident(Ident(&amp;quot;foo&amp;quot;))&lt;&#x2F;code&gt;&lt;&#x2F;td&gt;&lt;td&gt;&lt;code&gt;[]&lt;&#x2F;code&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;(foo)&lt;&#x2F;td&gt;&lt;td&gt;&lt;code&gt;Paren(Ident(Ident(&amp;quot;foo&amp;quot;)))&lt;&#x2F;code&gt;&lt;&#x2F;td&gt;&lt;td&gt;&lt;code&gt;[]&lt;&#x2F;code&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;(foo))&lt;&#x2F;td&gt;&lt;td&gt;&lt;code&gt;Paren(Ident(Ident(&amp;quot;foo&amp;quot;)))&lt;&#x2F;code&gt;&lt;&#x2F;td&gt;&lt;td&gt;&lt;code&gt;[Error(5..6, &amp;quot;expected EOF&amp;quot;)]&lt;&#x2F;code&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;(%&lt;&#x2F;td&gt;&lt;td&gt;&lt;code&gt;Paren(Error)&lt;&#x2F;code&gt;&lt;&#x2F;td&gt;&lt;td&gt;&lt;code&gt;[Error(1..2, &amp;quot;unexpected `%`&amp;quot;), Error(2..2, &amp;quot;missing `)`&amp;quot;)]&lt;&#x2F;code&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;(&lt;&#x2F;td&gt;&lt;td&gt;&lt;code&gt;Paren(Error)&lt;&#x2F;code&gt;&lt;&#x2F;td&gt;&lt;td&gt;&lt;code&gt;[Error(1..1, &amp;quot;expected expression after `(`&amp;quot;), Error(1..1, &amp;quot;missing `)`&amp;quot;)]&lt;&#x2F;code&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;%&lt;&#x2F;td&gt;&lt;td&gt;&lt;code&gt;Error&lt;&#x2F;code&gt;&lt;&#x2F;td&gt;&lt;td&gt;&lt;code&gt;[Error(0..1, &amp;quot;unexpected `%`&amp;quot;)]&lt;&#x2F;code&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;()&lt;&#x2F;td&gt;&lt;td&gt;&lt;code&gt;Paren(Error)&lt;&#x2F;code&gt;&lt;&#x2F;td&gt;&lt;td&gt;&lt;code&gt;[Error(1..2, &amp;quot;expected expression after `(`&amp;quot;)]&lt;&#x2F;code&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt; &lt;&#x2F;td&gt;&lt;td&gt;&lt;code&gt;Error&lt;&#x2F;code&gt;&lt;&#x2F;td&gt;&lt;td&gt;&lt;code&gt;[]&lt;&#x2F;code&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;&#x2F;tbody&gt;&lt;&#x2F;table&gt;
+&lt;&#x2F;div&gt;
+&lt;p&gt;These results are markedly better than what I had gotten with &lt;code&gt;nom&lt;&#x2F;code&gt; previously
+when I was relying on the built-in &lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;Geal&#x2F;nom&#x2F;blob&#x2F;master&#x2F;doc&#x2F;error_management.md&quot;&gt;custom error management&lt;&#x2F;a&gt; facilities, and the
+logic is significantly more declarative and understandable than the &lt;code&gt;Partial&amp;lt;T&amp;gt;&lt;&#x2F;code&gt;
+approach. And best of all, the final parsers are much shorter, easier to reason
+about, and are more directly analogous to their PEG equivalents, which makes the
+project much more maintainable in the long run.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;future-work&quot;&gt;Future work&lt;a class=&quot;zola-anchor&quot; href=&quot;#future-work&quot; aria-label=&quot;Anchor link for: future-work&quot;&gt;§&lt;&#x2F;a&gt;
+&lt;&#x2F;h2&gt;
+&lt;p&gt;The example shown above was intentionally designed very simply in order to
+demonstrate the core concepts from Medeiros’ and Mascarenhas’ 2018 paper applied
+to parser combinators with &lt;code&gt;nom&lt;&#x2F;code&gt;. In order to support parsing a complex
+programming language like Nix, I will need to translate more of the recovery
+expressions described in the paper to &lt;code&gt;nom&lt;&#x2F;code&gt; combinators. I will also need to
+investigate richer forms of error representation, possibly containing multiple
+spans, warnings, lints, etc.&lt;&#x2F;p&gt;
+&lt;p&gt;I should also add that the parser used in my actual project does not use
+&lt;code&gt;LocatedSpan&lt;&#x2F;code&gt;, but instead processes a custom &lt;code&gt;Tokens&amp;lt;&#x27;a&amp;gt;&lt;&#x2F;code&gt; type. Because of
+this, I can’t integrate the code used in this example into my project as-is. I
+will need to adapt it to work with this custom type, a topic which is considered
+out of scope for this particular post.&lt;&#x2F;p&gt;
+&lt;p&gt;I also didn’t cover incremental parsing nor concrete syntax trees (that much) in
+this guide, and I plan for &lt;code&gt;nix-parser&lt;&#x2F;code&gt; to produce a lossless concrete syntax
+tree (courtesy of &lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;matklad&#x2F;rowan&quot;&gt;&lt;code&gt;rowan&lt;&#x2F;code&gt;&lt;&#x2F;a&gt;) instead of an abstract syntax tree like the
+example.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;conclusion&quot;&gt;Conclusion&lt;a class=&quot;zola-anchor&quot; href=&quot;#conclusion&quot; aria-label=&quot;Anchor link for: conclusion&quot;&gt;§&lt;&#x2F;a&gt;
+&lt;&#x2F;h2&gt;
+&lt;p&gt;Implementing a parser with good error recovery strategies and rich,
+user-friendly diagnostics is as much an art as it is a science (I think the Rust
+compiler devs would agree). This is even more true when it comes to parsers
+catering to the needs of language servers, REPLs, and other interactive uses
+where you need to be very tolerant to parse errors and provide meaningful
+diagnostics in response to messy and incomplete input. I learned many valuable
+things on this journey, and I’m still learning further as I go along. For one, I
+need to brush up on my formal methods and re-read the paper a few more times to
+fully digest the information.&lt;&#x2F;p&gt;
+&lt;p&gt;I’m incredibly grateful to the &lt;a href=&quot;https:&#x2F;&#x2F;www.acm.org&#x2F;&quot;&gt;ACM&lt;&#x2F;a&gt; for having made their
+Digital Library open to the public during this global pandemic, and I’m also
+grateful to Sérgio Medeiros (UFRN, Brazil) and Fabio Mascarenhas (UFRJ, Brazil)
+for having produced the original research paper. I’m glad to have stumbled
+across it, and I learned some nice lessons out of it. If you’re a fan of PEG
+parsers and&#x2F;or parser combinators and you haven’t read this paper yet, please
+do. It’s pretty neat!&lt;&#x2F;p&gt;
+&lt;p&gt;In the meantime, I’ll be casually hacking away on &lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;ebkalderon&#x2F;nix-language-server&quot;&gt;&lt;code&gt;nix-language-server&lt;&#x2F;code&gt;&lt;&#x2F;a&gt;
+whenever I have some spare time, armed with plenty of useful knowledge and
+principles I didn’t have before. Maybe I’ll actually get to producing meaningful
+auto-completions and semantic analysis out of it for once, as soon as I can
+focus on traversing the syntax tree itself and building a usable interpreter for
+evaluating the language. 😛&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;external-links&quot;&gt;External links&lt;a class=&quot;zola-anchor&quot; href=&quot;#external-links&quot; aria-label=&quot;Anchor link for: external-links&quot;&gt;§&lt;&#x2F;a&gt;
+&lt;&#x2F;h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;https:&#x2F;&#x2F;dl.acm.org&#x2F;doi&#x2F;10.1145&#x2F;3167132.3167261&quot;&gt;“Syntax error recovery in parsing expression grammars”&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;ebkalderon&#x2F;example-fault-tolerant-parser&quot;&gt;Source code for demo&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;a href=&quot;https:&#x2F;&#x2F;matklad.github.io&#x2F;2018&#x2F;06&#x2F;06&#x2F;modern-parser-generator.html&quot;&gt;Modern Parser Generator&lt;&#x2F;a&gt; (&lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;matklad&quot;&gt;@matklad&lt;&#x2F;a&gt;)&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;dotnet&#x2F;roslyn&#x2F;wiki&#x2F;Roslyn-Overview#errors&quot;&gt;Roslyn Overview (.NET)&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;ebkalderon&#x2F;nix-language-server&quot;&gt;ebkalderon&#x2F;nix-language-server&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+</description>
+      </item>
+      <item>
+          <title>Introduction</title>
+          <pubDate>Sat, 19 Jan 2019 00:00:00 +0000</pubDate>
+          <author>Unknown</author>
+          <link>https://eyalkalderon.com/blog/introduction/</link>
+          <guid>https://eyalkalderon.com/blog/introduction/</guid>
+          <description>&lt;p&gt;Welcome to my new development blog! This is a place where I can record my
+thoughts on various topics, technical or otherwise. Conveying one’s own thought
+processes precisely and eloquently through text is a very valuable skill, and
+it’s one that only comes through practice.&lt;&#x2F;p&gt;
+&lt;p&gt;Notice that I wrote &lt;em&gt;new&lt;&#x2F;em&gt; development blog in the very first sentence of this
+post. That choice of words was quite intentional. I used to maintain a
+&lt;a href=&quot;https:&#x2F;&#x2F;nullpwd.wordpress.com&#x2F;&quot;&gt;personal WordPress blog&lt;&#x2F;a&gt; quite a few years ago, beginning in 2011. It was also
+the place where I announced the founding of the &lt;a href=&quot;https:&#x2F;&#x2F;nullpwd.wordpress.com&#x2F;2016&#x2F;01&#x2F;13&#x2F;starting-an-open-source-project&#x2F;&quot;&gt;Amethyst&lt;&#x2F;a&gt; game engine project,
+which happened to also be my last post to date. Crafting articles, writing
+guides, and posting them for the world to see was great fun, though, and I’d
+like to start doing that again.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;a-note-about-platforms&quot;&gt;A note about platforms&lt;a class=&quot;zola-anchor&quot; href=&quot;#a-note-about-platforms&quot; aria-label=&quot;Anchor link for: a-note-about-platforms&quot;&gt;§&lt;&#x2F;a&gt;
+&lt;&#x2F;h2&gt;
+&lt;p&gt;WordPress holds a special place in my heart as a familiar, venerable, and
+flexible &lt;abbr title=&quot;content management system&quot;&gt;CMS&lt;&#x2F;abbr&gt; and blog platform.
+but I feel as though I have outgrown it in the past few years. Underneath its
+appealing interface, there is an incredible amount of hidden complexity that
+sometimes rears its ugly head if you go poking around deep enough. This isn’t a
+bad thing, as WordPress is intended as a premier tool for crafting all sorts of
+professional websites. However, I simply have no need for 99% of the features it
+offers, and since I have grown increasingly comfortable working with Git and the
+terminal, I would personally rather write &lt;a href=&quot;https:&#x2F;&#x2F;daringfireball.net&#x2F;projects&#x2F;markdown&#x2F;syntax&quot;&gt;Markdown&lt;&#x2F;a&gt; in simple text files
+committed to version control than have to deal with WordPress’ idiosyncrasies.&lt;&#x2F;p&gt;
+&lt;p&gt;As such, I have decided to re-launch my personal blog as a static site hosted on
+&lt;a href=&quot;https:&#x2F;&#x2F;pages.github.com&#x2F;&quot;&gt;GitHub Pages&lt;&#x2F;a&gt; using &lt;a href=&quot;https:&#x2F;&#x2F;www.getzola.org&#x2F;&quot;&gt;Zola&lt;&#x2F;a&gt; as my preferred static site generator. I chose to
+use Zola over a more established tool like &lt;a href=&quot;https:&#x2F;&#x2F;jekyllrb.com&#x2F;&quot;&gt;Jekyll&lt;&#x2F;a&gt;, which GitHub Pages has
+native support for, because I enjoy the lack of external dependencies required
+by Zola itself, the simple TOML-based configuration, and its subjectively
+cleaner project layout. Plus, it’s written in &lt;a href=&quot;https:&#x2F;&#x2F;www.rust-lang.org&#x2F;&quot;&gt;Rust&lt;&#x2F;a&gt;, a programming language
+which I happen to personally enjoy.&lt;&#x2F;p&gt;
+&lt;p&gt;This new blog is deployed automatically through &lt;a href=&quot;https:&#x2F;&#x2F;travis-ci.org&#x2F;&quot;&gt;Travis CI&lt;&#x2F;a&gt; and the source code
+is available as free and open source software on GitHub (&lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;ebkalderon&#x2F;ebkalderon.github.io&#x2F;&quot;&gt;repository link&lt;&#x2F;a&gt;).
+Feel free to peruse through the source, if you’d like. If you’d like to get in
+touch with me, hit me up on any of these &lt;a href=&quot;https:&#x2F;&#x2F;eyalkalderon.com&#x2F;about&#x2F;&quot;&gt;social links&lt;&#x2F;a&gt;.&lt;&#x2F;p&gt;
+</description>
+      </item>
+    </channel>
+</rss>
