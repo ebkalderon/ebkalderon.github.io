@@ -15,7 +15,7 @@ jobs:
     - name: Checkout
       uses: actions/checkout@master
     - name: Compile resume.tex
-      uses: xu-cheng/latex-action@v2
+      uses: xu-cheng/latex-action@v3
       with:
         root_file: resume.tex
         working_directory: resume/
@@ -26,10 +26,10 @@ jobs:
       uses: shalzz/zola-deploy-action@master
       env:
         BUILD_DIR: .
-        TOKEN: ${{ secrets.TOKEN }}
+        TOKEN: ${{ secrets.GITHUB_TOKEN }}
         BUILD_ONLY: true
     - name: Upload preview resume.pdf
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: resume-pdf-preview
         path: static/resume.pdf
@@ -54,4 +54,4 @@ jobs:
       env:
         PAGES_BRANCH: gh-pages
         BUILD_DIR: .
-        TOKEN: ${{ secrets.TOKEN }}
+        TOKEN: ${{ secrets.GITHUB_TOKEN }}

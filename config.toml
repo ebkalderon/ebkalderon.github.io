@@ -6,9 +6,9 @@ title = "Eyal Kalderon"
 description = "If you listen to a UNIX shell, can you hear the C?"
 
 default_language = "en"
-generate_feed = true
-rss_limit = 20
-feed_filename = "rss.xml"
+generate_feeds = true
+feed_limit = 20
+feed_filenames = ["rss.xml"]
 
 taxonomies = [
     { name = "tags" },
