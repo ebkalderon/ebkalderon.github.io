@@ -37,7 +37,7 @@ by GitHub Pages.
 
 ## License
 
-Copyright © 2023 Eyal Kalderon. All rights reserved, except for the parts
+Copyright © 2025 Eyal Kalderon. All rights reserved, except for the parts
 enumerated below:
 
 * The page content, i.e. the `content` directory, is licensed under the terms of

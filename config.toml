@@ -29,7 +29,7 @@ show_tags = true
 theme_color = "orange"
 center = true
 favicon = "/img/favicon.png"
-copyright = "© 2022 Eyal Kalderon :: CC BY-SA<br>:: If you listen to a UNIX shell, can you hear the C?"
+copyright = "Eyal Kalderon :: CC BY-SA<br>:: If you listen to a UNIX shell, can you hear the C?"
 logo_text = "eyal kalderon"
 
 main_menu = [
