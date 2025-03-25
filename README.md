@@ -2,7 +2,7 @@
 
 [![Build Status][gbadge]][glink] [![CC BY-SA License][lbadge]][llink]
 
-[gbadge]: https://github.com/ebkalderon/ebkalderon.github.io/workflows/zola/badge.svg?branch=master
+[gbadge]: https://github.com/ebkalderon/ebkalderon.github.io/workflows/zola/badge.svg
 [glink]: https://github.com/ebkalderon/ebkalderon.github.io/actions
 
 [lbadge]: https://img.shields.io/badge/license-CC_BY--SA-blue.svg
