@@ -1,11 +1,5 @@
 {% extends "zerm/templates/page.html" -%}
 
-{%- block math -%}
-  {% if page.extra.math %}
-  {{ head::katex() }}
-  {% endif %}
-{%- endblock math -%}
-
 {%- block main -%}
     <article class="post">
         <header>
