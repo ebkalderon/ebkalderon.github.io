@@ -10,11 +10,11 @@ categories = ["research"]
 So, I was [nerd-sniped](https://www.urbandictionary.com/define.php?term=nerd-snipe)
 on Reddit a bit over a week ago.
 
-[Someone posted on **r/webdev**][reddit-post] asking whether it would be possible
-to archive a certain HTML5 game locally for offline play, similar to how folks
-used to [archive Flash games] by downloading the embedded `.swf` file, back in
-the early days of the Web. None of the other answers seemed particularly helpful
-at the time, so I decided to take a stab at it.
+[Someone posted on **r/webdev**][reddit-post] asking whether it would be
+possible to archive a certain HTML5 game locally for offline play, similar to
+how folks used to [archive Flash games] by downloading the embedded `.swf` file,
+back in the early days of the Web. None of the other answers seemed particularly
+helpful at the time, so I decided to take a stab at it.
 
 Below is a recounting of my original thought process while approaching this
 problem, from beginning to end.
@@ -22,12 +22,13 @@ problem, from beginning to end.
 [reddit-post]: https://www.reddit.com/r/webdev/comments/ypxyyb/comment/ivn0o5w/?context=8&depth=9
 [archive Flash games]: https://www.makeuseof.com/tag/download-run-flash-games/
 
-
-> **Disclaimer:** This post is intended for educational and non-commercial
-> [fair use] purposes only. If you're impatient,
-> [skip ahead to the TL;DR section](#tl-dr) for a list of steps.
+{% admonition(type="warning", title="DISCLAIMER") %}
+This post is intended for educational and non-commercial [fair use] purposes
+only. If you're impatient, [skip ahead to the TL;DR section](#tl-dr) for a list
+of steps.
 
 [fair use]: https://ogc.harvard.edu/pages/copyright-and-fair-use
+{% end %}
 
 ## A first attempt
 
