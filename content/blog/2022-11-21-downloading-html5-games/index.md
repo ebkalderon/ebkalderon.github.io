@@ -1,7 +1,6 @@
 +++
 title = "Downloading HTML5 games for offline play"
 description = "A guide to downloading HTML5 games and playing them locally. Assumes some basic knowledge of Bash and Python. This was a fun exercise!"
-date = "2022-11-21"
 
 [taxonomies]
 tags = ["html5", "games", "webdev"]
