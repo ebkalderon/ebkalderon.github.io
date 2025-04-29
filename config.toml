@@ -1,6 +1,6 @@
 base_url = "https://eyalkalderon.com"
-compile_sass = false
 theme = "zerm"
+compile_sass = true
 
 title = "Eyal Kalderon"
 description = "If you listen to a UNIX shell, can you hear the C?"

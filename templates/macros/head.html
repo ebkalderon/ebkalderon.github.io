@@ -13,6 +13,7 @@
 
 {% macro styling() %}
     <link rel="stylesheet" href="{{ get_url(path="style.css", cachebust=true) }}">
+    <link rel="stylesheet" href="{{ get_url(path="admonitions.css", cachebust=true) }}">
     {% if config.extra.theme_color != "orange" -%}
         {% set color = "color/" ~ config.extra.theme_color ~ ".css" -%}
         <link rel="stylesheet" href="{{ get_url(path=color, cachebust=true) }}">
