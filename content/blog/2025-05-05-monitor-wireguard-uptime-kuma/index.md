@@ -69,16 +69,19 @@ Here's how I implemented this.
 3. Create a new unprivileged user account named `uptime-kuma`. You could skip
    this step and use the existing root account instead in later steps, but I
    would strongly discourage that.
-4. Create a new [API key] for the `uptime-kuma` user by clicking the small button
-   with the icon resembling a movie ticket, titled "Create and download API key
-   for this user".
-5. This open a dialog prompting you to save a new text file titled
+4. Create a new [API key] for the `uptime-kuma` user by clicking the small
+   button with the icon resembling a movie ticket, titled "Create and download
+   API key for this user".
+5. This opens a dialog prompting you to save a new text file titled
    `$HOSTNAME_$USER_apikey.txt`. This text file contains two lines of the form:
 
    ```text
    key=JS/mNJWMxquktkUrqDZGWUMyuBpsnNPzlxOdYtLq/RnBJqHWMFBApAeaitVQcaTbqGuzPMZdPFzdaYlp
    secret=LsJqFYgTXqXoFjyRReLlUxeyyMIMtyDjoCChJIZwE+eEjUMOF/tSPsKcUiXZzdKVsOkej/UWLCJWEBqb
    ```
+
+   Save this file locally for the time being, but be prepared to securely delete
+   it later once you're finished configuring Uptime Kuma.
 
    {% admonition(type="warning") %}
    Both values for `key=` and `secret=` shown above are just randomly generated
@@ -88,9 +91,6 @@ Here's how I implemented this.
    I'm sure this doesn't need to be said, but please do not leak your actual API
    keys to the web!
    {% end %}
-
-   Save this file locally for the time being, but be prepared to securely delete
-   it later once you're finished configuring Uptime Kuma.
 6. Confirm the API key works as expected by running the following `curl` command
    in an open terminal:
 
