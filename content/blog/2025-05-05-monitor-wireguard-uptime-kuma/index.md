@@ -5,6 +5,9 @@ description = "Tutorial explaining how to monitor a Wireguard VPN endpoint in Up
 [taxonomies]
 tags = ["devops", "homelab", "monitoring", "opnsense"]
 categories = ["research"]
+
+[extra]
+og_preview_img = "wireguard-monitor-in-dashboard.png"
 +++
 
 {{ figure(src="wireguard-monitor-in-dashboard.png", caption="Screenshot of Wireguard monitor in Uptime Kuma dashboard") }}
