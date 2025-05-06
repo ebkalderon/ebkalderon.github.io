@@ -14,22 +14,24 @@ og_preview_img = "wireguard-monitor-in-dashboard.png"
 
 I use [Uptime Kuma](https://github.com/louislam/uptime-kuma) to monitor the
 status of all self-hosted services that run in my homelab. With one notable
-exception: my public-facing [Wireguard VPN](https://www.wireguard.com/), which
-cannot easily be monitored by Uptime Kuma.
+exception: my public-facing [Wireguard](https://www.wireguard.com/) VPN, which
+cannot easily be monitored by Uptime Kuma. Just see the comments on [this GitHub
+issue](https://github.com/louislam/uptime-kuma/issues/4350) for instance.
 
 This is because the Wireguard protocol is built on top of UDP instead of TCP.
 Unlike TCP, UDP is _connectionless_, which means it completely lacks the notion
 of a persistent "connection" existing between two peers, much less whether that
 connection is currently "up" or "down". Even if I know the precise hostname and
 port number where my Wireguard VPN is hosted, there is no guarantee that that
-endpoint will respond to whatever UDP packets I throw at it. In fact, Wireguard
-will completely ignore _all_ network traffic that doesn't originate from an
-authorized VPN client (or "peer" in Wireguard parlance). This is entirely by
-design; any protocol chatter conducted prior to the establishment of the VPN
-tunnel is a potential attack vector, so the Wireguard protocol takes the ["loose
-lips sink ships"] approach and simply doesn't expose health checks at all. This
-is great for security, but annoying for me trying to build a status monitoring
-solution.
+endpoint will respond to whatever UDP packets I throw at it.
+
+In fact, Wireguard will completely ignore _all_ network traffic that doesn't
+originate from an authorized VPN client (or "peer" in Wireguard parlance). This
+is entirely by design; any protocol chatter conducted prior to the establishment
+of the VPN tunnel is a potential attack vector, so the Wireguard protocol takes
+the ["loose lips sink ships"] approach and simply doesn't expose health checks
+at all. This is great for security, but annoying for me trying to build a status
+monitoring solution.
 
 ["loose lips sink ships"]: https://en.wikipedia.org/wiki/Loose_lips_sink_ships
 
