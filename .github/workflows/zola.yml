@@ -23,7 +23,7 @@ jobs:
         post_compile: |
           cp ./resume.pdf ../static/
     - name: Build only
-      uses: shalzz/zola-deploy-action@master
+      uses: shalzz/zola-deploy-action@v0.20.0
       env:
         BUILD_DIR: .
         TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -50,7 +50,7 @@ jobs:
         post_compile: |
           cp ./resume.pdf ../static/
     - name: Build and deploy
-      uses: shalzz/zola-deploy-action@master
+      uses: shalzz/zola-deploy-action@v0.20.0
       env:
         PAGES_BRANCH: gh-pages
         BUILD_DIR: .
