@@ -27,7 +27,7 @@
 
 {% macro favicon() %}
     {%- if config.extra.favicon is defined -%}
-        <link rel="shortcut icon" href="{{ get_url(path=config.extra.favicon) }}" type="image/x-icon" />
+        <link rel="shortcut icon" href="{{ get_url(path=config.extra.favicon) }}" type="image/x-icon">
     {%- endif -%}
 {% endmacro favicon %}
 
@@ -41,9 +41,9 @@
     <meta http-equiv="content-type" content="text/html; charset=utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
     {%- if page.title -%}
-        <meta name="description" content="{{ config.description }} {{ page.title }} {{ page.description }}"/>
+        <meta name="description" content="{{ config.description }} {{ page.title }} {{ page.description }}">
     {%- else -%}
-        <meta name="description" content="{{ config.description }}"/>
+        <meta name="description" content="{{ config.description }}">
     {%- endif -%}
 
     {%- if page.taxonomies.tags or page.taxonomies.categories -%}
@@ -61,11 +61,11 @@
                     {{ tag }}, {% endif -%}
             {%- endfor -%}
         {%- endif -%}
-        " />
+        " >
     {%- endif -%}
 
     <meta name="fediverse:creator" content="@ebkalderon@hachyderm.io">
-    <link rel="me" href="https://hachyderm.io/@ebkalderon" />
+    <link rel="me" href="https://hachyderm.io/@ebkalderon">
 {% endmacro general_meta %}
 
 {% macro katex() %}
