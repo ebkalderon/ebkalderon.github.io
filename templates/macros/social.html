@@ -6,7 +6,12 @@
     {%- endif -%}
     <meta property="og:description" content="{{ social::og_description() }}">
     {%- if config.extra.og_preview_img -%}
-        <meta property="og:image" content="{{ get_url(path=config.extra.og_preview_img) }}">
+        {%- set image = resize_image(path=config.extra.og_preview_img, width=1200, height=630, op="fit") -%}
+        <meta property="og:image" content="{{ image.url }}">
+    {%- elif page.extra.og_preview_img -%}
+        {%- set path = page.colocated_path ~ page.extra.og_preview_img -%}
+        {%- set image = resize_image(path=path, width=1200, height=630, op="fit") -%}
+        <meta property="og:image" content="{{ image.url }}">
     {%- endif -%}
 {% endmacro og_preview %}
 
