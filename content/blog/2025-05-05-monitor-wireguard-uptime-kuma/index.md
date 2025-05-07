@@ -273,7 +273,7 @@ I should really write a separate post diving into the hardware I'm currently
 using to power the extremely overkill 10 Gbps network I have at home, including
 the tiny-but-mighty DIY OPNsense router acting as the backbone behind it all.
 I'm pretty proud of it when considering the space constraints of the small
-network closet in my home. Perhaps some other day... ❧
+network closet in my home. Perhaps some other day...
 
 ---
 
