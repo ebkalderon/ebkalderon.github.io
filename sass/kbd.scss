@@ -1,0 +1,21 @@
+// Copyright (c) 2025 Radek Kozieł
+// Derived from this stylesheet from hugo-theme-terminal:
+// https://github.com/panr/hugo-theme-terminal/blob/855bbc2/assets/css/main.css#L275-L296
+
+kbd {
+    font-family: 'Fira Code' !important;
+    font-feature-settings: normal;
+    background: color-mix(in srgb, var(--color) 5%, transparent);
+    border: 1px solid color-mix(in srgb, var(--border-color) 10%, transparent);
+    padding: 1px 6px;
+    margin: 0 2px;
+    font-size: calc(1rem * 0.95);
+}
+
+kbd {
+    border-top: 1px solid color-mix(in srgb, var(--accent) 25%, transparent);
+    border-left: 1px solid var(--accent);
+    border-right: 1px solid var(--accent);
+    border-bottom: 4px solid var(--accent);
+    border-radius: 4px;
+}
