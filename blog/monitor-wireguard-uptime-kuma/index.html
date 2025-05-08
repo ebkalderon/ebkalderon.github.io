@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+    <title>Monitoring Wireguard in Uptime Kuma (with OPNsense) - Eyal Kalderon</title>
+    
+    
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1"><meta name="description" content="If you listen to a UNIX shell, can you hear the C? Monitoring Wireguard in Uptime Kuma (with OPNsense) Tutorial explaining how to monitor a Wireguard VPN endpoint in Uptime Kuma using the OPNsense API."><meta name="keywords" content="research, devops, homelab, monitoring, opnsense" ><meta name="fediverse:creator" content="@ebkalderon@hachyderm.io">
+    <link rel="me" href="https://hachyderm.io/@ebkalderon">
+
+    <meta property="og:title" content="Eyal Kalderon -&nbsp;Monitoring Wireguard in Uptime Kuma (with OPNsense)">
+    <meta property="og:type" content="website"><meta property="og:url" content="https:&#x2F;&#x2F;eyalkalderon.com&#x2F;blog&#x2F;monitor-wireguard-uptime-kuma&#x2F;"><meta property="og:description" content="Tutorial explaining how to monitor a Wireguard VPN endpoint in Uptime Kuma using the OPNsense API."><meta property="og:image" content="https:&#x2F;&#x2F;eyalkalderon.com&#x2F;processed_images&#x2F;wireguard-monitor-in-dashboard.f378e0fe786ba59d.png">
+    <link rel="preload" href="https://eyalkalderon.com/assets/fonts/FiraCode-Regular.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+    <link rel="preload" href="https://eyalkalderon.com/assets/fonts/FiraCode-Bold.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="https://eyalkalderon.com/style.css?h=97e262212a0704163528">
+    <link rel="stylesheet" href="https://eyalkalderon.com/admonitions.css?h=86e4c483ae35e6fd370e">
+    <link rel="stylesheet" href="https://eyalkalderon.com/kbd.css?h=64c64a6860a82a4f8af4">
+    <link rel="stylesheet" href=" https://eyalkalderon.com/color/orange.css?h=a5a5d7faf9d4bc3e0b18">
+    
+<link rel="shortcut icon" href="https://eyalkalderon.com/img/favicon.png" type="image/x-icon"><link rel="alternate" type="application/rss+xml" title="Eyal Kalderon RSS" href="https://eyalkalderon.com/rss.xml"></head>
+    <body>
+        <div class="container center">
+<header class="header">
+    <div class="header__inner">
+        <div class="header__logo">
+            <a href="https:&#x2F;&#x2F;eyalkalderon.com">
+    <div class="logo">
+        eyal kalderon
+    </div>
+</a>
+        </div>
+        <div class="menu-trigger">menu</div>
+    </div>
+    
+    <nav class="menu">
+        <ul class="menu__inner menu__inner--desktop">
+            
+            
+        <li>
+            <a href="
+    
+        https://eyalkalderon.com
+    
+">home</a>
+        </li>
+        <li>
+            <a href="
+    
+        https://eyalkalderon.com/about
+    
+">about</a>
+        </li>
+        <li>
+            <a href="
+    
+        https://eyalkalderon.com/projects
+    
+">projects</a>
+        </li>
+        <li>
+            <a href="
+    
+        https://eyalkalderon.com/resume.pdf
+    
+">résumé</a>
+        </li>
+        <li>
+            <a href="
+    
+        https://eyalkalderon.com/rss.xml
+    
+">rss</a>
+        </li></ul>
+
+        <ul class="menu__inner menu__inner--mobile">
+            
+        <li>
+            <a href="
+    
+        https://eyalkalderon.com
+    
+">home</a>
+        </li>
+        <li>
+            <a href="
+    
+        https://eyalkalderon.com/about
+    
+">about</a>
+        </li>
+        <li>
+            <a href="
+    
+        https://eyalkalderon.com/projects
+    
+">projects</a>
+        </li>
+        <li>
+            <a href="
+    
+        https://eyalkalderon.com/resume.pdf
+    
+">résumé</a>
+        </li>
+        <li>
+            <a href="
+    
+        https://eyalkalderon.com/rss.xml
+    
+">rss</a>
+        </li>
+        </ul>
+    </nav>
+
+    </header>
+<div class="content"><article class="post">
+        <header>
+            <h1 class="post-title">
+                <a href="https:&#x2F;&#x2F;eyalkalderon.com&#x2F;blog&#x2F;monitor-wireguard-uptime-kuma&#x2F;">Monitoring Wireguard in Uptime Kuma (with OPNsense)</a>
+            </h1>
+            
+    <div class="post-meta">
+        <span class="post-date">2025.05.05
+                </span>
+
+        <span class="post-author"></span>
+
+        
+
+    
+    :: {<a href="https://eyalkalderon.com/categories/research/">research</a>} 
+
+            
+    ::
+    #<a href="https://eyalkalderon.com/tags/devops/">devops</a>
+        
+    #<a href="https://eyalkalderon.com/tags/homelab/">homelab</a>
+        
+    #<a href="https://eyalkalderon.com/tags/monitoring/">monitoring</a>
+        
+    #<a href="https://eyalkalderon.com/tags/opnsense/">opnsense</a>
+        
+    
+            
+        
+    </div>
+
+            
+    
+</header>
+  <figure class="center" >
+    <img src="wireguard-monitor-in-dashboard.png" />
+    
+      <figcaption class="center">Screenshot of Wireguard monitor in the Uptime Kuma dashboard</figcaption>
+    
+  </figure>
+
+<p>I use <a href="https://github.com/louislam/uptime-kuma">Uptime Kuma</a> to monitor the
+status of all self-hosted services that run in my homelab. With one notable
+exception: my public-facing <a href="https://www.wireguard.com/">Wireguard</a> VPN, which
+cannot easily be monitored by Uptime Kuma. Just see the comments on <a href="https://github.com/louislam/uptime-kuma/issues/4350">this GitHub
+issue</a> for instance.</p>
+<p>This is because the Wireguard protocol is built on top of UDP instead of TCP.
+Unlike TCP, UDP is <em>connectionless</em>, which means it completely lacks the notion
+of a persistent “connection” existing between two peers, much less whether that
+connection is currently “up” or “down”. Even if I know the precise hostname and
+port number where my Wireguard VPN is hosted, there is no guarantee that that
+endpoint will respond to whatever UDP packets I throw at it.</p>
+<p>In fact, Wireguard will completely ignore <em>all</em> network traffic that doesn’t
+originate from an authorized VPN client (or “peer” in Wireguard parlance). This
+is entirely by design; any protocol chatter conducted prior to the establishment
+of the VPN tunnel is a potential attack vector, so the Wireguard protocol takes
+the <a href="https://en.wikipedia.org/wiki/Loose_lips_sink_ships">“loose lips sink ships”</a> approach and simply doesn’t expose health checks
+at all. This is great for security, but annoying for me trying to build a status
+monitoring solution.</p>
+<h1 id="initial-approach">Initial Approach<a class="zola-anchor" href="#initial-approach" aria-label="Anchor link for: initial-approach">§</a>
+</h1>
+<p>One brain-dead simple approach to checking the health of a Wireguard VPN
+endpoint to simply try connecting to it as a client, and then confirm that the
+endpoint is functional by pinging one or more hosts across the <code>wg0</code> network
+interface and seeing if they respond. While this heuristic seems sufficient for
+my needs and straightforward on the surface, this wasn’t something I wanted to
+do.</p>
+<p>My Uptime Kuma instance runs inside a Docker container, and I didn’t feel like
+messing with Docker’s network routing rules. Furthermore, the Wireguard instance
+I want to monitor runs directly on my <a href="https://opnsense.org/">OPNsense</a>
+firewall, which also acts as my home network’s backbone router, and the server
+where Uptime Kuma is running sits <em>behind</em> that same OPNsense firewall. This
+poses a problem: the aforementioned health check would fail to catch the <em>very</em>
+common case where there’s an Internet outage at my home. Because both Uptime
+Kuma and the Wireguard endpoint would still be able to communicate over LAN, the
+VPN status check would erroneously remain green.</p>
+<h1 id="eventual-solution">Eventual Solution<a class="zola-anchor" href="#eventual-solution" aria-label="Anchor link for: eventual-solution">§</a>
+</h1>
+<p>I decided to take a completely different approach. I wrote two simple Uptime
+Kuma monitors which query the <a href="https://docs.opnsense.org/development/api.html">OPNsense REST API</a> to check whether my home VPN
+is currently up or down. It boils down to checking the following conditions:</p>
+<ol>
+<li>Check whether the Wireguard service in OPNsense is healthy.</li>
+<li>Check whether the WAN interface’s IPv4 gateway is online.</li>
+</ol>
+<p>Here’s how I implemented this.</p>
+<h2 id="configuring-opnsense">Configuring OPNsense<a class="zola-anchor" href="#configuring-opnsense" aria-label="Anchor link for: configuring-opnsense">§</a>
+</h2>
+<ol>
+<li>
+<p>Log into the OPNsense management GUI as the root user.</p>
+</li>
+<li>
+<p>Navigate to <code>System</code> &gt; <code>Access</code> &gt; <code>Users</code>.</p>
+</li>
+<li>
+<p>Create a new unprivileged user account named <code>uptime-kuma</code>. You could skip
+this step and use the existing root account instead in later steps, but I
+would strongly discourage that.</p>
+</li>
+<li>
+<p>Create a new <a href="https://docs.opnsense.org/manual/how-tos/user-local.html#creating-and-maintainging-api-keys">API key</a> for the <code>uptime-kuma</code> user by clicking the small
+button with the icon resembling a movie ticket, titled “Create and download
+API key for this user”.</p>
+</li>
+<li>
+<p>This opens a dialog prompting you to save a new text file titled
+<code>$HOSTNAME_$USER_apikey.txt</code>. This text file contains two lines of the form:</p>
+<pre data-lang="text" style="background-color:#2b2c2f;color:#cccece;" class="language-text "><code class="language-text" data-lang="text"><span>key=JS/mNJWMxquktkUrqDZGWUMyuBpsnNPzlxOdYtLq/RnBJqHWMFBApAeaitVQcaTbqGuzPMZdPFzdaYlp
+</span><span>secret=LsJqFYgTXqXoFjyRReLlUxeyyMIMtyDjoCChJIZwE+eEjUMOF/tSPsKcUiXZzdKVsOkej/UWLCJWEBqb
+</span></code></pre>
+<p>Save this file locally for the time being, but be prepared to securely delete
+it later once you’re finished configuring Uptime Kuma.</p>
+
+
+<div class="admonition warning">
+    <div class="admonition-icon admonition-icon-warning"></div>
+    <div class="admonition-content">
+        <strong class="admonition-title">WARNING</strong>
+        <p>Both values for <code>key=</code> and <code>secret=</code> shown above are just randomly generated
+nonsense used purely for demonstration purposes. With that said, they do
+visually resemble valid OPNsense API keys.</p>
+<p>I’m sure this doesn’t need to be said, but please do not leak your actual API
+keys to the web!</p>
+
+    </div>
+</div>
+</li>
+<li>
+<p>Confirm the API key works as expected by running the following <code>curl</code> command
+in an open terminal:</p>
+<pre data-lang="bash" style="background-color:#2b2c2f;color:#cccece;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#6699cc;">curl</span><span style="color:#5fb3b3;"> -</span><span style="color:#f99157;">k</span><span style="color:#5fb3b3;"> -</span><span style="color:#f99157;">u </span><span style="color:#5fb3b3;">&quot;$(</span><span style="color:#6699cc;">cut</span><span style="color:#5fb3b3;"> -</span><span style="color:#f99157;">d </span><span style="color:#5fb3b3;">&#39;</span><span style="color:#99c794;">=</span><span style="color:#5fb3b3;">&#39; -</span><span style="color:#f99157;">f</span><span style="color:#6699cc;"> 2 ./path_to_apikey.txt </span><span style="color:#5fb3b3;">| </span><span style="color:#6699cc;">tr </span><span style="color:#5fb3b3;">&#39;</span><span style="color:#99c794;">\n</span><span style="color:#5fb3b3;">&#39; &#39;</span><span style="color:#99c794;">:</span><span style="color:#5fb3b3;">&#39;)&quot;</span><span style="color:#6699cc;"> https://firewall.yourdomain.com/api/wireguard/service/show
+</span></code></pre>
+<p>You should see some JSON printed to the console enumerating all Wireguard VPN
+instances and known peers (i.e. clients) and their properties. If all goes
+well, it’s time to create the new monitors in Uptime Kuma.</p>
+</li>
+</ol>
+<h2 id="configuring-uptime-kuma">Configuring Uptime Kuma<a class="zola-anchor" href="#configuring-uptime-kuma" aria-label="Anchor link for: configuring-uptime-kuma">§</a>
+</h2>
+<ol>
+<li>
+<p>Log into the Uptime Kuma dashboard.</p>
+</li>
+<li>
+<p>Create a new monitor named “Wireguard VPN” with these properties:</p>
+<table>
+    <thead>
+        <tr><th style="width:10rem">Property</th><th>Value</th></tr>
+    </thead>
+    <tbody>
+       <tr>
+           <td>Monitor Type</td>
+           <td><code>Group</code></td>
+       </tr>
+       <tr>
+           <td>Friendly Name</td>
+           <td><code>Wireguard VPN</code></td>
+       </tr>
+    </tbody>
+</table>
+<p>Click the <code>Save</code> button to create the monitor.</p>
+</li>
+<li>
+<p>Create another monitor named “Internet Gateway” with these properties:</p>
+<table>
+    <thead>
+        <tr><th style="width:10rem">Property</th><th>Value</th></tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Monitor Type</td>
+            <td><code>HTTP(s) - JSON Query</code></td>
+        </tr>
+        <tr>
+            <td>Friendly Name</td>
+            <td><code>Internet Gateway</code></td>
+        </tr>
+        <tr>
+            <td>URL</td>
+            <td><code>https://firewall.yourdomain.com/api/routes/gateway/status</code></td>
+        </tr>
+        <tr>
+            <td>JSON Query</td>
+            <td><code>status="ok" and items[name="WAN_GW"].status_translated="Online"</code></td>
+        </tr>
+        <tr>
+            <td>Expected Value</td>
+            <td><code>true</code></td>
+        </tr>
+        <tr>
+            <td>Monitor Group</td>
+            <td><code>Wireguard VPN</code></td>
+        </tr>
+    </tbody>
+</table>
+<p>Replace <code>WAN_GW</code> in the JSON query string above with whatever your primary
+IPv4 or IPv6 gateway is named in OPNsense.<sup class="footnote-reference"><a href="#1">1</a></sup></p>
+<p>Next, under the <strong>Authentication</strong> section, select <code>HTTP Basic Auth</code> as the
+authentication method. Refer back to your <code>$HOSTNAME_$USER_apikey.txt</code> file
+created in Step 5 of the <a href="https://eyalkalderon.com/blog/monitor-wireguard-uptime-kuma/#configuring-opnsense">Configuring OPNsense</a>
+section and fill out the following properties:</p>
+<table>
+    <thead>
+        <tr><th style="width:10rem">Property</th><th>Value</th></tr>
+    </thead>
+    <tbody>
+       <tr>
+           <td>Username</td>
+           <td>The value of <code>key=</code> in the text file</td>
+       </tr>
+       <tr>
+           <td>Password</td>
+           <td>The value of <code>secret=</code> in the text file</td>
+       </tr>
+    </tbody>
+</table>
+<p>Click the <code>Save</code> button to create the monitor.</p>
+</li>
+<li>
+<p>Create one more monitor named “Wireguard Instance” with these properties:</p>
+<table>
+    <thead>
+        <tr><th style="width:10rem">Property</th><th>Value</th></tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Monitor Type</td>
+            <td><code>HTTP(s) - JSON Query</code></td>
+        </tr>
+        <tr>
+            <td>Friendly Name</td>
+            <td><code>Wireguard Instance</code></td>
+        </tr>
+        <tr>
+            <td>URL</td>
+            <td><code>https://firewall.yourdomain.com/api/wireguard/service/show</code></td>
+        </tr>
+        <tr>
+            <td>JSON Query</td>
+            <td><code>rows[name="Remote-Access"].status</code></td>
+        </tr>
+        <tr>
+            <td>Expected Value</td>
+            <td><code>up</code></td>
+        </tr>
+        <tr>
+            <td>Monitor Group</td>
+            <td><code>Wireguard VPN</code></td>
+        </tr>
+    </tbody>
+</table>
+<p>Replace <code>Remote-Acesss</code> in the JSON query string above with the name of the
+Wireguard instance in OPNsense that you would like to monitor.<sup class="footnote-reference"><a href="#2">2</a></sup>
+Alternatively, feel free to rewrite the JSON query string to poll whether a
+specific peer is connected and throw an error if it goes down; whatever you
+think is best for your own setup.</p>
+<p>Configure the <strong>Authentication</strong> section identically to Step 3 from above.</p>
+<p>Click the <code>Save</code> button to create the monitor.</p>
+</li>
+<li>
+<p>Once all the above done, wait a minute or so for the “Wireguard VPN” monitor
+and its two child monitors to gradually settle into an all-green “up” state.</p>
+</li>
+</ol>
+<p>You are now ready to add the monitors to your Uptime Kuma status page(s) however
+you see fit.</p>
+<h1 id="explanation">Explanation<a class="zola-anchor" href="#explanation" aria-label="Anchor link for: explanation">§</a>
+</h1>
+<p>Basically, this VPN monitoring approach works according to the approach
+<a href="https://eyalkalderon.com/blog/monitor-wireguard-uptime-kuma/#eventual-solution">described above</a> by aggregating the results of two
+different health checks.</p>
+<p>The “Wireguard Instance” monitor reports whether the specific Wireguard instance
+is active on your OPNsense system and is in healthy state. If your instance is
+unable to start or is forcibly shut down, or is otherwise, then Uptime Kuma will
+mark the entire “Wireguard VPN” monitor as “down”.</p>
+<p>The “Internet Gateway” monitor reports whether the OPNsense system itself can
+access the Internet via the IPv4/v6 gateway you already have set up for
+monitoring. If that gateway’s status no longer returns <code>"Online"</code>, i.e. due to
+an unplugged Ethernet cable or other Internet outage, then Uptime Kuma will mark
+the entire “Wireguard VPN” monitor as “down”.</p>
+<p>You are now free to customize your Uptime Kuma status page to either display all
+three monitors or only the top-level “Wireguard VPN” group monitor, depending on
+how granular you would like your reporting to be. This same flexibility extends
+to the notifications and alerting options as well. For instance, you might want
+to update the “Wireguard Instance” monitor to send a different alert
+notification if the service is undergoing a graceful restart versus a permanent
+outage.</p>
+<h1 id="epilogue">Epilogue<a class="zola-anchor" href="#epilogue" aria-label="Anchor link for: epilogue">§</a>
+</h1>
+<p>I should really write a separate post diving into the hardware I’m currently
+using to power the extremely overkill 10 Gbps network I have at home, including
+the tiny-but-mighty DIY OPNsense router acting as the backbone behind it all.
+I’m pretty proud of it when considering the space constraints of the small
+network closet in my home. Perhaps some other day…</p>
+<hr />
+<h2 id="footnotes">Footnotes<a class="zola-anchor" href="#footnotes" aria-label="Anchor link for: footnotes">§</a>
+</h2>
+<!-- HACK: Until backreferences are supported in `Zola` -->
+<!-- https://github.com/raphlinus/pulldown-cmark/issues/142 -->
+<script src="/footnotes.js"></script>
+<div class="footnote-definition" id="1"><sup class="footnote-definition-label">1</sup>
+<p><a href="https://docs.opnsense.org/manual/gateways.html">OPNsense Manual - System &gt; Gateways</a></p>
+</div>
+<div class="footnote-definition" id="2"><sup class="footnote-definition-label">2</sup>
+<p><a href="https://docs.opnsense.org/manual/vpnet.html#instances">OPNsense Manual - Virtual Private Networking &gt; Wireguard &gt; Instances</a></p>
+</div>
+
+
+        <section class="post">
+            <hr>
+            <br>
+            <script src="https://utteranc.es/client.js"
+                  repo="ebkalderon/ebkalderon.github.io"
+                  issue-term="pathname"
+                  theme="github-dark-orange"
+                  crossorigin="anonymous"
+                  async>
+            </script>
+        </section>
+    </article></div>
+    <div class="pagination">
+        <div class="pagination__buttons">
+            </div>
+    </div>
+<footer class="footer">
+                    <div class="footer__inner"><div class="copyright copyright--user">© 2025 Eyal Kalderon :: CC BY-SA<br>:: If you listen to a UNIX shell, can you hear the C?</div>
+    <script type="text/javascript" src="https://eyalkalderon.com/assets/js/main.js"></script>
+</div>
+                    
+
+                </footer></div>
+    </body>
+</html>
