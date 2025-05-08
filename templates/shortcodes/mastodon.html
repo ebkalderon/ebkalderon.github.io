@@ -1,0 +1,11 @@
+{%- set mastodon_url = url -%}
+
+{# Requests an OEmbed `iframe` for a given Mastodon post `url` #}
+{# Upstream API docs: https://docs.joinmastodon.org/methods/oembed/ #}
+
+{%- set domain = mastodon_url | split(pat="/") | nth(n=2) -%}
+{%- set encoded_url = mastodon_url | urlencode_strict -%}
+{%- set api_url = "https://" ~ domain ~ "/api/oembed?url=" ~ encoded_url -%}
+{%- set response = load_data(url=api_url, format="json") -%}
+
+{{ response["html"] | safe }}
