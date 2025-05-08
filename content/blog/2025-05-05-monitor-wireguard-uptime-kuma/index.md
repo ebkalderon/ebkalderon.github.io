@@ -10,7 +10,7 @@ categories = ["research"]
 og_preview_img = "wireguard-monitor-in-dashboard.png"
 +++
 
-{{ figure(src="wireguard-monitor-in-dashboard.png", caption="Screenshot of Wireguard monitor in Uptime Kuma dashboard") }}
+{{ figure(src="wireguard-monitor-in-dashboard.png", caption="Screenshot of Wireguard monitor in the Uptime Kuma dashboard") }}
 
 I use [Uptime Kuma](https://github.com/louislam/uptime-kuma) to monitor the
 status of all self-hosted services that run in my homelab. With one notable
