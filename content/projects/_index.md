@@ -2,6 +2,8 @@
 title = "Projects"
 +++
 
+# Projects
+
 Below is a sampling of some interesting things I've built. :hammer: These are
 projects that I am permitted to publicly discuss.
 

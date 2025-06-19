@@ -6,8 +6,9 @@ description = "Tutorial explaining how to monitor a Wireguard VPN endpoint in Up
 tags = ["devops", "homelab", "monitoring", "opnsense"]
 categories = ["research"]
 
-[extra]
-og_preview_img = "wireguard-monitor-in-dashboard.png"
+[extra.social_media_image]
+path = "wireguard-monitor-in-dashboard.png"
+alt_text = "Screenshot of active Wireguard monitor in Uptime Kuma dashboard"
 +++
 
 {{ figure(src="wireguard-monitor-in-dashboard.png", caption="Screenshot of Wireguard monitor in the Uptime Kuma dashboard") }}
@@ -80,7 +81,7 @@ Here's how I implemented this.
 5. This opens a dialog prompting you to save a new text file titled
    `$HOSTNAME_$USER_apikey.txt`. This text file contains two lines of the form:
 
-   ```text
+   ```txt,name=$HOSTNAME_$USER_apikey.txt
    key=JS/mNJWMxquktkUrqDZGWUMyuBpsnNPzlxOdYtLq/RnBJqHWMFBApAeaitVQcaTbqGuzPMZdPFzdaYlp
    secret=LsJqFYgTXqXoFjyRReLlUxeyyMIMtyDjoCChJIZwE+eEjUMOF/tSPsKcUiXZzdKVsOkej/UWLCJWEBqb
    ```
@@ -114,57 +115,31 @@ Here's how I implemented this.
 1. Log into the Uptime Kuma dashboard.
 2. Create a new monitor named "Wireguard VPN" with these properties:
 
-   <table>
-       <thead>
-           <tr><th style="width:10rem">Property</th><th>Value</th></tr>
-       </thead>
-       <tbody>
-          <tr>
-              <td>Monitor Type</td>
-              <td><code>Group</code></td>
-          </tr>
-          <tr>
-              <td>Friendly Name</td>
-              <td><code>Wireguard VPN</code></td>
-          </tr>
-       </tbody>
-   </table>
+   {% wide_container() %}
+
+   | Property      | Value           |
+   |---------------|-----------------|
+   | Monitor Type  | `Group`         |
+   | Friendly Name | `Wireguard VPN` |
+
+   {% end %}
 
    Click the `Save` button to create the monitor.
 
 3. Create another monitor named "Internet Gateway" with these properties:
 
-   <table>
-       <thead>
-           <tr><th style="width:10rem">Property</th><th>Value</th></tr>
-       </thead>
-       <tbody>
-           <tr>
-               <td>Monitor Type</td>
-               <td><code>HTTP(s) - JSON Query</code></td>
-           </tr>
-           <tr>
-               <td>Friendly Name</td>
-               <td><code>Internet Gateway</code></td>
-           </tr>
-           <tr>
-               <td>URL</td>
-               <td><code>https://firewall.yourdomain.com/api/routes/gateway/status</code></td>
-           </tr>
-           <tr>
-               <td>JSON Query</td>
-               <td><code>status="ok" and items[name="WAN_GW"].status_translated="Online"</code></td>
-           </tr>
-           <tr>
-               <td>Expected Value</td>
-               <td><code>true</code></td>
-           </tr>
-           <tr>
-               <td>Monitor Group</td>
-               <td><code>Wireguard VPN</code></td>
-           </tr>
-       </tbody>
-   </table>
+   {% wide_container() %}
+
+   | Property       | Value                                                             |
+   |----------------|-------------------------------------------------------------------|
+   | Monitor Type   | `HTTP(s) - JSON Query`                                            |
+   | Friendly Name  | `Internet Gateway`                                                |
+   | URL            | `https://firewall.yourdomain.com/api/routes/gateway/status`       |
+   | JSON Query     | `status="ok" and items[name="WAN_GW"].status_translated="Online"` |
+   | Expected Value | `true`                                                            |
+   | Monitor Group  | `Wireguard VPN`                                                   |
+
+   {% end %}
 
    Replace `WAN_GW` in the JSON query string above with whatever your primary
    IPv4 or IPv6 gateway is named in OPNsense.[^1]
@@ -174,57 +149,31 @@ Here's how I implemented this.
    created in Step 5 of the [Configuring OPNsense](#configuring-opnsense)
    section and fill out the following properties:
 
-   <table>
-       <thead>
-           <tr><th style="width:10rem">Property</th><th>Value</th></tr>
-       </thead>
-       <tbody>
-          <tr>
-              <td>Username</td>
-              <td>The value of <code>key=</code> in the text file</td>
-          </tr>
-          <tr>
-              <td>Password</td>
-              <td>The value of <code>secret=</code> in the text file</td>
-          </tr>
-       </tbody>
-   </table>
+   {% wide_container() %}
+
+   | Property | Value                                   |
+   |----------|-----------------------------------------|
+   | Username | The value of `key=` in the text file    |
+   | Password | The value of `secret=` in the text file |
+
+   {% end %}
 
    Click the `Save` button to create the monitor.
 
 4. Create one more monitor named "Wireguard Instance" with these properties:
 
-   <table>
-       <thead>
-           <tr><th style="width:10rem">Property</th><th>Value</th></tr>
-       </thead>
-       <tbody>
-           <tr>
-               <td>Monitor Type</td>
-               <td><code>HTTP(s) - JSON Query</code></td>
-           </tr>
-           <tr>
-               <td>Friendly Name</td>
-               <td><code>Wireguard Instance</code></td>
-           </tr>
-           <tr>
-               <td>URL</td>
-               <td><code>https://firewall.yourdomain.com/api/wireguard/service/show</code></td>
-           </tr>
-           <tr>
-               <td>JSON Query</td>
-               <td><code>rows[name="Remote-Access"].status</code></td>
-           </tr>
-           <tr>
-               <td>Expected Value</td>
-               <td><code>up</code></td>
-           </tr>
-           <tr>
-               <td>Monitor Group</td>
-               <td><code>Wireguard VPN</code></td>
-           </tr>
-       </tbody>
-   </table>
+   {% wide_container() %}
+
+   | Property       | Value                                                        |
+   |----------------|--------------------------------------------------------------|
+   | Monitor Type   | `HTTP(s) - JSON Query`                                       |
+   | Friendly Name  | `Wireguard Instance`                                         |
+   | URL            | `https://firewall.yourdomain.com/api/wireguard/service/show` |
+   | JSON Query     | `rows[name="Remote-Access"].status`                          |
+   | Expected Value | `up`                                                         |
+   | Monitor Group  | `Wireguard VPN`                                              |
+
+   {% end %}
 
    Replace `Remote-Acesss` in the JSON query string above with the name of the
    Wireguard instance in OPNsense that you would like to monitor.[^2]
@@ -276,12 +225,6 @@ I'm pretty proud of it when considering the space constraints of the small
 network closet in my home. Perhaps some other day...
 
 ---
-
-## Footnotes
-
-<!-- HACK: Until backreferences are supported in `Zola` -->
-<!-- https://github.com/raphlinus/pulldown-cmark/issues/142 -->
-<script src="/footnotes.js"></script>
 
 [^1]: [OPNsense Manual - System > Gateways](https://docs.opnsense.org/manual/gateways.html)
 [^2]: [OPNsense Manual - Virtual Private Networking > Wireguard > Instances](https://docs.opnsense.org/manual/vpnet.html#instances)

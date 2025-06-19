@@ -43,8 +43,6 @@ describing other languages in terms of string pattern matching. That is, PEG
 allows the parser author to declare the grammar of the language they wish to
 parse using sets of expressions like those shown below:
 
-<style>pre > code { color: var(--color); }</style>
-
 ```
 expr    ← sum
 sum     ← product (('+' / '-') product)*
@@ -55,9 +53,7 @@ value   ← [0-9]+ / '(' expr ')'
 These PEG rules would then be able to describe the rules to a simple arithmetic
 language that behaves like this:
 
-<style>.table-auto > table { table-layout: auto }</style>
-
-<div class="table-auto">
+{% wide_container() %}
 
 Input       | Parsed syntax tree
 ------------|-------------------------------------------------
@@ -66,7 +62,7 @@ Input       | Parsed syntax tree
 1 + 2 * 3   | `Sum(Value(1), Product(Value(2), Value(3)))`
 (1 + 2) * 3 | `Product(Sum(Value(1), Value(2)), Value(3))`
 
-</div>
+{% end %}
 
 Any PEG expression can be converted directly into a [recursive descent parser],
 either automatically using a parser generator or crafted by hand in the
@@ -184,7 +180,7 @@ was essentially:
 
 [`Partial`]: https://github.com/ebkalderon/nix-language-server/blob/master/nix-parser/src/parser/partial.rs#L64-L68
 
-```rust
+```rust,name=nix-parser/src/parser/partial.rs
 pub struct Partial<T> {
     value: Option<T>,
     errors: Vec<Error>,
@@ -472,7 +468,7 @@ enum Expr {
 
 The following outputs were produced by calling `parse()`:
 
-<div class="table-auto">
+{% wide_container() %}
 
 Input  | Produced syntax tree         | Errors
 -------|------------------------------|---------------------------------------------------------------------------------
@@ -485,7 +481,7 @@ foo    | `Ident(Ident("foo"))`        | ```[]```
 ()     | `Paren(Error)`               | ```[Error(1..2, "expected expression after `(`")]```
 &nbsp; | `Error`                      | ```[]```
 
-</div>
+{% end %}
 
 These results are markedly better than what I had gotten with `nom` previously
 when I was relying on the built-in [custom error management] facilities, and the

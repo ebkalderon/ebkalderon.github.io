@@ -2,6 +2,8 @@
 title = "This is me..."
 +++
 
+# This is me...
+
 <img src="/about/photo.jpg" alt="photo" style="border-radius: 50%; max-width: 30%; float: right; margin-left: 0.5em; margin-bottom: 0.5em;"/>
 
 Engineer, tinkerer, bookworm, tech enthusiast.

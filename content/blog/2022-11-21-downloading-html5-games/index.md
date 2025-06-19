@@ -57,8 +57,6 @@ that Firefox had created; their paths are instead relative to `~/Downloads`.
 
 Looking through the `index.html` source, I see the following `<script>` tags:
 
-<style>pre > code { color: var(--color); }</style>
-
 ```html
 <div ...>...<script async="" src="GameBoss_files/main-html.js"></script></div>
 <script src="GameBoss_files/flambe.js"></script> 
@@ -96,7 +94,7 @@ promising-looking section towards the bottom:
 This nested `__meta__` object field appears to contain all the game assets, and
 is organized into the following structure:
 
-```txt
+```
 assets
 ├── bootstrap
 │   └── ...
@@ -164,7 +162,7 @@ wayback_machine_downloader https://games.gameboss.com/bubbleshooterclassic/
 
 Success! Looks like it found the capture and is grabbing the files.
 
-```txt
+```
 Downloading https://games.gameboss.com/bubbleshooterclassic/ to websites/games.gameboss.com/ from Wayback Machine archives.
 
 Getting snapshot pages.. found 92 snaphots to consider.
@@ -177,7 +175,7 @@ Download completed in 111.17s, saved in websites/games.gameboss.com/ (79 files)
 
 Okay, now that the download has finished, let's see what we've got here:
 
-```txt
+```
 $ tree ./websites/games.gameboss.com/
 websites/games.gameboss.com/
 └── bubbleshooterclassic
@@ -240,7 +238,7 @@ python3 launch_game.py
 
 This prints the following prompt and then hangs:
 
-```txt
+```
 serving at port 8000
 ```
 
@@ -255,7 +253,7 @@ Darn. Thankfully, those pesky CORS errors are gone, but they have been replaced
 with `404 File not found` responses instead. Attempting to navigate to one of
 the failing resource URLs in a new browser tab, such as:
 
-```txt
+```
 http://127.0.0.1:8000/assets/bootstrap/buttonfont/font.fnt?v=d64869dc1df0d1b0f27f38835250e4d1
 ```
 
@@ -265,7 +263,7 @@ But if we check the `websites/games.gameboss.com/bubbleshooterclassic/`
 directory again, we see that the `font.fnt?v=d64869dc1df0d1b0f27f38835250e4d1`
 file we're looking for is indeed present and in the right place.
 
-```txt
+```
 $ tree ./websites/games.gameboss.com/
 websites/games.gameboss.com/
 └── bubbleshooterclassic
@@ -292,7 +290,7 @@ of the URL and try to `wget` that in the terminal?
 
 [percent-encode]: https://en.wikipedia.org/wiki/Percent-encoding
 
-```txt
+```
 $ wget http://127.0.0.1:8000/assets/bootstrap/buttonfont/font.fnt%3Fv%3Dd64869dc1df0d1b0f27f38835250e4d1
 --2022-11-20 23:23:33--  http://127.0.0.1:8000/assets/bootstrap/buttonfont/font.fnt%3Fv%3Dd64869dc1df0d1b0f27f38835250e4d1
 Connecting to 127.0.0.1:8000... connected.
@@ -345,7 +343,7 @@ find . -name '*\?*' -type f -exec bash -c 'mv $1 $(echo $1 | cut -d? -f1)' bash 
 
 Well, there seem to be no errors. Let's check the output of `tree` to confirm.
 
-```txt
+```
 $ tree
 .
 ├── assets
@@ -438,11 +436,7 @@ game offline:
      launch the server more conveniently
 8. Navigate to `http://127.0.0.1:8000` in a Web browser to play.
 
-## Footnotes
-
-<!-- HACK: Until backreferences are supported in `Zola` -->
-<!-- https://github.com/raphlinus/pulldown-cmark/issues/142 -->
-<script src="/footnotes.js"></script>
+---
 
 [^1]: The Wayback Machine uses [Wombat](https://github.com/webrecorder/wombat)
       for all its client-side URL rewriting needs.

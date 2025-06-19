@@ -1,5 +1,5 @@
 base_url = "https://eyalkalderon.com"
-theme = "zerm"
+theme = "terminus"
 compile_sass = true
 
 title = "Eyal Kalderon"
@@ -7,8 +7,8 @@ description = "If you listen to a UNIX shell, can you hear the C?"
 
 default_language = "en"
 generate_feeds = true
-feed_limit = 20
 feed_filenames = ["rss.xml"]
+author = "Eyal Kalderon"
 
 taxonomies = [
     { name = "tags" },
@@ -16,29 +16,30 @@ taxonomies = [
 ]
 
 [markdown]
+bottom_footnotes = true
 highlight_code = true
-highlight_theme = "charcoal"
+highlight_theme = "monokai"
 render_emoji = true
 smart_punctuation = true
 
 [extra]
-author = "Eyal Kalderon"
-show_author = false
-show_categories = true
-show_tags = true
-theme_color = "orange"
-center = true
-favicon = "/img/favicon.png"
-copyright = "Eyal Kalderon :: CC BY-SA<br>:: If you listen to a UNIX shell, can you hear the C?"
-logo_text = "eyal kalderon"
+favicon = "img/favicon.png"
+fediverse_creator = "@ebkalderon@hachyderm.io"
+header.title = "eyal kalderon"
+show_default_author = false
 
 main_menu = [
-    { url = "/", name = "home" },
-    { url = "/about/", name = "about" },
-    { url = "/projects/", name = "projects" },
-    { url = "/resume.pdf", name = "résumé" },
-    { url = "/rss.xml", name = "rss" },
+    { name = "home", url = "", trailing_slash = true },
+    { name = "about", url = "about", trailing_slash = true },
+    { name = "projects", url = "projects", trailing_slash = true },
+    { name = "résumé", url = "resume.pdf", new_tab = true },
+    { name = "rss", url = "rss.xml" },
 ]
 
-menu_more = "show more"
-read_more = "read more"
+socials = [
+    { name = "email", url = "mailto:ebkalderon@gmail.com?subject=hello&body=PGP%20key%2000AB4C0942DCBA25" },
+    { name = "github", url = "https://github.com/ebkalderon" },
+    { name = "linkedin", url = "https://www.linkedin.com/in/ebkalderon" },
+    { name = "mastodon", url = "https://hachyderm.io/@ebkalderon" },
+    { name = "keybase", url = "https://keybase.io/ebkalderon" },
+]
