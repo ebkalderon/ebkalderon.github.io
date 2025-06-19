@@ -43,3 +43,11 @@ socials = [
     { name = "mastodon", url = "https://hachyderm.io/@ebkalderon" },
     { name = "keybase", url = "https://keybase.io/ebkalderon" },
 ]
+
+[extra.content_security_policy]
+enable = true
+allowed_domains = [
+    { directive = "frame-src", domains = ["'self'", "utteranc.es"] },
+    { directive = "script-src-elem", domains = ["'self'", "utteranc.es"] },
+    { directive = "style-src-elem", domains = ["'self'", "'unsafe-inline'", "utteranc.es"] },
+]
