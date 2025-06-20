@@ -5,6 +5,10 @@ description = "A guide to downloading HTML5 games and playing them locally. Assu
 [taxonomies]
 tags = ["html5", "games", "webdev"]
 categories = ["research"]
+
+[extra.social_media_image]
+path = "locally-served-game-2.png"
+alt_text = "Screenshot of downloaded Bubble Shooter HTML game running locally"
 +++
 
 So, I was [nerd-sniped](https://www.urbandictionary.com/define.php?term=nerd-snipe)
