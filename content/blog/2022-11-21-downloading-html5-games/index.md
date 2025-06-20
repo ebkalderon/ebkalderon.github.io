@@ -38,7 +38,7 @@ of steps.
 
 First, let's take a brief look at [the game itself](https://games.gameboss.com/bubbleshooterclassic/index.html):
 
-{{ resize_image(path="the-game.png", alt="Bubble Shooter Classic", width=785, height=0, op="fit_width") }}
+{{ responsive_image(src="the-game.png", alt="A screenshot of Mozilla Firefox running the game Bubble Shooter Classic") }}
 
 Seems like a simple enough single-player game with no server-side networking
 features. This should be an easy task, then!
@@ -46,14 +46,14 @@ features. This should be an easy task, then!
 I'll hit <kbd>Ctrl+S</kbd> in Firefox to save the entire Web page, including any
 referenced assets, open the `index.html`, and... 
 
-{{ resize_image(path="white-page.png", alt="Empty white page", width=785, height=0, op="fit_width") }}
+{{ responsive_image(src="white-page.png", alt="A screenshot of Mozilla Firefox displaying an empty page with a white background") }}
 
 A blank page. That's odd. I wonder why?
 
 Popping open the debug console with <kbd>F12</kbd> reveals that the game is
 missing a bunch of resources.
 
-{{ resize_image(path="missing-resources.png", alt="Console full of errors", width=785, height=0, op="fit_width") }}
+{{ responsive_image(src="missing-resources.png", alt="A screenshot of the browser debug console full of errors") }}
 
 <abbr title="Cross-Origin Resource Sharing">CORS</abbr> errors aside, the
 resources aren't even loading in from the `~/Downloads/GameBoss_files` directory
@@ -84,16 +84,16 @@ Going back into the devtools again, let's switch to the debugger and inspect the
 source code for `main-html.js`. This is probably where the actual game logic
 lives, since I presume `flambe.js` contains the base game engine.
 
-{{ resize_image(path="messy-source.png", alt="Messy JavaScript" width=785, height=0, op="fit_width") }}
+{{ responsive_image(src="messy-source.png", alt="A screenshot of Mozilla Firefox displaying some messy JavaScript code") }}
 
 Ouch, that's hard to read. Let's pretty-print that code...
 
-{{ resize_image(path="pretty-printed-source.png", alt="Pretty-printed JavaScript", width=785, height=0, op="fit_width") }}
+{{ responsive_image(src="pretty-printed-source.png", alt="A screenshot of Mozilla Firefox displaying the same JavaScript code pretty-printed") }}
 
 Much better! :+1: Searching for the word "assets" in the open file, I find a
 promising-looking section towards the bottom:
 
-{{ resize_image(path="asset-map-identified.png", alt="Asset map identified in code" width=785, height=0, op="fit_width") }}
+{{ responsive_image(src="asset-map-identified.png", alt="A snippet of JavaScript code for a complex object named __meta__") }}
 
 This nested `__meta__` object field appears to contain all the game assets, and
 is organized into the following structure:
@@ -194,14 +194,14 @@ websites/games.gameboss.com/
 Alright, looks promising. Let's try to open the `index.html` in the browser
 again...
 
-{{ resize_image(path="black-page.png", alt="Empty black screen", width=785, height=0, op="fit_width") }}
+{{ responsive_image(src="black-page.png", alt="A screenshot of Mozilla Firefox displaying an empty page with a black background") }}
 
 Well, a black screen instead of a white screen is an improvement, I guess. I
 suppose I should've expected something to still be wrong.
 
 Let's check the console again...
 
-{{ resize_image(path="cross-origin-errors.png", alt="Console errors similar to before", width=785, height=0, op="fit_width") }}
+{{ responsive_image(src="cross-origin-errors.png", alt="A screenshot of the browser debug console with CORS errors similar to before") }}
 
 Ah, right. We still haven't resolved the cross-origin `GET` errors we were
 seeing before. There are two possible ways to approach this problem:
@@ -251,7 +251,7 @@ effectively means all available network interfaces, including the loopback
 device. Let's nagivate to `http://127.0.0.1:8000` in a browser window, then, and
 see what we have.
 
-{{ resize_image(path="black-page-with-404-errors.png", alt="Black screen with 404 errors in console", width=785, height=0, op="fit_width") }}
+{{ responsive_image(src="black-page-with-404-errors.png", alt="A screenshot of Mozilla Firefox displaying a black page with 404 errors in the debug console") }}
 
 Darn. Thankfully, those pesky CORS errors are gone, but they have been replaced
 with `404 File not found` responses instead. Attempting to navigate to one of
@@ -272,10 +272,10 @@ $ tree ./websites/games.gameboss.com/
 websites/games.gameboss.com/
 └── bubbleshooterclassic
     ├── assets
-    │   ├── bootstrap
-    │   │   ├── buttonfont
-    │   │   │   ├── font.fnt?v=d64869dc1df0d1b0f27f38835250e4d1
-    │   │   │   └── font.png?v=6c598ce10f2bdaf6bcdd721cd6b0b4d0
+    │   ├── bootstrap
+    │   │   ├── buttonfont
+    │   │   │   ├── font.fnt?v=d64869dc1df0d1b0f27f38835250e4d1
+    │   │   │   └── font.png?v=6c598ce10f2bdaf6bcdd721cd6b0b4d0
     ... ... ...
 ```
 
@@ -363,8 +363,8 @@ Sweet! Looks like all the filenames have been fixed, and not a single file with
 back to Firefox, refresh the page for `http://127.0.0.1:8000`, and see what
 happens...
 
-{{ resize_image(path="locally-served-game-1.png", alt="Game start page", width=785, height=0, op="fit_width") }}
-{{ resize_image(path="locally-served-game-2.png", alt="Game board", width=785, height=0, op="fit_width") }}
+{{ responsive_image(src="locally-served-game-1.png", alt="A screenshot of Mozilla Firefox displaying the Bubble Shooter Classic start page") }}
+{{ responsive_image(src="locally-served-game-2.png", alt="A screenshot of Mozilla Firefox displaying the first level of the game, fully playable") }}
 
 Finally! :tada: Now _that's_ what I like to see. The game seems to be working.
 
@@ -372,7 +372,7 @@ Popping open the devtools once more and switching to the "network" tab, I can
 confirm there are zero requests reaching out to the broader Internet and the
 game is running 100% locally:
 
-{{ resize_image(path="examining-network-requests.png", alt="Examining network requests", width=785, height=0, op="fit_width") }}
+{{ responsive_image(src="examining-network-requests.png", alt="A screenshot of the browser's network request inspector full of HTTP requests to localhost") }}
 
 That was so much fun! Now to relay what I've learned back to OP...
 
