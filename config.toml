@@ -47,7 +47,8 @@ socials = [
 [extra.content_security_policy]
 enable = true
 allowed_domains = [
+    { directive = "connect-src", domains = ["'self'", "cloudflareinsights.com"] },
     { directive = "frame-src", domains = ["'self'", "utteranc.es"] },
-    { directive = "script-src-elem", domains = ["'self'", "utteranc.es"] },
+    { directive = "script-src", domains = ["'self'", "utteranc.es", "static.cloudflareinsights.com", "'unsafe-inline'"] },
     { directive = "style-src-elem", domains = ["'self'", "'unsafe-inline'", "utteranc.es"] },
 ]
