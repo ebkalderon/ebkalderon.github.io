@@ -26,7 +26,7 @@ problem, from beginning to end.
 [reddit-post]: https://www.reddit.com/r/webdev/comments/ypxyyb/comment/ivn0o5w/?context=8&depth=9
 [archive Flash games]: https://www.makeuseof.com/tag/download-run-flash-games/
 
-{% admonition(type="warning", title="DISCLAIMER") %}
+{% alert(type="warning", title="DISCLAIMER") %}
 This post is intended for educational and non-commercial [fair use] purposes
 only. If you're impatient, [skip ahead to the TL;DR section](#tl-dr) for a list
 of steps.

@@ -89,7 +89,7 @@ Here's how I implemented this.
    Save this file locally for the time being, but be prepared to securely delete
    it later once you're finished configuring Uptime Kuma.
 
-   {% admonition(type="warning") %}
+   {% alert(type="warning") %}
    Both values for `key=` and `secret=` shown above are just randomly generated
    nonsense used purely for demonstration purposes. With that said, they do
    visually resemble valid OPNsense API keys.
@@ -97,6 +97,7 @@ Here's how I implemented this.
    I'm sure this doesn't need to be said, but please do not leak your actual API
    keys to the web!
    {% end %}
+
 6. Confirm the API key works as expected by running the following `curl` command
    in an open terminal:
 
