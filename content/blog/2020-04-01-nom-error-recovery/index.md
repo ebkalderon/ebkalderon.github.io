@@ -2,6 +2,7 @@
 title = "Error recovery with parser combinators (using nom)"
 description = "A brief exploration of the paper \"Syntax error recovery in parsing expression grammars\" (2018) and a practical demonstration in code."
 updated = 2021-02-04
+aliases = ["/nom-error-recovery"]
 
 [taxonomies]
 tags = ["parsers", "rust"]
