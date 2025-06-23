@@ -1,5 +1,9 @@
 +++
 title = "This is me..."
+
+[extra.social_media_image]
+path = "photo.jpg"
+alt_text = "A portrait photo of myself wearing headphones and smiling at the camera"
 +++
 
 # This is me...
