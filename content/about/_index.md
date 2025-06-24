@@ -1,14 +1,17 @@
 +++
 title = "This is me..."
 
+[extra]
+stylesheets = ["css/about.css"]
+
 [extra.social_media_image]
 path = "photo.jpg"
-alt_text = "A portrait photo of myself wearing headphones and smiling at the camera"
+alt_text = "A photo of myself wearing headphones and smiling at the camera"
 +++
 
 # This is me...
 
-<img src="/about/photo.jpg" alt="photo" style="border-radius: 50%; max-width: 30%; float: right; margin-top: 0; margin-left: 0.5em; margin-bottom: 0.5em;"/>
+<img class="self-photo" src="/about/photo.jpg" alt="A photo of myself wearing headphones and smiling at the camera">
 
 Engineer, tinkerer, bookworm, tech enthusiast.
 
