@@ -225,7 +225,5 @@ the tiny-but-mighty DIY OPNsense router acting as the backbone behind it all.
 I'm pretty proud of it when considering the space constraints of the small
 network closet in my home. Perhaps some other day...
 
----
-
 [^1]: [OPNsense Manual - System > Gateways](https://docs.opnsense.org/manual/gateways.html)
 [^2]: [OPNsense Manual - Virtual Private Networking > Wireguard > Instances](https://docs.opnsense.org/manual/vpnet.html#instances)

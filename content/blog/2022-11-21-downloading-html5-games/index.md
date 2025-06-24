@@ -440,8 +440,6 @@ game offline:
      launch the server more conveniently
 8. Navigate to `http://127.0.0.1:8000` in a Web browser to play.
 
----
-
 [^1]: The Wayback Machine uses [Wombat](https://github.com/webrecorder/wombat)
       for all its client-side URL rewriting needs.
 
