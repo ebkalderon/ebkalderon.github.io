@@ -23,7 +23,7 @@ render_emoji = true
 smart_punctuation = true
 
 [extra]
-favicon = "img/favicon.png"
+favicon = "images/favicon.png"
 fediverse_creator = "@ebkalderon@hachyderm.io"
 header.title = "eyal kalderon"
 show_default_author = false
