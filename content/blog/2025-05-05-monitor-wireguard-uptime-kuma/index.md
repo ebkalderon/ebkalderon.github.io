@@ -6,6 +6,9 @@ description = "Tutorial explaining how to monitor a Wireguard VPN endpoint in Up
 tags = ["devops", "homelab", "monitoring", "opnsense"]
 categories = ["research"]
 
+[extra]
+copy_button = true
+
 [extra.social_media_image]
 path = "wireguard-monitor-in-dashboard.png"
 alt_text = "Screenshot of active Wireguard monitor in Uptime Kuma dashboard"

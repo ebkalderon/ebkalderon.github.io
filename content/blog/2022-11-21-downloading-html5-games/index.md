@@ -6,6 +6,9 @@ description = "A guide to downloading HTML5 games and playing them locally. Assu
 tags = ["html5", "games", "webdev"]
 categories = ["research"]
 
+[extra]
+copy_button = true
+
 [extra.social_media_image]
 path = "locally-served-game-2.png"
 alt_text = "Screenshot of downloaded Bubble Shooter HTML game running locally"

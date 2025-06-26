@@ -7,6 +7,9 @@ aliases = ["/nom-error-recovery"]
 [taxonomies]
 tags = ["parsers", "rust"]
 categories = ["research"]
+
+[extra]
+copy_button = true
 +++
 
 As the COVID-19 pandemic continues to ravage the globe, lots of people are stuck
