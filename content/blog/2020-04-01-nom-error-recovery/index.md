@@ -1,7 +1,7 @@
 +++
 title = "Error recovery with parser combinators (using nom)"
 description = "A brief exploration of the paper \"Syntax error recovery in parsing expression grammars\" (2018) and a practical demonstration in code."
-updated = 2021-02-04
+updated = 2025-06-26T20:39:05-04:00
 aliases = ["/nom-error-recovery"]
 
 [taxonomies]
@@ -555,4 +555,4 @@ evaluating the language. :stuck_out_tongue:
 * [ebkalderon/nix-language-server][nls]
 
 [@matklad]: https://github.com/matklad
-[Roslyn Overview (.NET)]: https://github.com/dotnet/roslyn/wiki/Roslyn-Overview#errors
+[Roslyn Overview (.NET)]: https://github.com/dotnet/roslyn/blob/6b00b6c/docs/wiki/Roslyn-Overview.md#errors
