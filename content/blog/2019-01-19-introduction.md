@@ -5,6 +5,9 @@ description = "Reinvigorating my love of creative writing, one post at a time."
 [taxonomies]
 tags = ["webdev"]
 categories = ["meta"]
+
+[extra]
+stylesheets = ["css/comments.css"]
 +++
 
 Welcome to my new development blog! This is a place where I can record my

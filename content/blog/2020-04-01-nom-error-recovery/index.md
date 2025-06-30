@@ -10,6 +10,7 @@ categories = ["research"]
 
 [extra]
 copy_button = true
+stylesheets = ["css/comments.css"]
 +++
 
 As the COVID-19 pandemic continues to ravage the globe, lots of people are stuck

@@ -8,6 +8,7 @@ categories = ["research"]
 
 [extra]
 copy_button = true
+stylesheets = ["css/comments.css"]
 
 [extra.social_media_image]
 path = "wireguard-monitor-in-dashboard.png"
