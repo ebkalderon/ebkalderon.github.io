@@ -18,7 +18,7 @@ Engineer, tinkerer, bookworm, tech enthusiast.
 I'm based in the United States, currently working as a software engineer at
 Disney Streaming. I am the founder of the [Amethyst](https://github.com/amethyst)
 game engine project and a couple other popular open source projects. I also have
-5+ years of work experience at companies large and small; you can get the full
+7+ years of work experience at companies large and small; you can get the full
 story on my [LinkedIn](https://www.linkedin.com/in/ebkalderon).
 
 I'm fascinated by hard problems of all kinds, including (but not limited to)
