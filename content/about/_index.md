@@ -37,4 +37,4 @@ cup of coffee! :coffee:
 * [Mastodon (@ebkalderon@hachyderm.io)](https://hachyderm.io/@ebkalderon)
 * [Twitter (@ebkalderon)](https://twitter.com/ebkalderon)
 * [Keybase (ebkalderon)](https://keybase.io/ebkalderon)
-* [Say hello via email](mailto:ebkalderon@gmail.com?subject=hi) (PGP: 00AB4C0942DCBA25)
+* [Say hello via email](mailto:ebkalderon@gmail.com?subject=hi) (PGP: [00AB4C0942DCBA25](pubkey.asc))

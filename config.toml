@@ -38,7 +38,7 @@ main_menu = [
 ]
 
 socials = [
-    { name = "email", url = "mailto:ebkalderon@gmail.com?subject=hello&body=PGP%20key%2000AB4C0942DCBA25" },
+    { name = "email", url = "mailto:ebkalderon@gmail.com?subject=hi&body=PGP%20key%2000AB4C0942DCBA25" },
     { name = "github", url = "https://github.com/ebkalderon" },
     { name = "linkedin", url = "https://www.linkedin.com/in/ebkalderon" },
     { name = "mastodon", url = "https://hachyderm.io/@ebkalderon" },
