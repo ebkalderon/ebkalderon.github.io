@@ -1,3 +1,12 @@
+@font-face {
+    font-family: 'Noto Sans Mono';
+    src:  url('/fonts/NotoSansMono-Regular-Subset.woff2') format('woff2');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+    unicode-range: U+0294, U+02C8;
+}
+
 figure {
     float: right;
     margin-top: 0;
@@ -10,5 +19,9 @@ figure {
         margin-bottom: 0.5em;
         margin-inline: auto;
         max-width: 70%;
+    }
+
+    a {
+        font-family: 'Noto Sans Mono', 'Fira Code';
     }
 }
