@@ -1,6 +1,0 @@
-{% for asset in page.assets -%}
-  {%- if asset is ending_with(path) -%}
-    {% set image = resize_image(path=asset, width=width, height=height, op=op) %}
-    <img src="{{ image.url }}" {% if alt %} alt="{{ alt }}"{% endif %} />
-  {%- endif %}
-{%- endfor %}
