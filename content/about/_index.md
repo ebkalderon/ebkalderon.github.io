@@ -1,5 +1,6 @@
 +++
 title = "This is me..."
+description = "A passionate software engineer who loves to tinker and draw"
 
 [extra]
 stylesheets = ["css/about.css"]
@@ -11,7 +12,12 @@ alt_text = "A photo of myself wearing headphones and smiling at the camera"
 
 # This is me...
 
-<img class="self-photo" src="/about/photo.jpg" alt="A photo of myself wearing headphones and smiling at the camera">
+<figure>
+    <img src="photo.jpg" alt="A photo of myself wearing headphones and smiling at the camera">
+    <figcaption>
+        Eyal (<a href="pronunciation.aac" title="Listen to audio pronunciation">/ʔeˈjal/</a><sup>💬</sup>)
+    </figcaption>
+</figure>
 
 Engineer, tinkerer, bookworm, tech enthusiast.
 
