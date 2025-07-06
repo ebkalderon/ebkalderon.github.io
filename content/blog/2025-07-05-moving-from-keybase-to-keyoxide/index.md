@@ -88,7 +88,7 @@ proofs are embedded directly in your public key.** This means your Ariadne
 identity profile truly belongs to you and isn't dependent on a centralized
 service somewhere remaining functional (_ahem_... looking at you, Keybase).
 Heck, if you're feeling determined enough and have plenty of time to spare, you
-could even verify the identity claims _by hand_. I definitely don't recommend
+could even verify the identity claims _by hand_. I definitely wouldn't recommend
 it, though; that sounds pretty damn tedious. :stuck_out_tongue:
 
 And because Ariadne is an open specification that builds on existing
@@ -97,10 +97,10 @@ cryptographic proofs will feasibly outlive the Keyoxide project itself, should
 the developers ever stop working on it someday.
 
 Though I don't expect that day to come anytime soon... The Keyoxide project is
-funded primarily via generous [grants by the NLnet foundation] along with
-[private donations on OpenCollective]. Being a non-profit organization with
-relatively stable financial backing and not needing to host any user data
-themselves, they should have a fighting chance of operating for a long time.
+funded by generous [grants by the NLnet foundation] along with [private
+donations on OpenCollective]. Being a non-profit organization with relatively
+stable financial backing and not needing to host any user data themselves, they
+should have a fighting chance of operating for a long time.
 
 [ASP]: https://ariadne.id/related/ariadne-signature-profile-0/
 [grants by the NLnet Foundation]: https://nlnet.nl/project/Keyoxide/
@@ -109,12 +109,11 @@ themselves, they should have a fighting chance of operating for a long time.
 By contrast, it's clear (in retrospect) that Keybase's for-profit business model
 was never going to be sustainable long-term. The Keybase team was desperately
 looking for ways to monetize their service: after only 4 years of existence,
-they [took funds from the Stellar Development Foundation] as a way to stay
-afloat. Shortly thereafter, the app rolled out multiple cryptocurrency-focused
-features such as [crypto "coin flipping"] and [built-in Stellar crypto wallets]
-with surprise airdrops of coins to Keybase users' wallets. It seems even this
-still couldn't stem the bleeding, though, hence the eventual Zoom acqui-hire in
-2020.
+they [took funds from the Stellar Development Foundation] to stay afloat.
+Shortly thereafter, the app rolled out multiple cryptocurrency-focused features
+such as [crypto "coin flipping"] and [built-in Stellar crypto wallets] with
+surprise airdrops of coins to Keybase users' wallets. It seems these moves
+failed to stem the bleeding in the end, hence the Zoom acqui-hire in 2020.
 
 [took funds from the Stellar Development Foundation]: https://keybase.io/blog/keybase-stellar
 [crypto "coin flipping"]: https://keybase.io/blog/cryptographic-coin-flipping
@@ -144,8 +143,8 @@ that issue should be trivial enough to fix.
 ### Adding Identity Proofs
 
 Adding new identity proofs to my Keyoxide profile is nowhere near as streamlined
-than it is with Keybase, but it wasn't too bad once I got the hang of it. Here's
-the gist:
+as with Keybase, but it wasn't too bad once I got the hang of it. Here's the
+gist:
 
 1. Find the online service or social media network you would like to verify in
    [the Keyoxide documentation](https://docs.keyoxide.org/service-providers/).
