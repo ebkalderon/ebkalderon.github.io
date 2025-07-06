@@ -113,11 +113,12 @@ they [took funds from the Stellar Development Foundation] to stay afloat.
 Shortly thereafter, the app rolled out multiple cryptocurrency-focused features
 such as [crypto "coin flipping"] and [built-in Stellar crypto wallets] with
 surprise airdrops of coins to Keybase users' wallets. It seems these moves
-failed to stem the bleeding in the end, hence the Zoom acqui-hire in 2020.
+failed to stem the bleeding in the end, hence the Zoom [acqui-hire] in 2020.
 
 [took funds from the Stellar Development Foundation]: https://keybase.io/blog/keybase-stellar
 [crypto "coin flipping"]: https://keybase.io/blog/cryptographic-coin-flipping
 [built-in Stellar crypto wallets]: https://keybase.io/blog/keybase-stellar-launch
+[acqui-hire]: https://en.wikipedia.org/wiki/Acqui-hiring
 
 ### Getting Started
 
