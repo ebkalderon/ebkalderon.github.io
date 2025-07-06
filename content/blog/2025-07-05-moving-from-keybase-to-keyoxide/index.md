@@ -22,7 +22,8 @@ throes of the COVID-19 pandemic, the pace of Keybase's development essentially
 stopped.
 
 {{ responsive_image(src="contributors-graph-for-keybase-client.png",
-   alt="A screenshot of the Contributors graph for the `keybase/client` GitHub repository indicating a sharp decline in activity to almost nothing since May 2020") }}
+   alt="A screenshot of the Contributors graph for the `keybase/client` GitHub repository indicating a sharp decline in activity to almost nothing since May 2020",
+   lazy=false) }}
 
 The official blog went completely silent, third-party integrations started to
 break down, previously-announced improvements to Keybase never materialized,

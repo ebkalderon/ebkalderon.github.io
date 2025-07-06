@@ -15,7 +15,7 @@ path = "wireguard-monitor-in-dashboard.png"
 alt_text = "Screenshot of active Wireguard monitor in Uptime Kuma dashboard"
 +++
 
-{{ responsive_image(src="wireguard-monitor-in-dashboard.png", alt="Screenshot of active Wireguard monitor in Uptime Kuma dashboard", caption="Wireguard monitor in Uptime Kuma") }}
+{{ responsive_image(src="wireguard-monitor-in-dashboard.png", alt="Screenshot of active Wireguard monitor in Uptime Kuma dashboard", caption="Wireguard monitor in Uptime Kuma", lazy=false) }}
 
 I use [Uptime Kuma](https://github.com/louislam/uptime-kuma) to monitor the
 status of all self-hosted services that run in my homelab. With one notable
