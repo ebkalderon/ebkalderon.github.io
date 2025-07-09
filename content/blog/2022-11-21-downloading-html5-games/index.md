@@ -445,7 +445,7 @@ game offline:
 8. Navigate to `http://127.0.0.1:8000` in a Web browser to play.
 
 [^1]: The Wayback Machine uses [Wombat](https://github.com/webrecorder/wombat)
-      for all its client-side URL rewriting needs.
+      for its client-side URL rewriting needs.
 
 [^2]: See the [MDN Web Docs entry for `Access-Control-Allow-Origin`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Access-Control-Allow-Origin)
       for details.
