@@ -40,7 +40,7 @@ monitoring solution.
 
 ["loose lips sink ships"]: https://en.wikipedia.org/wiki/Loose_lips_sink_ships
 
-# Initial Approach
+## Initial Approach
 
 One brain-dead simple approach to checking the health of a Wireguard VPN
 endpoint to simply try connecting to it as a client, and then confirm that the
@@ -59,7 +59,7 @@ common case where there's an Internet outage at my home. Because both Uptime
 Kuma and the Wireguard endpoint would still be able to communicate over LAN, the
 VPN status check would erroneously remain green.
 
-# Eventual Solution
+## Eventual Solution
 
 I decided to take a completely different approach. I wrote two simple Uptime
 Kuma monitors which query the [OPNsense REST API] to check whether my home VPN
@@ -72,7 +72,7 @@ is currently up or down. It boils down to checking the following conditions:
 
 Here's how I implemented this.
 
-## Configuring OPNsense
+### Configuring OPNsense
 
 1. Log into the OPNsense management GUI as the root user.
 2. Navigate to `System` > `Access` > `Users`.
@@ -115,7 +115,7 @@ Here's how I implemented this.
 
 [API Key]: https://docs.opnsense.org/manual/how-tos/user-local.html#creating-and-maintainging-api-keys
 
-## Configuring Uptime Kuma
+### Configuring Uptime Kuma
 
 1. Log into the Uptime Kuma dashboard.
 2. Create a new monitor named "Wireguard VPN" with these properties:
@@ -196,7 +196,7 @@ Here's how I implemented this.
 You are now ready to add the monitors to your Uptime Kuma status page(s) however
 you see fit.
 
-# Explanation
+## Explanation
 
 Basically, this VPN monitoring approach works according to the approach
 [described above](#eventual-solution) by aggregating the results of two
@@ -221,7 +221,7 @@ to update the "Wireguard Instance" monitor to send a different alert
 notification if the service is undergoing a graceful restart versus a permanent
 outage.
 
-# Epilogue
+## Epilogue
 
 I should really write a separate post diving into the hardware I'm currently
 using to power the extremely overkill 10 Gbps network I have at home, including
