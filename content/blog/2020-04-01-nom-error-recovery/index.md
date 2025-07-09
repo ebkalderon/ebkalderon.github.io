@@ -1,6 +1,7 @@
 +++
 title = "Error recovery with parser combinators (using nom)"
 description = "A brief exploration of the paper \"Syntax error recovery in parsing expression grammars\" (2018) and a practical demonstration in code."
+date = 2020-04-01T17:51:12+08:00
 updated = 2025-06-26T20:39:05-04:00
 aliases = ["/nom-error-recovery"]
 
