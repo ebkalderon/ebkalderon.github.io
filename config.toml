@@ -26,7 +26,7 @@ smart_punctuation = true
 copy_button = false
 favicon = "images/favicon.png"
 fediverse_creator = "@ebkalderon@hachyderm.io"
-header.title = "eyal kalderon"
+header_title = "eyal kalderon"
 show_default_author = false
 
 main_menu = [
