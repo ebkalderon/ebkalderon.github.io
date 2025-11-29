@@ -54,3 +54,7 @@ allowed_domains = [
     { directive = "script-src", domains = ["'self'", "utteranc.es", "static.cloudflareinsights.com"] },
     { directive = "style-src-elem", domains = ["'self'", "'unsafe-inline'", "utteranc.es"] },
 ]
+
+[extra.theme_switcher]
+enable = false
+default = "terminus"
