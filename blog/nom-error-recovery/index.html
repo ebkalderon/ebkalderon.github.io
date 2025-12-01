@@ -1,0 +1,605 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src-attr 'unsafe-inline'; connect-src 'self' cloudflareinsights.com; frame-src 'self' utteranc.es; img-src 'self' data:; script-src 'self' utteranc.es static.cloudflareinsights.com; style-src-elem 'self' 'unsafe-inline' utteranc.es">
+
+    <title>Error recovery with parser combinators (using nom) | Eyal Kalderon</title>
+
+    <link rel="preload" href="https://eyalkalderon.com/fonts/FiraCode-Regular.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+    <link rel="preload" href="https://eyalkalderon.com/fonts/FiraCode-Bold.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://eyalkalderon.com/css/style.css?h=b15039a827e49a424ac9">
+    <link rel="stylesheet" href="https://eyalkalderon.com/css/comments.css?h=b869520e8b0b63bda8a9">
+    
+    <link rel="icon" type="image/png" href="https://eyalkalderon.com/images/favicon.png">
+    <link rel="apple-touch-icon" href="https://eyalkalderon.com/processed_images/favicon.4a98e100e3837000.png">
+    <script src="https://eyalkalderon.com/js/auto-close-popover-on-resize.js?h=4ef87d6fc7b98b22e044" defer></script>
+    <script src="https://eyalkalderon.com/js/copy-code-to-clipboard.js?h=6aac77c47d552a0ac847" defer></script>
+
+    <link rel="canonical" href="https://eyalkalderon.com/blog/nom-error-recovery/">
+    <link rel="alternate" type="application/rss+xml" href="https://eyalkalderon.com/rss.xml" title="Eyal Kalderon">
+    
+    <meta name="author" content="Eyal Kalderon">
+    <meta name="description" content="A brief exploration of the paper “Syntax error recovery in parsing expression grammars” (2018) and a practical demonstration in code.">
+    <meta name="robots" content="index, follow">
+    <meta name="theme-color" content="#211f1a">
+    <meta name="color-scheme" content="dark">
+
+    <meta property="og:title" content="Error recovery with parser combinators (using nom)">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://eyalkalderon.com/blog/nom-error-recovery/">
+    <meta property="og:description" content="A brief exploration of the paper “Syntax error recovery in parsing expression grammars” (2018) and a practical demonstration in code.">
+    <meta property="og:site_name" content="Eyal Kalderon">
+    <meta property="og:updated_time" content="2025-12-01T03:46:46.713841613+00:00">
+    <meta property="article:published_time" content="2020-04-01T17:51:12+08:00">
+    <meta property="article:modified_time" content="2025-06-26T20:39:05-04:00">
+    <meta property="article:section" content="research">
+    <meta property="article:tag" content="parsers">
+    <meta property="article:tag" content="rust">
+    <meta name="fediverse:creator" content="@ebkalderon@hachyderm.io">
+</head>
+
+<body class="layout-center">
+    <header class="header">
+        <div class="header-container">
+            <span class="header-logo-container">
+                <a href="https://eyalkalderon.com">
+                    <span class="logo">eyal kalderon</span>
+                </a>
+            </span>
+        </div>
+        <nav class="main-menu" aria-label="Main Menu">
+            <a class="skip-to-content" href="#main">Skip to main content</a>
+            <button class="main-menu-dropdown-button" popovertarget="nav-menu">Menu</button>
+            <ul id="nav-menu" class="main-menu-items" aria-label="Site Navigation" popover>
+                <li><a href="https://eyalkalderon.com/">home</a></li>
+                <li><a href="https://eyalkalderon.com/about/">about</a></li>
+                <li><a href="https://eyalkalderon.com/projects/">projects</a></li>
+                <li><a href="https://eyalkalderon.com/resume.pdf" target="_blank">résumé</a></li>
+                <li><a href="https://eyalkalderon.com/rss.xml">rss</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main id="main">
+        <article class="post content">
+            <header>
+                <h1 class="post-title">
+                    <a href="https://eyalkalderon.com/blog/nom-error-recovery/">Error recovery with parser combinators (using nom)</a>
+                </h1>
+                <ul class="post-meta hidden">
+                    <li title="Published on 2020-04-01T17:51:12+08:00, last updated 2025-06-26T20:39:05-04:00"><time datetime="2020-04-01T17:51:12+08:00">2020.04.01</time>&nbsp;[Updated: <time datetime="2025-06-26T20:39:05-04:00">2025.06.26</time>]</li>
+                    <li role="separator" aria-hidden="true">::</li>
+                    <li title="2943 words"><time datetime="PT15M">15 min</time> read</li>
+                </ul>
+                <div class="post-tags">
+                    <span>&lbrace;<a rel="tag" href="https://eyalkalderon.com/categories/research/">research</a>&rbrace;</span>
+                    <span role="separator">::</span>
+                    <span>#<a rel="tag" href="https://eyalkalderon.com/tags/parsers/">parsers</a></span>
+                    <span>#<a rel="tag" href="https://eyalkalderon.com/tags/rust/">rust</a></span>
+                </div>
+            </header>
+
+<p>As the COVID-19 pandemic continues to ravage the globe, lots of people are stuck
+at home, either working remotely or sitting around without much to do. The
+previous afternoon, I had stumbled across an online announcement that the
+<a href="https://www.acm.org/articles/bulletins/2020/march/dl-access-during-covid-19">ACM Digital Library has been made free to all to read and download</a> to
+help foster research, discovery, and learning during this time of crisis.
+Feeling curious, and having previously wanted to read certain research papers
+from the ACM DL previously, I took the opportunity to peruse through its library
+and read as much content as I could. As I was doing so, I stumbled across a very
+useful paper called <a href="https://dl.acm.org/doi/10.1145/3167132.3167261"><strong>“Syntax error recovery in parsing expression
+grammars”</strong></a> by (Medeiros, S. and Fabio Mascarenhas, 2018) that I would
+like to share, and I’ll be testing some of its concepts using a prototype parser
+written in <a href="https://www.rust-lang.org">Rust</a> with the help of the <a href="https://docs.rs/nom"><code>nom</code></a> crate.</p>
+<h2 id="some-background">Some background<a class="post-anchor" href="#some-background" aria-label="Anchor link for: some-background"><span aria-hidden="true">#</span></a>
+</h2>
+<p>Language parsing is a very broad and interesting topic, with a swathe of varying
+approaches and tools to choose from depending on the requirements of the task at
+hand, but the basic premise is simple: the goal of a parser is to consume some
+data as input, break it down into its component parts according to some grammar,
+and derive meaning or understanding from it (<a href="https://en.wikipedia.org/wiki/Parsing">wiki</a>). I personally happen to
+enjoy working with <em>parsing expression grammars</em> (PEGs) and <em>parser combinators</em>
+when writing my own projects.</p>
+<p>In case you are not familiar, PEG is a kind of declarative formal language for
+describing other languages in terms of string pattern matching. That is, PEG
+allows the parser author to declare the grammar of the language they wish to
+parse using sets of expressions like those shown below:</p>
+<pre style="background-color:#272822;color:#f8f8f2;"><code><span>expr    ← sum
+</span><span>sum     ← product ((&#39;+&#39; / &#39;-&#39;) product)*
+</span><span>product ← value ((&#39;*&#39; / &#39;/&#39;) value)*
+</span><span>value   ← [0-9]+ / &#39;(&#39; expr &#39;)&#39;
+</span></code></pre>
+<p>These PEG rules would then be able to describe the rules to a simple arithmetic
+language that behaves like this:</p>
+<div class="wide-container">
+    <table><thead><tr><th>Input</th><th>Parsed syntax tree</th></tr></thead><tbody>
+<tr><td>123</td><td><code>Value(123)</code></td></tr>
+<tr><td>1 + 2</td><td><code>Sum(Value(1), Value(2))</code></td></tr>
+<tr><td>1 + 2 * 3</td><td><code>Sum(Value(1), Product(Value(2), Value(3)))</code></td></tr>
+<tr><td>(1 + 2) * 3</td><td><code>Product(Sum(Value(1), Value(2)), Value(3))</code></td></tr>
+</tbody></table>
+
+</div>
+<p>Any PEG expression can be converted directly into a <a href="https://en.wikipedia.org/wiki/Recursive_descent_parser">recursive descent parser</a>,
+either automatically using a parser generator or crafted by hand in the
+programming language of your choice.</p>
+<p>I really enjoy using parser combinator frameworks like <a href="https://docs.rs/nom"><code>nom</code></a> as a nice middle
+ground between the two options, since they grant you the freedom and flexibility
+of writing your parser fully in the host language (in this example, Rust), but
+the resulting code is succinct, fairly declarative, and looks somewhat PEG-ish,
+if you tilt your head and squint hard enough.</p>
+<pre data-lang="rust" style="background-color:#272822;color:#f8f8f2;" class="language-rust "><code class="language-rust" data-lang="rust"><span style="font-style:italic;color:#66d9ef;">fn </span><span style="color:#a6e22e;">expr</span><span>(</span><span style="font-style:italic;color:#fd971f;">input</span><span>: </span><span style="color:#f92672;">&amp;</span><span style="font-style:italic;color:#66d9ef;">str</span><span>) -&gt; IResult&lt;</span><span style="color:#f92672;">&amp;</span><span style="font-style:italic;color:#66d9ef;">str</span><span>, </span><span style="color:#f92672;">&amp;</span><span style="font-style:italic;color:#66d9ef;">str</span><span>&gt; {
+</span><span>    </span><span style="color:#66d9ef;">sum</span><span>(input)
+</span><span>}
+</span><span>
+</span><span style="font-style:italic;color:#66d9ef;">fn </span><span style="color:#a6e22e;">sum</span><span>(</span><span style="font-style:italic;color:#fd971f;">input</span><span>: </span><span style="color:#f92672;">&amp;</span><span style="font-style:italic;color:#66d9ef;">str</span><span>) -&gt; IResult&lt;</span><span style="color:#f92672;">&amp;</span><span style="font-style:italic;color:#66d9ef;">str</span><span>, </span><span style="color:#f92672;">&amp;</span><span style="font-style:italic;color:#66d9ef;">str</span><span>&gt; {
+</span><span>    </span><span style="font-style:italic;color:#66d9ef;">let</span><span> op </span><span style="color:#f92672;">= </span><span style="color:#66d9ef;">alt</span><span>((</span><span style="font-style:italic;color:#66d9ef;">char</span><span>(</span><span style="color:#e6db74;">&#39;+&#39;</span><span>), </span><span style="font-style:italic;color:#66d9ef;">char</span><span>(</span><span style="color:#e6db74;">&#39;-&#39;</span><span>)));
+</span><span>    </span><span style="color:#66d9ef;">recognize</span><span>(</span><span style="color:#66d9ef;">pair</span><span>(product, </span><span style="color:#66d9ef;">many0</span><span>(</span><span style="color:#66d9ef;">pair</span><span>(op, product))))(input)
+</span><span>}
+</span><span>
+</span><span style="font-style:italic;color:#66d9ef;">fn </span><span style="color:#a6e22e;">product</span><span>(</span><span style="font-style:italic;color:#fd971f;">input</span><span>: </span><span style="color:#f92672;">&amp;</span><span style="font-style:italic;color:#66d9ef;">str</span><span>) -&gt; IResult&lt;</span><span style="color:#f92672;">&amp;</span><span style="font-style:italic;color:#66d9ef;">str</span><span>, </span><span style="color:#f92672;">&amp;</span><span style="font-style:italic;color:#66d9ef;">str</span><span>&gt; {
+</span><span>    </span><span style="font-style:italic;color:#66d9ef;">let</span><span> op </span><span style="color:#f92672;">= </span><span style="color:#66d9ef;">alt</span><span>((</span><span style="font-style:italic;color:#66d9ef;">char</span><span>(</span><span style="color:#e6db74;">&#39;*&#39;</span><span>), </span><span style="font-style:italic;color:#66d9ef;">char</span><span>(</span><span style="color:#e6db74;">&#39;/&#39;</span><span>)));
+</span><span>    </span><span style="color:#66d9ef;">recognize</span><span>(</span><span style="color:#66d9ef;">pair</span><span>(value, </span><span style="color:#66d9ef;">many0</span><span>(</span><span style="color:#66d9ef;">pair</span><span>(op, value))))(input)
+</span><span>}
+</span><span>
+</span><span style="font-style:italic;color:#66d9ef;">fn </span><span style="color:#a6e22e;">value</span><span>(</span><span style="font-style:italic;color:#fd971f;">input</span><span>: </span><span style="color:#f92672;">&amp;</span><span style="font-style:italic;color:#66d9ef;">str</span><span>) -&gt; IResult&lt;</span><span style="color:#f92672;">&amp;</span><span style="font-style:italic;color:#66d9ef;">str</span><span>, </span><span style="color:#f92672;">&amp;</span><span style="font-style:italic;color:#66d9ef;">str</span><span>&gt; {
+</span><span>    </span><span style="color:#66d9ef;">recognize</span><span>(</span><span style="color:#66d9ef;">alt</span><span>((digit1, </span><span style="color:#66d9ef;">delimited</span><span>(</span><span style="font-style:italic;color:#66d9ef;">char</span><span>(</span><span style="color:#e6db74;">&#39;(&#39;</span><span>), expr, </span><span style="font-style:italic;color:#66d9ef;">char</span><span>(</span><span style="color:#e6db74;">&#39;)&#39;</span><span>)))))(input)
+</span><span>}
+</span></code></pre>
+<p>Each of the four parsers above corresponds to a PEG rule, and since each one is
+represented as a pure function, they compose nicely in code and each one can
+easily be tested in isolation from the others, e.g. with inline unit tests. All
+in all, I enjoy working with PEG and parser combinators!</p>
+<h2 id="motivation">Motivation<a class="post-anchor" href="#motivation" aria-label="Anchor link for: motivation"><span aria-hidden="true">#</span></a>
+</h2>
+<p>I’ve been hacking on a parser and <a href="https://microsoft.github.io/language-server-protocol/">language server</a> for the <a href="https://nixos.org/nix/">Nix programming
+language</a> as a side project (<a href="https://github.com/ebkalderon/nix-language-server">GitHub</a>) for some time now, and this extended
+period of being stuck at home renewed my interest in working on it. This
+language server aims to supply code analysis, and auto-completion for compatible
+third-party text editors and IDEs. This project has been very challenging for me
+to work on, in a good way, because language servers tend to have very strict
+requirements of their underlying parsers.</p>
+<p>Most compilers and static analysis tools are <a href="https://en.wikipedia.org/wiki/Batch_program">batch programs</a> which act like a
+dumb pipe, consuming source code in one end and spitting an executable out the
+other (yes, incremental compilation and artifact caching bends this analogy a
+bit, but the basic premise still holds). This means that their parsers and
+resulting <a href="https://en.wikipedia.org/wiki/Abstract_syntax_tree">abstract syntax trees</a> are optimized for very different things than
+what an interactive IDE would want.</p>
+<p>Since the user is continuously modifying the source text and entering keystrokes
+into their editor, the parser providing syntax checking for their editor is very
+frequently exposed to incomplete or downright invalid snippets of code more
+often than not. This means that halting parsing and bailing with an error
+message whenever the first error is encountered, like many traditional parsers
+do, is <em>simply not an option</em>.</p>
+
+  <figure class="center" >
+    <img src="rust-analyzer.gif" alt="rust-analyzer in action" />
+    
+      <figcaption class="center">Parser producing a best-effort syntax tree from incomplete code (<a href="https://rust-analyzer.github.io/thisweek/2020/03/16/changelog-16.html">credit</a>)</figcaption>
+    
+  </figure>
+
+<p>Instead, the parser needs to be as fault-tolerant as possible, always producing
+a syntax tree of some kind on every single parse and deriving as much syntactic
+and semantic meaning as it can from user input, however malformed it might be.
+Your editor should still be able to provide meaningful code completion, hover
+documentation, go-to-definition, and symbol searching regardless of whether
+there is a missing semicolon somewhere halfway down the page.</p>
+<h2 id="a-naive-approach">A naive approach<a class="post-anchor" href="#a-naive-approach" aria-label="Anchor link for: a-naive-approach"><span aria-hidden="true">#</span></a>
+</h2>
+<p>When I first started working on this project, I had chosen to implement my Nix
+parser in Rust using <code>nom</code> 5.0, since that was the tool I was most comfortable
+using for writing parsers at the time.</p>
+<p>As I was writing up my parsers, I very quickly realized that bailing early from
+parsing with an <code>Err(nom::Err::Error(_))</code> or <code>Err(nom::Error::Failure(_))</code>
+wasn’t a good idea for emitting errors. The former triggers a backtrack, which I
+didn’t always want, and the latter would halt parsing altogether with an error,
+which I never wanted. <code>Err(nom::Error::Incomplete(_))</code> sounded promising due to
+the name, but it too ended up being useless given the design constraints I had
+in mind. I needed some way to log that a non-fatal parse error had been
+encountered and resume parsing as though nothing had happened, but
+unfortunately, there seemed to be nothing in the vast <code>nom</code> parser combinator
+toolbox that could help me deal with this.</p>
+<p>Given that <code>nom</code> parser combinators are pure functions whose signatures are
+structured like this:</p>
+<pre data-lang="rust" style="background-color:#272822;color:#f8f8f2;" class="language-rust "><code class="language-rust" data-lang="rust"><span style="font-style:italic;color:#66d9ef;">impl </span><span>Fn(Input) -&gt; IResult&lt;Input, Output, Error&gt;
+</span></code></pre>
+<p>which maps to:</p>
+<pre data-lang="rust" style="background-color:#272822;color:#f8f8f2;" class="language-rust "><code class="language-rust" data-lang="rust"><span style="font-style:italic;color:#66d9ef;">impl </span><span>Fn(Input) -&gt; Result&lt;(Remaining, Output), Error&gt;
+</span></code></pre>
+<p>I decided to carry these non-fatal parse errors through the <code>Output</code> instead of
+returning them through <code>Result::Err(nom::Error::Error(_))</code> using a custom data
+structure which I had named <a href="https://github.com/ebkalderon/nix-language-server/blob/master/nix-parser/src/parser/partial.rs#L64-L68"><code>Partial</code></a>. This was a monadic data structure which
+was essentially:</p>
+<pre data-lang="rust" data-name="nix-parser/src/parser/partial.rs" style="background-color:#272822;color:#f8f8f2;" class="language-rust "><code class="language-rust" data-lang="rust" data-name="nix-parser/src/parser/partial.rs"><span style="color:#f92672;">pub </span><span style="font-style:italic;color:#66d9ef;">struct </span><span>Partial&lt;T&gt; {
+</span><span>    value: </span><span style="font-style:italic;color:#66d9ef;">Option</span><span>&lt;T&gt;,
+</span><span>    errors: </span><span style="font-style:italic;color:#66d9ef;">Vec</span><span>&lt;Error&gt;,
+</span><span>}
+</span><span>
+</span><span style="font-style:italic;color:#66d9ef;">impl</span><span>&lt;T&gt; Partial&lt;T&gt; {
+</span><span>    </span><span style="color:#f92672;">pub </span><span style="font-style:italic;color:#66d9ef;">fn </span><span style="color:#a6e22e;">map</span><span>&lt;U, F&gt;(</span><span style="font-style:italic;color:#fd971f;">self</span><span>, </span><span style="font-style:italic;color:#fd971f;">f</span><span>: F) -&gt; Partial&lt;U&gt;
+</span><span>    </span><span style="color:#f92672;">where
+</span><span>        F: FnOnce(T) -&gt; U
+</span><span>    { </span><span style="color:#f92672;">... </span><span>}
+</span><span>
+</span><span>    </span><span style="color:#f92672;">pub </span><span style="font-style:italic;color:#66d9ef;">fn </span><span style="color:#a6e22e;">flat_map</span><span>&lt;U, F&gt;(</span><span style="color:#f92672;">mut </span><span style="font-style:italic;color:#fd971f;">self</span><span>, </span><span style="font-style:italic;color:#fd971f;">f</span><span>: F) -&gt; Partial&lt;U&gt;
+</span><span>    </span><span style="color:#f92672;">where
+</span><span>        F: FnOnce(T) -&gt; Partial&lt;U&gt;
+</span><span>    { </span><span style="color:#f92672;">... </span><span>}
+</span><span>
+</span><span>    </span><span style="color:#f92672;">pub </span><span style="font-style:italic;color:#66d9ef;">fn </span><span style="color:#a6e22e;">value</span><span>(</span><span style="color:#f92672;">&amp;</span><span style="font-style:italic;color:#fd971f;">self</span><span>) -&gt; </span><span style="font-style:italic;color:#66d9ef;">Option</span><span>&lt;</span><span style="color:#f92672;">&amp;</span><span>T&gt; {
+</span><span>        </span><span style="color:#f92672;">...
+</span><span>    }
+</span><span>
+</span><span>    </span><span style="color:#f92672;">pub </span><span style="font-style:italic;color:#66d9ef;">fn </span><span style="color:#a6e22e;">errors</span><span>(</span><span style="color:#f92672;">&amp;</span><span style="font-style:italic;color:#fd971f;">self</span><span>) -&gt; </span><span style="color:#f92672;">&amp;</span><span>[Error] {
+</span><span>        </span><span style="color:#f92672;">...
+</span><span>    }
+</span><span>
+</span><span>    </span><span style="color:#f92672;">pub </span><span style="font-style:italic;color:#66d9ef;">fn </span><span style="color:#a6e22e;">verify</span><span>(</span><span style="font-style:italic;color:#fd971f;">self</span><span>) -&gt; </span><span style="font-style:italic;color:#66d9ef;">Result</span><span>&lt;T, </span><span style="font-style:italic;color:#66d9ef;">Vec</span><span>&lt;Error&gt;&gt; {
+</span><span>        </span><span style="color:#f92672;">...
+</span><span>    }
+</span><span>}
+</span></code></pre>
+<p>This data structure was complemented with a bunch of custom <code>nom</code> combinators,
+e.g. <code>map_partial()</code>, <code>expect_terminated()</code>, and <code>skip_if_err()</code>, which would
+allow me to compose these fault-tolerant parsers together while accumulating
+errors in the <code>errors</code> field.</p>
+<p>The consumer of this data structure would then choose to either:</p>
+<ol>
+<li>Assert that they need a valid AST without errors by calling <code>expr.verify()</code>,
+transforming the <code>Partial&lt;T&gt;</code> into a <code>Result&lt;T, Vec&lt;Error&gt;&gt;</code>. This option
+would be useful for traditonal batch compiler authors, as well as for testing
+and debugging.</li>
+<li>Extract and examine the contents of the <code>value</code> and <code>errors</code> field
+separately. This is what the language server would do: publish the
+accumulated errors to the user’s editor in the form of diagnostics and then
+perform further analysis on the syntax tree contained in <code>value</code>.</li>
+</ol>
+<p>All the parser combinators would have this function signature instead:</p>
+<pre data-lang="rust" style="background-color:#272822;color:#f8f8f2;" class="language-rust "><code class="language-rust" data-lang="rust"><span style="font-style:italic;color:#66d9ef;">impl </span><span>Fn(Input) -&gt; IResult&lt;Input, Partial&lt;Output&gt;, Error&gt;
+</span></code></pre>
+<p>While this approach seemed to work well initially, it spiralled out of control
+once the parser grew beyond a certain size. The number of <code>Partial</code> specific
+combinators grew, the parser logic got hairier, more imperative, and trickier to
+debug, and the performance implications of carrying around a heavy stack of
+errors from function to function <a href="https://github.com/ebkalderon/nix-language-server/commit/4cd939a2917709a527bd1967f4a29bfd9f2767cc">were astonishingly awful</a>. It didn’t
+look and feel that much like PEG anymore.</p>
+<p>I will admit I learned a lot about a breadth of topics during this time, from
+benchmarking functions with <a href="https://github.com/bheisler/criterion.rs"><code>criterion</code></a> to generating flamegraphs with
+<a href="https://github.com/ferrous-systems/flamegraph"><code>cargo-flamegraph</code></a>, and going to extreme lengths to avoid heap allocations to
+make the parser as fast as possible. I used <a href="https://docs.rs/nom_locate"><code>nom_locate</code></a> to retain string span
+information and be as zero-copy as possible when constructing the syntax tree.
+But ultimately, I couldn’t fix all the warts and fundamental flaws. I needed a
+new approach.</p>
+<h2 id="the-paper-s-solution">The paper’s solution<a class="post-anchor" href="#the-paper-s-solution" aria-label="Anchor link for: the-paper-s-solution"><span aria-hidden="true">#</span></a>
+</h2>
+<p>Finally, back to the paper that originally inspired this article! I shelved this
+project some months ago due to work and personal life matters, but came back
+to it last month with some fresh ideas and a better intuition of where to look.
+Discouraged by the previous setbacks, I was questioning whether parser
+combinators in general were flexible enough to express parsers which were both
+permissive and fault-tolerant, while also emitting good hand-crafted
+diagnostics. But then I stumbled upon the <a href="https://dl.acm.org/doi/10.1145/3167132.3167261">“Syntax error recovery in parsing
+expression grammars” (2018)</a> paper while scouring the ACM DL search
+engine for interesting articles last night.</p>
+<p>The authors of this paper actually managed to get pretty great results parsing
+the <a href="https://www.lua.org/">Lua programming language</a> using a set of extended PEGs, producing excellent
+tailor-made diagnostics rivaling the automatic error recovering capabilities of
+their control, a top-down <a href="https://en.wikipedia.org/wiki/LL_parser">LL parser</a> generated by <a href="https://www.antlr.org/">ANTLR</a>. Their techniques are
+similar to those outlined in <a href="https://matklad.github.io/2018/06/06/modern-parser-generator.html">this excellent blog post by @matklad</a>,
+prominent author of <a href="https://github.com/rust-analyzer/rust-analyzer"><code>rust-analyzer</code></a> and <a href="https://github.com/matklad/rowan"><code>rowan</code></a>, a library for
+lossless <a href="https://en.wikipedia.org/wiki/Parse_tree">concrete syntax trees</a>.</p>
+<p>And they managed to do all of this while not bailing out on the first parse
+error and still producing some kind of syntax tree <em>100% of the time</em> in all the
+cases they tested. And the final result still looks and feels like PEG. Quite
+promising stuff! 😍</p>
+<p>I was immediately excited by this paper since I knew that any error recovery
+strategy for PEG could potentially be applicable in a parser combinator library
+like <code>nom</code>, given that both approaches employ recursive descent. If you’re
+interested in the specific error recovery strategies used, I would strongly
+recommend you read the entire paper for yourself.</p>
+<p>I would also recommend looking at <a href="https://github.com/sqmedeiros/lpeglabel">LPegLabel</a>, a reference implementation of a
+PEG parser generator using these techniques developed by authors Medeiros and
+Mascarenhas, if you’d like a more concrete example.</p>
+<p>In general, though, it boils down to a few key principles:</p>
+<ol>
+<li>Parsing should <em>never</em> fail. If some kind of syntax tree isn’t produced, it’s
+considered a bug. Basically, the output of the top-level parser should be a
+<code>(T, Vec&lt;Error&gt;)</code>, not <code>Result&lt;T, Vec&lt;Error&gt;&gt;</code>. Also, your syntax tree should
+provide a fallback <code>Error</code> node type for representing invalid, unparseable
+expressions.</li>
+<li>The PEG rules describing your language are loosened and extended to include
+recovery expressions annotated by “labels” which basically ensures that
+parsing never fails. These recovery expressions emit error messages when
+evaluated but will silently allow parsing to continue unabated. Sometimes
+they skip forward a few tokens, but often the cursor just stays where it is.
+I’ll demonstrate a very basic recovery expression with implemented with <code>nom</code>
+later on.</li>
+<li>Synchronization tokens like <code>)</code>, <code>}</code>, and <code>;</code> are used to skip ahead through
+the text when necessary to avoid recovery expressions emitting spurious
+errors down the line after an earlier one has already fired.</li>
+</ol>
+<p>The first and third concepts aren’t really anything new in the academic space.
+Infallible parsing, special syntax tree nodes for marking errors, and the use of
+synchronization tokens for error recovery are common tactics used to great
+effect in hand-written recursive descent parsers, but this paper applies them
+nicely to PEG parsers (which in turn, I would apply to parser combinators)
+without sacrificing their declarative nature. It also provides a small library
+of handy recovery expressions you can use in different situations to either emit
+high quality errors or suppress them.</p>
+<p>Let’s take a look at a real world example of a fault-tolerant parser written
+in Rust using the <code>nom</code> 5.0 parser combinator library.</p>
+<h2 id="demonstration">Demonstration<a class="post-anchor" href="#demonstration" aria-label="Anchor link for: demonstration"><span aria-hidden="true">#</span></a>
+</h2>
+<p>The full source code for this demo can be found <a href="https://github.com/ebkalderon/example-fault-tolerant-parser">here</a> if you’d like to
+read the whole thing, but the idea is to apply the most basic error recovery
+strategies outlined in the paper for PEGs using parser combinators.</p>
+<p>Below are some Rust types and traits that we will use throughout our example:</p>
+<pre data-lang="rust" style="background-color:#272822;color:#f8f8f2;" class="language-rust "><code class="language-rust" data-lang="rust"><span style="color:#f92672;">use </span><span>std::ops::Range;
+</span><span>
+</span><span style="color:#75715e;">/// This used in place of `&amp;str` or `&amp;[u8]` in our `nom` parsers.
+</span><span style="font-style:italic;color:#66d9ef;">type </span><span>LocatedSpan</span><span style="color:#f92672;">&lt;&#39;a&gt; = </span><span>nom_locate::LocatedSpan&lt;</span><span style="color:#f92672;">&amp;&#39;a </span><span style="font-style:italic;color:#66d9ef;">str</span><span>, State&lt;</span><span style="color:#f92672;">&#39;a</span><span>&gt;&gt;;
+</span><span style="color:#75715e;">/// Convenient type alias for `nom::IResult&lt;I, O&gt;` reduced to `IResult&lt;O&gt;`.
+</span><span style="font-style:italic;color:#66d9ef;">type </span><span>IResult</span><span style="color:#f92672;">&lt;&#39;a</span><span>, T</span><span style="color:#f92672;">&gt; = </span><span>nom::IResult&lt;LocatedSpan&lt;</span><span style="color:#f92672;">&#39;a</span><span>&gt;, T&gt;;
+</span><span>
+</span><span style="font-style:italic;color:#66d9ef;">trait </span><span>ToRange {
+</span><span>    </span><span style="font-style:italic;color:#66d9ef;">fn </span><span style="color:#a6e22e;">to_range</span><span>(</span><span style="color:#f92672;">&amp;</span><span style="font-style:italic;color:#fd971f;">self</span><span>) -&gt; Range&lt;</span><span style="font-style:italic;color:#66d9ef;">usize</span><span>&gt;;
+</span><span>}
+</span><span>
+</span><span style="font-style:italic;color:#66d9ef;">impl</span><span>&lt;</span><span style="color:#f92672;">&#39;a</span><span>&gt; ToRange </span><span style="color:#f92672;">for </span><span>LocatedSpan&lt;</span><span style="color:#f92672;">&#39;a</span><span>&gt; {
+</span><span>    </span><span style="font-style:italic;color:#66d9ef;">fn </span><span style="color:#a6e22e;">to_range</span><span>(</span><span style="color:#f92672;">&amp;</span><span style="font-style:italic;color:#fd971f;">self</span><span>) -&gt; Range&lt;</span><span style="font-style:italic;color:#66d9ef;">usize</span><span>&gt; {
+</span><span>        </span><span style="font-style:italic;color:#66d9ef;">let</span><span> start </span><span style="color:#f92672;">= </span><span>self.</span><span style="color:#66d9ef;">location_offset</span><span>();
+</span><span>        </span><span style="font-style:italic;color:#66d9ef;">let</span><span> end </span><span style="color:#f92672;">=</span><span> start </span><span style="color:#f92672;">+ </span><span>self.</span><span style="color:#66d9ef;">fragment</span><span>().</span><span style="color:#66d9ef;">len</span><span>();
+</span><span>        start</span><span style="color:#f92672;">..</span><span>end
+</span><span>    }
+</span><span>}
+</span><span>
+</span><span style="color:#75715e;">/// Error containing a text span and an error message to display.
+</span><span>#[derive(Debug)]
+</span><span style="font-style:italic;color:#66d9ef;">struct </span><span>Error(Range&lt;</span><span style="font-style:italic;color:#66d9ef;">usize</span><span>&gt;, String);
+</span><span>
+</span><span style="color:#75715e;">/// Carried around in the `LocatedSpan::extra` field in
+</span><span style="color:#75715e;">/// between `nom` parsers.
+</span><span>#[derive(Clone, Debug)]
+</span><span style="font-style:italic;color:#66d9ef;">struct </span><span>State&lt;</span><span style="color:#f92672;">&#39;a</span><span>&gt;(</span><span style="color:#f92672;">&amp;&#39;a </span><span>RefCell&lt;</span><span style="font-style:italic;color:#66d9ef;">Vec</span><span>&lt;Error&gt;&gt;);
+</span><span>
+</span><span style="font-style:italic;color:#66d9ef;">impl</span><span>&lt;</span><span style="color:#f92672;">&#39;a</span><span>&gt; State&lt;</span><span style="color:#f92672;">&#39;a</span><span>&gt; {
+</span><span>    </span><span style="color:#75715e;">/// Pushes an error onto the errors stack from within a `nom`
+</span><span>    </span><span style="color:#75715e;">/// parser combinator while still allowing parsing to continue.
+</span><span>    </span><span style="color:#f92672;">pub </span><span style="font-style:italic;color:#66d9ef;">fn </span><span style="color:#a6e22e;">report_error</span><span>(</span><span style="color:#f92672;">&amp;</span><span style="font-style:italic;color:#fd971f;">self</span><span>, </span><span style="font-style:italic;color:#fd971f;">error</span><span>: Error) {
+</span><span>        self.</span><span style="color:#ae81ff;">0.</span><span style="color:#66d9ef;">borrow_mut</span><span>().</span><span style="color:#66d9ef;">push</span><span>(error);
+</span><span>    }
+</span><span>}
+</span></code></pre>
+<p>Our top-level <code>parse()</code> function is defined as follows:</p>
+<pre data-lang="rust" style="background-color:#272822;color:#f8f8f2;" class="language-rust "><code class="language-rust" data-lang="rust"><span style="color:#f92672;">pub </span><span style="font-style:italic;color:#66d9ef;">fn </span><span style="color:#a6e22e;">parse</span><span>(</span><span style="font-style:italic;color:#fd971f;">source</span><span>: </span><span style="color:#f92672;">&amp;</span><span style="font-style:italic;color:#66d9ef;">str</span><span>) -&gt; (Expr, </span><span style="font-style:italic;color:#66d9ef;">Vec</span><span>&lt;Error&gt;) {
+</span><span>    </span><span style="color:#75715e;">/// Store our error stack external to our `nom` parser here. It
+</span><span>    </span><span style="color:#75715e;">/// is wrapped in a `RefCell` so parser functions down the line
+</span><span>    </span><span style="color:#75715e;">/// can remotely push errors onto it as they run.
+</span><span>    </span><span style="font-style:italic;color:#66d9ef;">let</span><span> errors </span><span style="color:#f92672;">= </span><span>RefCell::new(</span><span style="font-style:italic;color:#66d9ef;">Vec</span><span>::new());
+</span><span>    </span><span style="font-style:italic;color:#66d9ef;">let</span><span> input </span><span style="color:#f92672;">= </span><span>LocatedSpan::new_extra(source, State(</span><span style="color:#f92672;">&amp;</span><span>errors));
+</span><span>    </span><span style="font-style:italic;color:#66d9ef;">let </span><span>(</span><span style="color:#f92672;">_</span><span>, expr) </span><span style="color:#f92672;">= </span><span style="color:#66d9ef;">all_consuming</span><span>(source_file)(input).</span><span style="color:#66d9ef;">expect</span><span>(</span><span style="color:#e6db74;">&quot;parser cannot fail&quot;</span><span>);
+</span><span>    (expr, errors.</span><span style="color:#66d9ef;">into_inner</span><span>())
+</span><span>}
+</span></code></pre>
+<p>Notice how we <code>.expect()</code> on our all-consuming <code>source_file()</code> parser. Remember,
+if we fail to produce some kind of syntax tree and consume all of the input 100%
+of the time, that’s considered a bug in the parser.</p>
+<p>For the sake of example, I’ve implemented only one recovery expression outlined
+in the paper in the form of a custom parser combinator I call <code>expect()</code>. It
+looks like this:</p>
+<pre data-lang="rust" style="background-color:#272822;color:#f8f8f2;" class="language-rust "><code class="language-rust" data-lang="rust"><span style="color:#75715e;">/// Evaluate `parser` and wrap the result in a `Some(_)`. Otherwise,
+</span><span style="color:#75715e;">/// emit the  provided `error_msg` and return a `None` while allowing
+</span><span style="color:#75715e;">/// parsing to continue.
+</span><span style="font-style:italic;color:#66d9ef;">fn </span><span style="color:#a6e22e;">expect</span><span>&lt;</span><span style="color:#f92672;">&#39;a</span><span>, F, E, T&gt;(</span><span style="font-style:italic;color:#fd971f;">parser</span><span>: F, </span><span style="font-style:italic;color:#fd971f;">error_msg</span><span>: E) -&gt; impl Fn(LocatedSpan&lt;</span><span style="color:#f92672;">&#39;a</span><span>&gt;) -&gt; IResult&lt;</span><span style="font-style:italic;color:#66d9ef;">Option</span><span>&lt;T&gt;&gt;
+</span><span style="color:#f92672;">where
+</span><span>    F: Fn(LocatedSpan&lt;</span><span style="color:#f92672;">&#39;a</span><span>&gt;) -&gt; IResult&lt;T&gt;,
+</span><span>    E: ToString,
+</span><span>{
+</span><span>    </span><span style="color:#f92672;">move |</span><span>input</span><span style="color:#f92672;">| match </span><span style="color:#66d9ef;">parser</span><span>(input) {
+</span><span>        </span><span style="font-style:italic;color:#66d9ef;">Ok</span><span>((remaining, out)) </span><span style="color:#f92672;">=&gt; </span><span style="font-style:italic;color:#66d9ef;">Ok</span><span>((remaining, </span><span style="font-style:italic;color:#66d9ef;">Some</span><span>(out))),
+</span><span>        </span><span style="font-style:italic;color:#66d9ef;">Err</span><span>(nom::Err::Error((input, </span><span style="color:#f92672;">_</span><span>))) </span><span style="color:#f92672;">| </span><span style="font-style:italic;color:#66d9ef;">Err</span><span>(nom::Err::Failure((input, </span><span style="color:#f92672;">_</span><span>))) </span><span style="color:#f92672;">=&gt; </span><span>{
+</span><span>            </span><span style="font-style:italic;color:#66d9ef;">let</span><span> err </span><span style="color:#f92672;">=</span><span> Error(input.</span><span style="color:#66d9ef;">to_range</span><span>(), error_msg.</span><span style="color:#66d9ef;">to_string</span><span>());
+</span><span>            input.extra.</span><span style="color:#66d9ef;">report_error</span><span>(err); </span><span style="color:#75715e;">// Push error onto stack.
+</span><span>            </span><span style="font-style:italic;color:#66d9ef;">Ok</span><span>((input, </span><span style="font-style:italic;color:#66d9ef;">None</span><span>)) </span><span style="color:#75715e;">// Parsing failed, but keep going.
+</span><span>        }
+</span><span>        </span><span style="font-style:italic;color:#66d9ef;">Err</span><span>(err) </span><span style="color:#f92672;">=&gt; </span><span style="font-style:italic;color:#66d9ef;">Err</span><span>(err),
+</span><span>    }
+</span><span>}
+</span></code></pre>
+<p>This is the realm where parser combinator libraries really shine. This
+<code>expect()</code> combinator can be composed with other parser functions and produce
+results which closely map to their PEG counterparts. Below is an example parser
+capable of parsing a parenthesized expression which uses <code>expect()</code> to report
+errors:</p>
+<pre data-lang="rust" style="background-color:#272822;color:#f8f8f2;" class="language-rust "><code class="language-rust" data-lang="rust"><span style="font-style:italic;color:#66d9ef;">fn </span><span style="color:#a6e22e;">paren</span><span>(</span><span style="font-style:italic;color:#fd971f;">input</span><span>: LocatedSpan) -&gt; IResult&lt;Expr&gt; {
+</span><span>    </span><span style="color:#75715e;">// This approach of using `expect()` to annotate a parser
+</span><span>    </span><span style="color:#75715e;">// with a message follows the original paper&#39;s definition of
+</span><span>    </span><span style="color:#75715e;">// labels annotating certain parts of the PEG grammar.
+</span><span>    </span><span style="font-style:italic;color:#66d9ef;">let</span><span> paren </span><span style="color:#f92672;">= </span><span style="color:#66d9ef;">delimited</span><span>(
+</span><span>        </span><span style="font-style:italic;color:#66d9ef;">char</span><span>(</span><span style="color:#e6db74;">&#39;(&#39;</span><span>),
+</span><span>        </span><span style="color:#66d9ef;">expect</span><span>(expr, </span><span style="color:#e6db74;">&quot;expected expression after `(`&quot;</span><span>),
+</span><span>        </span><span style="color:#66d9ef;">expect</span><span>(</span><span style="font-style:italic;color:#66d9ef;">char</span><span>(</span><span style="color:#e6db74;">&#39;)&#39;</span><span>), </span><span style="color:#e6db74;">&quot;missing `)`&quot;</span><span>),
+</span><span>    );
+</span><span>
+</span><span>    </span><span style="color:#66d9ef;">map</span><span>(paren, |</span><span style="font-style:italic;color:#fd971f;">inner</span><span>| {
+</span><span>        Expr::Paren(</span><span style="font-style:italic;color:#66d9ef;">Box</span><span>::new(inner.</span><span style="color:#66d9ef;">unwrap_or</span><span>(Expr::Error)))
+</span><span>    })(input)
+</span><span>}
+</span></code></pre>
+<h2 id="results">Results<a class="post-anchor" href="#results" aria-label="Anchor link for: results"><span aria-hidden="true">#</span></a>
+</h2>
+<p>The final results of this toy implementation were quite striking, consistently
+producing some very pretty parse results. Given a very trivial AST that looks
+like this:</p>
+<pre data-lang="rust" style="background-color:#272822;color:#f8f8f2;" class="language-rust "><code class="language-rust" data-lang="rust"><span style="color:#75715e;">/// `foo`, `foo_bar`, `foo123`
+</span><span>#[derive(Debug)]
+</span><span style="font-style:italic;color:#66d9ef;">struct </span><span>Ident(String);
+</span><span>
+</span><span>#[derive(Debug)]
+</span><span style="font-style:italic;color:#66d9ef;">enum </span><span>Expr {
+</span><span>    </span><span style="color:#75715e;">/// `(foo)`
+</span><span>    Paren(</span><span style="font-style:italic;color:#66d9ef;">Box</span><span>&lt;Expr&gt;),
+</span><span>    </span><span style="color:#75715e;">/// `foo`
+</span><span>    Ident(Ident),
+</span><span>    </span><span style="color:#75715e;">/// An unparseable, invalid expression.
+</span><span>    Error,
+</span><span>}
+</span></code></pre>
+<p>The following outputs were produced by calling <code>parse()</code>:</p>
+<div class="wide-container">
+    <table><thead><tr><th>Input</th><th>Produced syntax tree</th><th>Errors</th></tr></thead><tbody>
+<tr><td>foo</td><td><code>Ident(Ident("foo"))</code></td><td><code>[]</code></td></tr>
+<tr><td>(foo)</td><td><code>Paren(Ident(Ident("foo")))</code></td><td><code>[]</code></td></tr>
+<tr><td>(foo))</td><td><code>Paren(Ident(Ident("foo")))</code></td><td><code>[Error(5..6, "expected EOF")]</code></td></tr>
+<tr><td>(%</td><td><code>Paren(Error)</code></td><td><code>[Error(1..2, "unexpected `%`"), Error(2..2, "missing `)`")]</code></td></tr>
+<tr><td>(</td><td><code>Paren(Error)</code></td><td><code>[Error(1..1, "expected expression after `(`"), Error(1..1, "missing `)`")]</code></td></tr>
+<tr><td>%</td><td><code>Error</code></td><td><code>[Error(0..1, "unexpected `%`")]</code></td></tr>
+<tr><td>()</td><td><code>Paren(Error)</code></td><td><code>[Error(1..2, "expected expression after `(`")]</code></td></tr>
+<tr><td> </td><td><code>Error</code></td><td><code>[]</code></td></tr>
+</tbody></table>
+
+</div>
+<p>These results are markedly better than what I had gotten with <code>nom</code> previously
+when I was relying on the built-in <a href="https://github.com/Geal/nom/blob/master/doc/error_management.md">custom error management</a> facilities, and the
+logic is significantly more declarative and understandable than the <code>Partial&lt;T&gt;</code>
+approach. And best of all, the final parsers are much shorter, easier to reason
+about, and are more directly analogous to their PEG equivalents, which makes the
+project much more maintainable in the long run.</p>
+<h2 id="future-work">Future work<a class="post-anchor" href="#future-work" aria-label="Anchor link for: future-work"><span aria-hidden="true">#</span></a>
+</h2>
+<p>The example shown above was intentionally designed very simply in order to
+demonstrate the core concepts from Medeiros’ and Mascarenhas’ 2018 paper applied
+to parser combinators with <code>nom</code>. In order to support parsing a complex
+programming language like Nix, I will need to translate more of the recovery
+expressions described in the paper to <code>nom</code> combinators. I will also need to
+investigate richer forms of error representation, possibly containing multiple
+spans, warnings, lints, etc.</p>
+<p>I should also add that the parser used in my actual project does not use
+<code>LocatedSpan</code>, but instead processes a custom <code>Tokens&lt;'a&gt;</code> type. Because of
+this, I can’t integrate the code used in this example into my project as-is. I
+will need to adapt it to work with this custom type, a topic which is considered
+out of scope for this particular post.</p>
+<p>I also didn’t cover incremental parsing nor concrete syntax trees (that much) in
+this guide, and I plan for <code>nix-parser</code> to produce a lossless concrete syntax
+tree (courtesy of <a href="https://docs.rs/rowan"><code>rowan</code></a>) instead of an abstract syntax tree like the
+example.</p>
+<h2 id="conclusion">Conclusion<a class="post-anchor" href="#conclusion" aria-label="Anchor link for: conclusion"><span aria-hidden="true">#</span></a>
+</h2>
+<p>Implementing a parser with good error recovery strategies and rich,
+user-friendly diagnostics is as much an art as it is a science (I think the Rust
+compiler devs would agree). This is even more true when it comes to parsers
+catering to the needs of language servers, REPLs, and other interactive uses
+where you need to be very tolerant to parse errors and provide meaningful
+diagnostics in response to messy and incomplete input. I learned many valuable
+things on this journey, and I’m still learning further as I go along. For one, I
+need to brush up on my formal methods and re-read the paper a few more times to
+fully digest the information.</p>
+<p>I’m incredibly grateful to the <a href="https://www.acm.org/">ACM</a> for having made their
+Digital Library open to the public during this global pandemic, and I’m also
+grateful to Sérgio Medeiros (UFRN, Brazil) and Fabio Mascarenhas (UFRJ, Brazil)
+for having produced the original research paper. I’m glad to have stumbled
+across it, and I learned some nice lessons out of it. If you’re a fan of PEG
+parsers and/or parser combinators and you haven’t read this paper yet, please
+do. It’s pretty neat!</p>
+<p>In the meantime, I’ll be casually hacking away on <a href="https://github.com/ebkalderon/nix-language-server"><code>nix-language-server</code></a>
+whenever I have some spare time, armed with plenty of useful knowledge and
+principles I didn’t have before. Maybe I’ll actually get to producing meaningful
+auto-completions and semantic analysis out of it for once, as soon as I can
+focus on traversing the syntax tree itself and building a usable interpreter for
+evaluating the language. 😛</p>
+<h2 id="external-links">External links<a class="post-anchor" href="#external-links" aria-label="Anchor link for: external-links"><span aria-hidden="true">#</span></a>
+</h2>
+<ul>
+<li><a href="https://dl.acm.org/doi/10.1145/3167132.3167261">“Syntax error recovery in parsing expression grammars”</a></li>
+<li><a href="https://github.com/ebkalderon/example-fault-tolerant-parser">Source code for demo</a></li>
+<li><a href="https://matklad.github.io/2018/06/06/modern-parser-generator.html">Modern Parser Generator</a> (<a href="https://github.com/matklad">@matklad</a>)</li>
+<li><a href="https://github.com/dotnet/roslyn/blob/6b00b6c/docs/wiki/Roslyn-Overview.md#errors">Roslyn Overview (.NET)</a></li>
+<li><a href="https://github.com/ebkalderon/nix-language-server">ebkalderon/nix-language-server</a></li>
+</ul>
+
+        </article>
+        <nav class="post-navigation">
+            <header class="post-navigation-title">
+                <h2>Read More Posts</h2>
+                <hr>
+            </header>
+            <div class="post-navigation-buttons">
+                <a rel="next" href="https://eyalkalderon.com/blog/downloading-html5-games/" aria-label="Next article">
+                    <span aria-hidden="true">&lt;&nbsp;[</span>Downloading HTML5 games for offline play<span aria-hidden="true">]</span>
+                </a>
+                <span aria-hidden="true" role="separator">::</span>
+                <a rel="prev" href="https://eyalkalderon.com/blog/introduction/" aria-label="Prev article">
+                    <span aria-hidden="true">[</span>Introduction<span aria-hidden="true">]&nbsp;&gt;</span>
+                </a>
+            </div>
+        </nav>
+        <section class="comments">
+            <script src="https://utteranc.es/client.js"
+                repo="ebkalderon/ebkalderon.github.io"
+                issue-term="pathname"
+                theme="github-dark-orange"
+                crossorigin="anonymous"
+                async>
+            </script>
+            <noscript>JavaScript must be enabled to view comments.</noscript>
+        </section>
+    </main>
+    <footer class="footer">
+        <address class="socials">
+            <ul>
+                <li>
+                    <a class="social-link" href="https://eyalkalderon.com/rss.xml" title="rss feed" aria-label="rss feed">
+                        <svg role="img" aria-label="feed icon">
+                            <use aria-hidden="true" href="https://eyalkalderon.com/images/social_icons/rss.svg#icon" />
+                        </svg>
+                    </a>
+                </li>
+                <li>
+                    <a class="social-link" rel="me" href="mailto:ebkalderon@gmail.com?subject=hi&body=PGP%20key%2000AB4C0942DCBA25" title="email" aria-label="email">
+                        <svg role="img" aria-label="email icon">
+                            <use aria-hidden="true" href="https://eyalkalderon.com/images/social_icons/email.svg#icon" />
+                        </svg>
+                    </a>
+                </li>
+                <li>
+                    <a class="social-link" rel="me" href="https://github.com/ebkalderon" title="github" aria-label="github">
+                        <svg role="img" aria-label="github icon">
+                            <use aria-hidden="true" href="https://eyalkalderon.com/images/social_icons/github.svg#icon" />
+                        </svg>
+                    </a>
+                </li>
+                <li>
+                    <a class="social-link" rel="me" href="https://www.linkedin.com/in/ebkalderon" title="linkedin" aria-label="linkedin">
+                        <svg role="img" aria-label="linkedin icon">
+                            <use aria-hidden="true" href="https://eyalkalderon.com/images/social_icons/linkedin.svg#icon" />
+                        </svg>
+                    </a>
+                </li>
+                <li>
+                    <a class="social-link" rel="me" href="https://hachyderm.io/@ebkalderon" title="mastodon" aria-label="mastodon">
+                        <svg role="img" aria-label="mastodon icon">
+                            <use aria-hidden="true" href="https://eyalkalderon.com/images/social_icons/mastodon.svg#icon" />
+                        </svg>
+                    </a>
+                </li>
+                <li>
+                    <a class="social-link" rel="me" href="https://keyoxide.org/d5ad5bd47835b0f0b0c3046c00ab4c0942dcba25" title="keyoxide" aria-label="keyoxide">
+                        <svg role="img" aria-label="keyoxide icon">
+                            <use aria-hidden="true" href="https://eyalkalderon.com/images/social_icons/keyoxide.svg#icon" />
+                        </svg>
+                    </a>
+                </li>
+            </ul>
+        </address>
+        <p class="copyright">
+            <span>© <time>2025</time> Eyal Kalderon</span>
+            <span>Powered by <a href="https://www.getzola.org">Zola</a></span>
+            <span>Theme by <a href="https://eyalkalderon.com">ebkalderon</a></span>
+        </p>
+    </footer>
+</body>
+
+</html>

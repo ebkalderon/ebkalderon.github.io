@@ -1,0 +1,370 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src-attr 'unsafe-inline'; connect-src 'self' cloudflareinsights.com; frame-src 'self' utteranc.es; img-src 'self' data:; script-src 'self' utteranc.es static.cloudflareinsights.com; style-src-elem 'self' 'unsafe-inline' utteranc.es">
+
+    <title>Moving from Keybase to Keyoxide | Eyal Kalderon</title>
+
+    <link rel="preload" href="https://eyalkalderon.com/fonts/FiraCode-Regular.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+    <link rel="preload" href="https://eyalkalderon.com/fonts/FiraCode-Bold.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://eyalkalderon.com/css/style.css?h=b15039a827e49a424ac9">
+    <link rel="stylesheet" href="https://eyalkalderon.com/css/comments.css?h=b869520e8b0b63bda8a9">
+    
+    <link rel="icon" type="image/png" href="https://eyalkalderon.com/images/favicon.png">
+    <link rel="apple-touch-icon" href="https://eyalkalderon.com/processed_images/favicon.4a98e100e3837000.png">
+    <script src="https://eyalkalderon.com/js/auto-close-popover-on-resize.js?h=4ef87d6fc7b98b22e044" defer></script>
+    <script src="https://eyalkalderon.com/js/copy-code-to-clipboard.js?h=6aac77c47d552a0ac847" defer></script>
+
+    <link rel="canonical" href="https://eyalkalderon.com/blog/moving-from-keybase-to-keyoxide/">
+    <link rel="alternate" type="application/rss+xml" href="https://eyalkalderon.com/rss.xml" title="Eyal Kalderon">
+    
+    <meta name="author" content="Eyal Kalderon">
+    <meta name="description" content="Mourning the slow death of Keybase and introducing Keyoxide, an open source decentralized replacement.">
+    <meta name="robots" content="index, follow">
+    <meta name="theme-color" content="#211f1a">
+    <meta name="color-scheme" content="dark">
+
+    <meta property="og:title" content="Moving from Keybase to Keyoxide">
+    <meta property="og:type" content="article">
+    <meta property="og:image" content="https://eyalkalderon.com/processed_images/keyoxide-profile-page.12d5bb3a2d9e90df.png">
+    <meta property="og:image:width" content="1133">
+    <meta property="og:image:height" content="675">
+    <meta property="og:image:type" content="image/png">
+    <meta property="og:image:alt" content="Screenshot of my personal Keyoxide profile page with a few identity proofs visible">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta property="og:url" content="https://eyalkalderon.com/blog/moving-from-keybase-to-keyoxide/">
+    <meta property="og:description" content="Mourning the slow death of Keybase and introducing Keyoxide, an open source decentralized replacement.">
+    <meta property="og:site_name" content="Eyal Kalderon">
+    <meta property="og:updated_time" content="2025-12-01T03:46:46.712024701+00:00">
+    <meta property="article:published_time" content="2025-07-05T03:08:11-04:00">
+    <meta property="article:section" content="meta">
+    <meta property="article:tag" content="cryptography">
+    <meta property="article:tag" content="keybase">
+    <meta property="article:tag" content="keyoxide">
+    <meta property="article:tag" content="openpgp">
+    <meta property="article:tag" content="indieweb">
+    <meta name="fediverse:creator" content="@ebkalderon@hachyderm.io">
+</head>
+
+<body class="layout-center">
+    <header class="header">
+        <div class="header-container">
+            <span class="header-logo-container">
+                <a href="https://eyalkalderon.com">
+                    <span class="logo">eyal kalderon</span>
+                </a>
+            </span>
+        </div>
+        <nav class="main-menu" aria-label="Main Menu">
+            <a class="skip-to-content" href="#main">Skip to main content</a>
+            <button class="main-menu-dropdown-button" popovertarget="nav-menu">Menu</button>
+            <ul id="nav-menu" class="main-menu-items" aria-label="Site Navigation" popover>
+                <li><a href="https://eyalkalderon.com/">home</a></li>
+                <li><a href="https://eyalkalderon.com/about/">about</a></li>
+                <li><a href="https://eyalkalderon.com/projects/">projects</a></li>
+                <li><a href="https://eyalkalderon.com/resume.pdf" target="_blank">résumé</a></li>
+                <li><a href="https://eyalkalderon.com/rss.xml">rss</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main id="main">
+        <article class="post content">
+            <header>
+                <h1 class="post-title">
+                    <a href="https://eyalkalderon.com/blog/moving-from-keybase-to-keyoxide/">Moving from Keybase to Keyoxide</a>
+                </h1>
+                <ul class="post-meta hidden">
+                    <li title="Published on 2025-07-05T03:08:11-04:00"><time datetime="2025-07-05T03:08:11-04:00">2025.07.05</time></li>
+                    <li role="separator" aria-hidden="true">::</li>
+                    <li title="1379 words"><time datetime="PT7M">7 min</time> read</li>
+                </ul>
+                <div class="post-tags">
+                    <span>&lbrace;<a rel="tag" href="https://eyalkalderon.com/categories/meta/">meta</a>&rbrace;</span>
+                    <span role="separator">::</span>
+                    <span>#<a rel="tag" href="https://eyalkalderon.com/tags/cryptography/">cryptography</a></span>
+                    <span>#<a rel="tag" href="https://eyalkalderon.com/tags/keybase/">keybase</a></span>
+                    <span>#<a rel="tag" href="https://eyalkalderon.com/tags/keyoxide/">keyoxide</a></span>
+                    <span>#<a rel="tag" href="https://eyalkalderon.com/tags/openpgp/">openpgp</a></span>
+                    <span>#<a rel="tag" href="https://eyalkalderon.com/tags/indieweb/">indieweb</a></span>
+                </div>
+            </header>
+
+<p>Ever since <a href="https://keybase.io/blog/keybase-joins-zoom">the acquisition of Keybase by
+Zoom</a> while the world was in the
+throes of the COVID-19 pandemic, the pace of Keybase’s development essentially
+stopped.</p>
+<img src="https://eyalkalderon.com/processed_images/contributors-graph-for-keybase-client.5ae0e15065296035.png" alt="A screenshot of the Contributors graph for the `keybase&#x2F;client` GitHub repository indicating a sharp decline in activity to almost nothing since May 2020"
+     width="1280" height="513"
+     sizes="(min-width: 920px) 784px, (min-width: 700px) calc(82vw + 46px), calc(100vw - 40px)" 
+     srcset="https://eyalkalderon.com/processed_images/contributors-graph-for-keybase-client.ab513f7f034484d2.png 640w,
+             https://eyalkalderon.com/processed_images/contributors-graph-for-keybase-client.69dd40a28bc3b14a.png 784w,
+             https://eyalkalderon.com/processed_images/contributors-graph-for-keybase-client.b62c836e342b265b.png 1280w"
+     fetchpriority="high">
+<p>The official blog went completely silent, third-party integrations started to
+break down, previously-announced improvements to Keybase never materialized,
+unaddressed GitHub issues began piling up, and I started encountering an
+increasing number of 404 errors while navigating through the official site.</p>
+<section class="alert info" role="note" aria-labelledby="A17btz1&#x2F;">
+    <div class="alert-icon alert-icon-info"></div>
+    <div class="alert-content" role="presentation">
+        <strong id="A17btz1&#x2F;" class="alert-title" aria-hidden="true">INFO</strong>
+        <p>For those unaware, <a href="https://keybase.io/">Keybase</a> is (was?) a cutting-edge
+social network which aimed to make <abbr title="Pretty Good Privacy">PGP</abbr>
+approachable, convenient, and <em>fun</em>. By creating and uploading an
+<a href="https://www.openpgp.org/">OpenPGP</a> public key to Keybase, you could:</p>
+<ul>
+<li>Prove ownership of your online identities on Twitter, Reddit, GitHub, etc. or
+even entire websites and Bitcoin wallets, like a “digital passport” of sorts.</li>
+<li>Privately message other users via <a href="https://en.wikipedia.org/wiki/End-to-end_encryption">end-to-end
+encrypted</a> chat rooms.</li>
+<li>Back up personal files to an encrypted cloud drive akin to Google Drive.</li>
+<li>Follow other Keybase users and be notified when their “link tree” of online
+identities has changed.</li>
+<li>Among other things…</li>
+</ul>
+
+    </div>
+</section>
+<p>As service quality continued to degrade, social media networks began removing
+Keybase integration from their products, which makes Keybase far less useful as
+a so-called “digital passport” these days. For instance, <a href="https://github.com/mastodon/mastodon/pull/17045">Mastodon removed
+their integration back in November 2021</a>.</p>
+<p>Thankfully, there <a href="https://www.openpgp.org/software/kleopatra/">already</a> <a href="https://signal.org/">exist</a> <a href="https://proton.me/drive">alternatives</a>
+for basically all of Keybase’s functionality <em>except</em> the core identity
+verification part, for which I have been actively seeking a replacement.</p>
+<h2 id="enter-keyoxide">Enter Keyoxide<a class="post-anchor" href="#enter-keyoxide" aria-label="Anchor link for: enter-keyoxide"><span aria-hidden="true">#</span></a>
+</h2>
+<p>Which brings us to this year! I recently stumbled upon
+<a href="https://keyoxide.org/">Keyoxide</a> as a possible replacement for Keybase. While
+it’s not perfect, it checks all the main boxes:</p>
+<ul>
+<li><input disabled="" type="checkbox" checked=""/>
+Profiles consist of a name, avatar, and OpenPGP key fingerprint.</li>
+<li><input disabled="" type="checkbox" checked=""/>
+Verifies many online social media services, e.g. Mastodon, Reddit,
+Bluesky, and others (<a href="https://codeberg.org/keyoxide/doipjs/issues/?q=&amp;type=all&amp;state=open&amp;labels=183437">with more on the way</a>).</li>
+<li><input disabled="" type="checkbox" checked=""/>
+Verifies domain name ownership <a href="https://docs.keyoxide.org/service-providers/dns/">via DNS <code>TXT</code> records</a>.</li>
+<li><input disabled="" type="checkbox" checked=""/>
+<a href="https://blog.keyoxide.org/keyoxide-launch/#What_are_those_decentralized_identity_proofs_you_keep_mentioning?">Truly decentralized</a>, unlike Keybase.<sup class="footnote-reference" id="fr-1-1"><a href="#fn-1">1</a></sup></li>
+</ul>
+<p>Incidentally, the folks developing Keyoxide are the same folks behind the
+<a href="https://ariadne.id/">Ariadne Identity Specification</a>. Ariadne is the open
+protocol which underpins Keyoxide and is responsible for the actual
+“decentralized identity verification” stuff.</p>
+<p>The best thing about Keyoxide/Ariadne, in my opinion, is that <strong>the identity
+proofs are embedded directly in your public key.</strong> This means your Ariadne
+identity profile truly belongs to you and isn’t dependent on a centralized
+service somewhere remaining functional (<em>ahem</em>… looking at you, Keybase).
+Heck, if you’re feeling determined enough and have plenty of time to spare, you
+could even verify the identity claims <em>by hand</em>. I definitely wouldn’t recommend
+it, though; that sounds pretty damn tedious. 😛</p>
+<p>And because Ariadne is an open specification that builds on existing
+technologies like OpenPGP and <a href="https://ariadne.id/related/ariadne-signature-profile-0/">ASP</a>, rather than a monolithic product, your
+cryptographic proofs will feasibly outlive the Keyoxide project itself, should
+the developers ever stop working on it someday.</p>
+<p>Though I don’t expect that day to come anytime soon… The Keyoxide project is
+funded by generous <a href="https://nlnet.nl/project/Keyoxide/">grants by the NLnet foundation</a> along with <a href="https://opencollective.com/keyoxide">private
+donations on OpenCollective</a>. Being a non-profit organization with relatively
+stable financial backing and not needing to host any user data themselves, they
+should have a fighting chance of operating for a long time.</p>
+<p>By contrast, it’s clear (in retrospect) that Keybase’s for-profit business model
+was never going to be sustainable long-term. The Keybase team was desperately
+looking for ways to monetize their service: after only 4 years of existence,
+they <a href="https://keybase.io/blog/keybase-stellar">took funds from the Stellar Development Foundation</a> to stay afloat.
+Shortly thereafter, the app rolled out multiple cryptocurrency-focused features
+such as <a href="https://keybase.io/blog/cryptographic-coin-flipping">crypto “coin flipping”</a> and <a href="https://keybase.io/blog/keybase-stellar-launch">built-in Stellar crypto wallets</a> with
+surprise airdrops of coins to Keybase users’ wallets. It seems these moves
+failed to stem the bleeding in the end, hence the Zoom <a href="https://en.wikipedia.org/wiki/Acqui-hiring">acqui-hire</a> in 2020.</p>
+<h3 id="getting-started">Getting Started<a class="post-anchor" href="#getting-started" aria-label="Anchor link for: getting-started"><span aria-hidden="true">#</span></a>
+</h3>
+<p>To get started with Keyoxide, I simply opened my browser and navigated to
+<a href="https://keyoxide.org/d5ad5bd47835b0f0b0c3046c00ab4c0942dcba25">https://keyoxide.org/d5ad5bd47835b0f0b0c3046c00ab4c0942dcba25</a>
+(which is the OpenPGP fingerprint of my public key). To my delight, a profile
+page already existed for me! 🎉</p>
+<figure>
+<img src="https://eyalkalderon.com/processed_images/keyoxide-profile-page.5890da60b252b2a2.png" alt="A screenshot of my profile page on Keyoxide displaying a (somewhat dated) photo of me"
+     width="1280" height="762"
+     sizes="(min-width: 920px) 784px, (min-width: 700px) calc(82vw + 46px), calc(100vw - 40px)" 
+     srcset="https://eyalkalderon.com/processed_images/keyoxide-profile-page.81a0ae0697561405.png 640w,
+             https://eyalkalderon.com/processed_images/keyoxide-profile-page.3404381aabcd78c3.png 784w,
+             https://eyalkalderon.com/processed_images/keyoxide-profile-page.66a7e52c1fbb4269.png 1280w"
+     loading="lazy">
+    <figcaption>
+        <p>My Keyoxide profile, after adding a few proofs</p>
+    </figcaption>
+</figure>
+<p>It seems that Keyoxide automatically creates user profiles for all public keys
+present on the most popular PGP keyservers out there, including
+<a href="https://keys.openpgp.org/">keys.openpgp.org</a>, which I think is pretty neat.
+Furthermore, Keyoxide automatically retrieved a user avatar from
+<a href="https://gravatar.com/">Gravatar</a> based on the email address associated with my
+own PGP key, which was a nice touch. Granted, it’s a fairly dated photo, but
+that issue should be trivial enough to fix.</p>
+<h3 id="adding-identity-proofs">Adding Identity Proofs<a class="post-anchor" href="#adding-identity-proofs" aria-label="Anchor link for: adding-identity-proofs"><span aria-hidden="true">#</span></a>
+</h3>
+<p>Adding new identity proofs to my Keyoxide profile is nowhere near as streamlined
+as with Keybase, but it wasn’t too bad once I got the hang of it. Here’s the
+gist:</p>
+<ol>
+<li>
+<p>Find the online service or social media network you would like to verify in
+<a href="https://docs.keyoxide.org/service-providers/">the Keyoxide documentation</a>.</p>
+</li>
+<li>
+<p>Create the proof according to the given instructions. For example, <a href="https://gist.github.com/ebkalderon/b2ae0515fcb6933cff7880b68d4d14fe">here’s a
+link to my GitHub proof</a>.</p>
+</li>
+<li>
+<p>Record the proof in your OpenPGP key using the appropriate <em>notation</em> per the
+Ariadne spec. This process only requires <a href="https://gnupg.org/">GnuPG</a> and an
+open terminal window.</p>
+<ol>
+<li><pre data-lang="bash" style="background-color:#272822;color:#f8f8f2;" class="language-bash "><code class="language-bash" data-lang="bash"><span>gpg</span><span style="font-style:italic;color:#fd971f;"> --edit-key</span><span> d5ad5bd47835b0f0b0c3046c00ab4c0942dcba25
+</span></code></pre>
+</li>
+<li>
+<p>At the <code>gpg&gt;</code> prompt, type <code>notation</code> and hit <kbd>Enter</kbd>. This will
+ask you to enter a string of the form:</p>
+<pre style="background-color:#272822;color:#f8f8f2;"><code><span>proof@ariadne.id=$THE_PROOF
+</span></code></pre>
+<p>Usually, <code>$THE_PROOF</code> refers to a URL to the social media profile you’re
+trying to claim, but might contain other information. Refer to the
+official Keyoxide instructions for that specific online service to see the
+exact format.</p>
+</li>
+<li>
+<p>At the <code>gpg&gt;</code> prompt, type <code>save</code> and hit <kbd>Enter</kbd>. This will
+apply all changes to your public key and quit out of GnuPG.</p>
+</li>
+</ol>
+</li>
+<li>
+<p>Upload your updated public key to the OpenPGP keyserver of your choice. In my
+case, that keyserver is <a href="https://keys.openpgp.org/">keys.openpgp.org</a>. This
+can be done quickly without leaving the terminal window:</p>
+<pre data-lang="bash" style="background-color:#272822;color:#f8f8f2;" class="language-bash "><code class="language-bash" data-lang="bash"><span>gpg</span><span style="font-style:italic;color:#fd971f;"> --export</span><span> d5ad5bd47835b0f0b0c3046c00ab4c0942dcba25 </span><span style="color:#f92672;">| </span><span>curl</span><span style="font-style:italic;color:#fd971f;"> -T</span><span> - https://keys.openpgp.org
+</span></code></pre>
+<p>If successful, the command prints the following output:</p>
+<pre style="background-color:#272822;color:#f8f8f2;"><code><span>Key successfully uploaded. Proceed with verification here:
+</span><span>https://keys.openpgp.org/upload/R_9QF8lSV9hGQJDLgS6igAwfzwToUySZ6IMuVICteuEDQ5k40gMCS7Jd7ckh5iO7WlWK2LHyuV5WX2GtyTWYcq5CLYBAAiZd-rMC9-Eln87cuOS6MMaimomGnur1hqYcB3-K2AMmSeGOcje78vSgRLvF6ZmDiZKuKtmEbcD8CupY3UipnExg1lTEY0nTx2qRf3ppdX_yrG7HsJn2kyMGquLXTw
+</span></code></pre>
+<p>You must open this one-time link in your browser before it expires for your
+updated PGP key to be available worldwide.</p>
+</li>
+</ol>
+<p>That’s pretty much it! Once you refresh your browser, your Keyoxide
+profile page should automatically show the new identity proofs with either a
+green checkmark (indicating successful identity verification) or a red “x”
+(indicating failure) next to each one.</p>
+<h2 id="conclusion">Conclusion<a class="post-anchor" href="#conclusion" aria-label="Anchor link for: conclusion"><span aria-hidden="true">#</span></a>
+</h2>
+<p>So yeah… Keyoxide is pretty neat! I’m happy to have an open source alternative
+to Keybase, and I’m especially happy to have my online identity double-verified
+between Keyoxide and Mastodon. 😄</p>
+<figure>
+<img src="https://eyalkalderon.com/processed_images/double-verified-mastodon.b9170fbeba506007.png" alt="A screenshot of my Mastodon account profile, where the link to Keyoxide is highlighted with a green checkmark, indicating successful reverse verification between the two sites"
+     width="882" height="758"
+     sizes="(min-width: 920px) 784px, (min-width: 700px) calc(82vw + 46px), calc(100vw - 40px)" 
+     srcset="https://eyalkalderon.com/processed_images/double-verified-mastodon.336d7a7ee6cd4e31.png 640w,
+             https://eyalkalderon.com/processed_images/double-verified-mastodon.e6385979f03ce29d.png 784w"
+     loading="lazy">
+    <figcaption>
+        <p>Mastodon and Keyoxide verifying each other… Verification-ception!</p>
+    </figcaption>
+</figure>
+<p><a href="https://keyoxide.org/d5ad5bd47835b0f0b0c3046c00ab4c0942dcba25">My Keyoxide profile</a> is linked in the footer of this website
+alongside my other social media accounts. While <a href="https://keybase.io/ebkalderon">my Keybase
+account</a> will remain active for the time being, I
+will no longer be actively using it.</p>
+<footer class="footnotes">
+<ol class="footnotes-list">
+<li id="fn-1">
+<p>When I say “decentralized” here, I do <em>not</em> mean blockchain! Instead,
+think email, RSS feeds, or the World Wide Web itself. <a href="#fr-1-1">↩</a></p>
+</li>
+</ol>
+</footer>
+
+        </article>
+        <nav class="post-navigation">
+            <header class="post-navigation-title">
+                <h2>Read More Posts</h2>
+                <hr>
+            </header>
+            <div class="post-navigation-buttons">
+                <a rel="prev" href="https://eyalkalderon.com/blog/monitor-wireguard-uptime-kuma/" aria-label="Prev article">
+                    <span aria-hidden="true">[</span>Monitoring Wireguard in Uptime Kuma (with OPNsense)<span aria-hidden="true">]&nbsp;&gt;</span>
+                </a>
+            </div>
+        </nav>
+        <section class="comments">
+            <script src="https://utteranc.es/client.js"
+                repo="ebkalderon/ebkalderon.github.io"
+                issue-term="pathname"
+                theme="github-dark-orange"
+                crossorigin="anonymous"
+                async>
+            </script>
+            <noscript>JavaScript must be enabled to view comments.</noscript>
+        </section>
+    </main>
+    <footer class="footer">
+        <address class="socials">
+            <ul>
+                <li>
+                    <a class="social-link" href="https://eyalkalderon.com/rss.xml" title="rss feed" aria-label="rss feed">
+                        <svg role="img" aria-label="feed icon">
+                            <use aria-hidden="true" href="https://eyalkalderon.com/images/social_icons/rss.svg#icon" />
+                        </svg>
+                    </a>
+                </li>
+                <li>
+                    <a class="social-link" rel="me" href="mailto:ebkalderon@gmail.com?subject=hi&body=PGP%20key%2000AB4C0942DCBA25" title="email" aria-label="email">
+                        <svg role="img" aria-label="email icon">
+                            <use aria-hidden="true" href="https://eyalkalderon.com/images/social_icons/email.svg#icon" />
+                        </svg>
+                    </a>
+                </li>
+                <li>
+                    <a class="social-link" rel="me" href="https://github.com/ebkalderon" title="github" aria-label="github">
+                        <svg role="img" aria-label="github icon">
+                            <use aria-hidden="true" href="https://eyalkalderon.com/images/social_icons/github.svg#icon" />
+                        </svg>
+                    </a>
+                </li>
+                <li>
+                    <a class="social-link" rel="me" href="https://www.linkedin.com/in/ebkalderon" title="linkedin" aria-label="linkedin">
+                        <svg role="img" aria-label="linkedin icon">
+                            <use aria-hidden="true" href="https://eyalkalderon.com/images/social_icons/linkedin.svg#icon" />
+                        </svg>
+                    </a>
+                </li>
+                <li>
+                    <a class="social-link" rel="me" href="https://hachyderm.io/@ebkalderon" title="mastodon" aria-label="mastodon">
+                        <svg role="img" aria-label="mastodon icon">
+                            <use aria-hidden="true" href="https://eyalkalderon.com/images/social_icons/mastodon.svg#icon" />
+                        </svg>
+                    </a>
+                </li>
+                <li>
+                    <a class="social-link" rel="me" href="https://keyoxide.org/d5ad5bd47835b0f0b0c3046c00ab4c0942dcba25" title="keyoxide" aria-label="keyoxide">
+                        <svg role="img" aria-label="keyoxide icon">
+                            <use aria-hidden="true" href="https://eyalkalderon.com/images/social_icons/keyoxide.svg#icon" />
+                        </svg>
+                    </a>
+                </li>
+            </ul>
+        </address>
+        <p class="copyright">
+            <span>© <time>2025</time> Eyal Kalderon</span>
+            <span>Powered by <a href="https://www.getzola.org">Zola</a></span>
+            <span>Theme by <a href="https://eyalkalderon.com">ebkalderon</a></span>
+        </p>
+    </footer>
+</body>
+
+</html>

@@ -1,0 +1,576 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src-attr 'unsafe-inline'; connect-src 'self' cloudflareinsights.com; frame-src 'self' utteranc.es; img-src 'self' data:; script-src 'self' utteranc.es static.cloudflareinsights.com; style-src-elem 'self' 'unsafe-inline' utteranc.es">
+
+    <title>Downloading HTML5 games for offline play | Eyal Kalderon</title>
+
+    <link rel="preload" href="https://eyalkalderon.com/fonts/FiraCode-Regular.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+    <link rel="preload" href="https://eyalkalderon.com/fonts/FiraCode-Bold.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://eyalkalderon.com/css/style.css?h=b15039a827e49a424ac9">
+    <link rel="stylesheet" href="https://eyalkalderon.com/css/comments.css?h=b869520e8b0b63bda8a9">
+    
+    <link rel="icon" type="image/png" href="https://eyalkalderon.com/images/favicon.png">
+    <link rel="apple-touch-icon" href="https://eyalkalderon.com/processed_images/favicon.4a98e100e3837000.png">
+    <script src="https://eyalkalderon.com/js/auto-close-popover-on-resize.js?h=4ef87d6fc7b98b22e044" defer></script>
+    <script src="https://eyalkalderon.com/js/copy-code-to-clipboard.js?h=6aac77c47d552a0ac847" defer></script>
+
+    <link rel="canonical" href="https://eyalkalderon.com/blog/downloading-html5-games/">
+    <link rel="alternate" type="application/rss+xml" href="https://eyalkalderon.com/rss.xml" title="Eyal Kalderon">
+    
+    <meta name="author" content="Eyal Kalderon">
+    <meta name="description" content="A guide to downloading HTML5 games and playing them locally. Assumes some basic knowledge of Bash and Python. This was a fun exercise!">
+    <meta name="robots" content="index, follow">
+    <meta name="theme-color" content="#211f1a">
+    <meta name="color-scheme" content="dark">
+
+    <meta property="og:title" content="Downloading HTML5 games for offline play">
+    <meta property="og:type" content="article">
+    <meta property="og:image" content="https://eyalkalderon.com/processed_images/locally-served-game-2.fea157c68b03fcde.png">
+    <meta property="og:image:width" content="959">
+    <meta property="og:image:height" content="657">
+    <meta property="og:image:type" content="image/png">
+    <meta property="og:image:alt" content="Screenshot of downloaded Bubble Shooter HTML game running locally">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta property="og:url" content="https://eyalkalderon.com/blog/downloading-html5-games/">
+    <meta property="og:description" content="A guide to downloading HTML5 games and playing them locally. Assumes some basic knowledge of Bash and Python. This was a fun exercise!">
+    <meta property="og:site_name" content="Eyal Kalderon">
+    <meta property="og:updated_time" content="2025-12-01T03:46:46.711783318+00:00">
+    <meta property="article:published_time" content="2022-11-21T05:02:57-05:00">
+    <meta property="article:section" content="research">
+    <meta property="article:tag" content="html5">
+    <meta property="article:tag" content="games">
+    <meta property="article:tag" content="webdev">
+    <meta name="fediverse:creator" content="@ebkalderon@hachyderm.io">
+</head>
+
+<body class="layout-center">
+    <header class="header">
+        <div class="header-container">
+            <span class="header-logo-container">
+                <a href="https://eyalkalderon.com">
+                    <span class="logo">eyal kalderon</span>
+                </a>
+            </span>
+        </div>
+        <nav class="main-menu" aria-label="Main Menu">
+            <a class="skip-to-content" href="#main">Skip to main content</a>
+            <button class="main-menu-dropdown-button" popovertarget="nav-menu">Menu</button>
+            <ul id="nav-menu" class="main-menu-items" aria-label="Site Navigation" popover>
+                <li><a href="https://eyalkalderon.com/">home</a></li>
+                <li><a href="https://eyalkalderon.com/about/">about</a></li>
+                <li><a href="https://eyalkalderon.com/projects/">projects</a></li>
+                <li><a href="https://eyalkalderon.com/resume.pdf" target="_blank">résumé</a></li>
+                <li><a href="https://eyalkalderon.com/rss.xml">rss</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main id="main">
+        <article class="post content">
+            <header>
+                <h1 class="post-title">
+                    <a href="https://eyalkalderon.com/blog/downloading-html5-games/">Downloading HTML5 games for offline play</a>
+                </h1>
+                <ul class="post-meta hidden">
+                    <li title="Published on 2022-11-21T05:02:57-05:00"><time datetime="2022-11-21T05:02:57-05:00">2022.11.21</time></li>
+                    <li role="separator" aria-hidden="true">::</li>
+                    <li title="2482 words"><time datetime="PT13M">13 min</time> read</li>
+                </ul>
+                <div class="post-tags">
+                    <span>&lbrace;<a rel="tag" href="https://eyalkalderon.com/categories/research/">research</a>&rbrace;</span>
+                    <span role="separator">::</span>
+                    <span>#<a rel="tag" href="https://eyalkalderon.com/tags/html5/">html5</a></span>
+                    <span>#<a rel="tag" href="https://eyalkalderon.com/tags/games/">games</a></span>
+                    <span>#<a rel="tag" href="https://eyalkalderon.com/tags/webdev/">webdev</a></span>
+                </div>
+            </header>
+
+<p>So, I was <a href="https://www.urbandictionary.com/define.php?term=nerd-snipe">nerd-sniped</a>
+on Reddit a bit over a week ago.</p>
+<p><a href="https://www.reddit.com/r/webdev/comments/ypxyyb/comment/ivn0o5w/?context=8&amp;depth=9">Someone posted on <strong>r/webdev</strong></a> asking whether it would be
+possible to archive a certain HTML5 game locally for offline play, similar to
+how folks used to <a href="https://www.makeuseof.com/tag/download-run-flash-games/">archive Flash games</a> by downloading the embedded <code>.swf</code> file,
+back in the early days of the Web. None of the other answers seemed particularly
+helpful at the time, so I decided to take a stab at it.</p>
+<p>Below is a recounting of my original thought process while approaching this
+problem, from beginning to end.</p>
+<section class="alert warning" role="note" aria-labelledby="a82LsTBv">
+    <div class="alert-icon alert-icon-warning"></div>
+    <div class="alert-content" role="presentation">
+        <strong id="a82LsTBv" class="alert-title" aria-hidden="true">DISCLAIMER</strong>
+        <p>This post is intended for educational and non-commercial <a href="https://ogc.harvard.edu/pages/copyright-and-fair-use">fair use</a> purposes
+only. If you’re impatient, <a href="#tl-dr">skip ahead to the TL;DR section</a> for a list
+of steps.</p>
+
+    </div>
+</section>
+<h2 id="a-first-attempt">A first attempt<a class="post-anchor" href="#a-first-attempt" aria-label="Anchor link for: a-first-attempt"><span aria-hidden="true">#</span></a>
+</h2>
+<p>First, let’s take a brief look at <a href="https://games.gameboss.com/bubbleshooterclassic/index.html">the game itself</a>:</p>
+<img src="https://eyalkalderon.com/processed_images/the-game.022923071c371e7b.png" alt="A screenshot of Mozilla Firefox running the game Bubble Shooter Classic"
+     width="959" height="657"
+     sizes="(min-width: 920px) 784px, (min-width: 700px) calc(82vw + 46px), calc(100vw - 40px)" 
+     srcset="https://eyalkalderon.com/processed_images/the-game.d8fe16b4afb9982c.png 640w,
+             https://eyalkalderon.com/processed_images/the-game.e080b66d5f192c8e.png 784w"
+     loading="lazy">
+<p>Seems like a simple enough single-player game with no server-side networking
+features. This should be an easy task, then!</p>
+<p>I’ll hit <kbd>Ctrl+S</kbd> in Firefox to save the entire Web page, including any
+referenced assets, open the <code>index.html</code>, and…</p>
+<img src="https://eyalkalderon.com/processed_images/white-page.cbd9d8d987a4e1b3.png" alt="A screenshot of Mozilla Firefox displaying an empty page with a white background"
+     width="959" height="657"
+     sizes="(min-width: 920px) 784px, (min-width: 700px) calc(82vw + 46px), calc(100vw - 40px)" 
+     srcset="https://eyalkalderon.com/processed_images/white-page.4e1ba0a8b682edce.png 640w,
+             https://eyalkalderon.com/processed_images/white-page.212d0cd8172331e9.png 784w"
+     loading="lazy">
+<p>A blank page. That’s odd. I wonder why?</p>
+<p>Popping open the debug console with <kbd>F12</kbd> reveals that the game is
+missing a bunch of resources.</p>
+<img src="https://eyalkalderon.com/processed_images/missing-resources.466842dce43ec042.png" alt="A screenshot of the browser debug console full of errors"
+     width="959" height="657"
+     sizes="(min-width: 920px) 784px, (min-width: 700px) calc(82vw + 46px), calc(100vw - 40px)" 
+     srcset="https://eyalkalderon.com/processed_images/missing-resources.3fbc6d3ff4090cfa.png 640w,
+             https://eyalkalderon.com/processed_images/missing-resources.1b301cacd820ff26.png 784w"
+     loading="lazy">
+<p><abbr title="Cross-Origin Resource Sharing">CORS</abbr> errors aside, the
+resources aren’t even loading in from the <code>~/Downloads/GameBoss_files</code> directory
+that Firefox had created; their paths are instead relative to <code>~/Downloads</code>.</p>
+<p>Looking through the <code>index.html</code> source, I see the following <code>&lt;script&gt;</code> tags:</p>
+<pre data-lang="html" style="background-color:#272822;color:#f8f8f2;" class="language-html "><code class="language-html" data-lang="html"><span>&lt;</span><span style="color:#f92672;">div </span><span style="color:#a6e22e;">...</span><span>&gt;...&lt;</span><span style="color:#f92672;">script </span><span style="color:#a6e22e;">async</span><span>=</span><span style="color:#e6db74;">&quot;&quot; </span><span style="color:#a6e22e;">src</span><span>=</span><span style="color:#e6db74;">&quot;GameBoss_files/main-html.js&quot;</span><span>&gt;&lt;/</span><span style="color:#f92672;">script</span><span>&gt;&lt;/</span><span style="color:#f92672;">div</span><span>&gt;
+</span><span>&lt;</span><span style="color:#f92672;">script </span><span style="color:#a6e22e;">src</span><span>=</span><span style="color:#e6db74;">&quot;GameBoss_files/flambe.js&quot;</span><span>&gt;&lt;/</span><span style="color:#f92672;">script</span><span>&gt; 
+</span><span>&lt;</span><span style="color:#f92672;">script</span><span>&gt;
+</span><span>  flambe.embed([</span><span style="color:#e6db74;">&quot;targets/main-html.js&quot;</span><span>], </span><span style="color:#e6db74;">&quot;content&quot;</span><span>);
+</span><span>  
+</span><span>&lt;/</span><span style="color:#f92672;">script</span><span>&gt;
+</span></code></pre>
+<p>That’s not right. Looks like Firefox failed to detect <code>"targets/main-html.js"</code>
+in the inline JavaScript and didn’t rewrite it to
+<code>"GameBoss_files/main-html.js"</code> when saving the webpage with <kbd>Ctrl+S</kbd>.
+Fixing this and reloading the page doesn’t seem to do any good.</p>
+<p>This <code>flambe.js</code> script that’s being loaded alongside <code>main-html.js</code> looks
+interesting, though. The name seems to refer to
+<a href="https://github.com/aduros/flambe">Flambe</a>, a 2D game engine written in
+<a href="https://haxe.org">Haxe</a> that deploys to HTML5.</p>
+<p>Going back into the devtools again, let’s switch to the debugger and inspect the
+source code for <code>main-html.js</code>. This is probably where the actual game logic
+lives, since I presume <code>flambe.js</code> contains the base game engine.</p>
+<img src="https://eyalkalderon.com/processed_images/messy-source.dedca80f07788ba2.png" alt="A screenshot of Mozilla Firefox displaying some messy JavaScript code"
+     width="959" height="657"
+     sizes="(min-width: 920px) 784px, (min-width: 700px) calc(82vw + 46px), calc(100vw - 40px)" 
+     srcset="https://eyalkalderon.com/processed_images/messy-source.fe446eca88b09e85.png 640w,
+             https://eyalkalderon.com/processed_images/messy-source.d907488988c49698.png 784w"
+     loading="lazy">
+<p>Ouch, that’s hard to read. Let’s pretty-print that code…</p>
+<img src="https://eyalkalderon.com/processed_images/pretty-printed-source.daaee6fde9c45845.png" alt="A screenshot of Mozilla Firefox displaying the same JavaScript code pretty-printed"
+     width="959" height="657"
+     sizes="(min-width: 920px) 784px, (min-width: 700px) calc(82vw + 46px), calc(100vw - 40px)" 
+     srcset="https://eyalkalderon.com/processed_images/pretty-printed-source.27bb063ca4ee0f0f.png 640w,
+             https://eyalkalderon.com/processed_images/pretty-printed-source.8463018bb3a7d1b3.png 784w"
+     loading="lazy">
+<p>Much better! 👍 Searching for the word “assets” in the open file, I find a
+promising-looking section towards the bottom:</p>
+<img src="https://eyalkalderon.com/processed_images/asset-map-identified.43afe8c1936a3495.png" alt="A snippet of JavaScript code for a complex object named __meta__"
+     width="959" height="657"
+     sizes="(min-width: 920px) 784px, (min-width: 700px) calc(82vw + 46px), calc(100vw - 40px)" 
+     srcset="https://eyalkalderon.com/processed_images/asset-map-identified.c7b93de3cc1a4da1.png 640w,
+             https://eyalkalderon.com/processed_images/asset-map-identified.5b76adebc1909ab9.png 784w"
+     loading="lazy">
+<p>This nested <code>__meta__</code> object field appears to contain all the game assets, and
+is organized into the following structure:</p>
+<pre style="background-color:#272822;color:#f8f8f2;"><code><span>assets
+</span><span>├── bootstrap
+</span><span>│   └── ...
+</span><span>└── hd_assets
+</span><span>    └── ...
+</span></code></pre>
+<p>Each entry contains the asset’s path (relative to the game’s root URL), its size
+in bytes, and an MD5 hash digest, presumably for verifying the file’s integrity.
+Below is an example entry:</p>
+<pre data-lang="js" style="background-color:#272822;color:#f8f8f2;" class="language-js "><code class="language-js" data-lang="js"><span>{
+</span><span>  bytes: </span><span style="color:#ae81ff;">18446</span><span>,
+</span><span>  md5: </span><span style="color:#e6db74;">&#39;d64869dc1df0d1b0f27f38835250e4d1&#39;</span><span>,
+</span><span>  name: </span><span style="color:#e6db74;">&#39;buttonfont/font.fnt&#39;
+</span><span>}
+</span></code></pre>
+<p>Honestly, the task of downloading each and every file by hand and arranging it
+into the correct folder structure seems daunting. There may also be other broken
+paths in the code or assets that I’m unaware of, complicating things. Fixing all
+this up would be tedious enough on its own, much less teaching an Internet
+stranger how to do it.</p>
+<p>I decided to leave a comment directed at the OP explaining the complexity of the
+task at hand and asked “why not use a <a href="https://web.archive.org/">Wayback Machine</a> capture of the game
+instead?” It seems perfectly functional, and this link is guaranteed to last as
+long as <a href="https://archive.org/.">Archive.org</a> itself exists as an organization (which is hopefully a
+good long while; please donate to them).</p>
+<p>It turns out it was OP who created this particular Wayback Machine capture in
+the first place! This was done prior to posting their question in <strong>r/webdev</strong>.
+While this does indeed preserve the game for the future, they didn’t like how
+slowly the archived page loaded and were wondering if totally offline play was
+possible. So we’re back to square one: how can we archive this game?</p>
+<p>Wait a minute… If downloading the game files directly from the publisher’s
+website is unreliable due to broken paths and missing assets, then maybe we
+could download it from the Wayback Machine instead? Its client-side URL
+rewriting capabilities are very advanced<sup class="footnote-reference" id="fr-1-1"><a href="#fn-1">1</a></sup>, so surely it will have managed to
+capture all the necessary files. Perhaps this approach might work better?</p>
+<h2 id="starting-again-a-new-lead">Starting again, a new lead<a class="post-anchor" href="#starting-again-a-new-lead" aria-label="Anchor link for: starting-again-a-new-lead"><span aria-hidden="true">#</span></a>
+</h2>
+<p>Rather than naively downloading the Wayback Machine capture of the game using
+<kbd>Ctrl+S</kbd> again and potentially suffer the same issues as before, I
+want to try a third-party tool named <a href="https://github.com/hartator/wayback-machine-downloader"><code>wayback-machine-downloader</code></a> instead.
+This seems to do exactly what I need!</p>
+<p>Switching to a new directory in the terminal, let’s install the Ruby gem and run
+it against the live website, being careful to leave off the <code>index.html</code> at the
+end so it fetches the whole <code>bubbleshooterclassic</code> directory rather than just
+the one file.</p>
+<pre data-lang="bash" style="background-color:#272822;color:#f8f8f2;" class="language-bash "><code class="language-bash" data-lang="bash"><span>gem install wayback_machine_downloader
+</span><span>wayback_machine_downloader https://games.gameboss.com/bubbleshooterclassic/
+</span></code></pre>
+<p>Success! Looks like it found the capture and is grabbing the files.</p>
+<pre style="background-color:#272822;color:#f8f8f2;"><code><span>Downloading https://games.gameboss.com/bubbleshooterclassic/ to websites/games.gameboss.com/ from Wayback Machine archives.
+</span><span>
+</span><span>Getting snapshot pages.. found 92 snaphots to consider.
+</span><span>
+</span><span>79 files to download:
+</span><span>https://games.gameboss.com/bubbleshooterclassic/ -&gt; websites/games.gameboss.com/bubbleshooterclassic/index.html (1/79)
+</span><span>...
+</span><span>Download completed in 111.17s, saved in websites/games.gameboss.com/ (79 files)
+</span></code></pre>
+<p>Okay, now that the download has finished, let’s see what we’ve got here:</p>
+<pre style="background-color:#272822;color:#f8f8f2;"><code><span>$ tree ./websites/games.gameboss.com/
+</span><span>websites/games.gameboss.com/
+</span><span>└── bubbleshooterclassic
+</span><span>    ├── assets
+</span><span>    │   ├── bootstrap
+</span><span>    │   │   ├── buttonfont
+</span><span>    │   │   │   ├── font.fnt?v=d64869dc1df0d1b0f27f38835250e4d1
+</span><span>    │   │   │   └── font.png?v=6c598ce10f2bdaf6bcdd721cd6b0b4d0
+</span><span>    ... ... ...
+</span></code></pre>
+<p>Alright, looks promising. Let’s try to open the <code>index.html</code> in the browser
+again…</p>
+<img src="https://eyalkalderon.com/processed_images/black-page.e2b5abbfee5f19c7.png" alt="A screenshot of Mozilla Firefox displaying an empty page with a black background"
+     width="959" height="657"
+     sizes="(min-width: 920px) 784px, (min-width: 700px) calc(82vw + 46px), calc(100vw - 40px)" 
+     srcset="https://eyalkalderon.com/processed_images/black-page.43cd9753eb9fdbdf.png 640w,
+             https://eyalkalderon.com/processed_images/black-page.4eaa569976da696a.png 784w"
+     loading="lazy">
+<p>Well, a black screen instead of a white screen is an improvement, I guess. I
+suppose I should’ve expected something to still be wrong.</p>
+<p>Let’s check the console again…</p>
+<img src="https://eyalkalderon.com/processed_images/cross-origin-errors.5b8dc76a112edd95.png" alt="A screenshot of the browser debug console with CORS errors similar to before"
+     width="959" height="657"
+     sizes="(min-width: 920px) 784px, (min-width: 700px) calc(82vw + 46px), calc(100vw - 40px)" 
+     srcset="https://eyalkalderon.com/processed_images/cross-origin-errors.3dc8c956bbec8923.png 640w,
+             https://eyalkalderon.com/processed_images/cross-origin-errors.65bcbedf9643e38f.png 784w"
+     loading="lazy">
+<p>Ah, right. We still haven’t resolved the cross-origin <code>GET</code> errors we were
+seeing before. There are two possible ways to approach this problem:</p>
+<ol>
+<li>Disable CORS enforcement at the browser level.</li>
+<li>Serve the game locally on an HTTP server that attaches a
+<code>Access-Control-Allow-Origin: *</code> header to every response sent.<sup class="footnote-reference" id="fr-2-1"><a href="#fn-2">2</a></sup></li>
+</ol>
+<p>The first option would be nice in theory, since it would allow anyone to
+double-click on the <code>index.html</code> in their file browser to open and play the
+game. However, this is infeasible in practice: the process of disabling CORS
+enforcement works slightly differently for every major browser. Some, like
+Mozilla Firefox, don’t even allow users to broadly disable CORS checks anymore
+for security reasons (the <code>security.fileuri.strict_origin_policy</code> key still
+exists in <code>about:config</code>, but its scope is too narrow to be useful here).
+Besides, we don’t want to persistently override CORS for all sites; that could
+be a security risk.</p>
+<p>That leaves option two. While more complex than option one, this is a more
+targeted solution that is guaranteed to work equally across all major browsers,
+isn’t a potential security risk, and is nonetheless easy enough to do.</p>
+<p><a href="https://gist.github.com/mkows/cd2122f427ea722bf41aa169ef762001">This short Python script</a>
+should do nicely in a pinch. It does exactly what it says on the tin: it serves
+all the files present in the current working directory on <code>http://0.0.0.0:8000</code>,
+and crucially, it appends an <code>Access-Control-Allow-Origin: *</code> header to every
+outgoing response, which should nullify those CORS checks currently preventing
+the game from loading.</p>
+<p>Let’s save the script as <code>launch_game.py</code> in the
+<code>websites/games.gamesboss.com/bubbleshooterclassic/</code> directory, which contains
+the <code>index.html</code> and all the files we want to serve. We can then start the Web
+server, like so:</p>
+<pre data-lang="bash" style="background-color:#272822;color:#f8f8f2;" class="language-bash "><code class="language-bash" data-lang="bash"><span>python3 launch_game.py
+</span></code></pre>
+<p>This prints the following prompt and then hangs:</p>
+<pre style="background-color:#272822;color:#f8f8f2;"><code><span>serving at port 8000
+</span></code></pre>
+<p>Okay, the server should now be listening on port 8000 on <code>0.0.0.0</code>, which
+effectively means all available network interfaces, including the loopback
+device. Let’s nagivate to <code>http://127.0.0.1:8000</code> in a browser window, then, and
+see what we have.</p>
+<img src="https://eyalkalderon.com/processed_images/black-page-with-404-errors.965df323c1e830ee.png" alt="A screenshot of Mozilla Firefox displaying a black page with 404 errors in the debug console"
+     width="1280" height="878"
+     sizes="(min-width: 920px) 784px, (min-width: 700px) calc(82vw + 46px), calc(100vw - 40px)" 
+     srcset="https://eyalkalderon.com/processed_images/black-page-with-404-errors.c2ce7b70fa9fe441.png 640w,
+             https://eyalkalderon.com/processed_images/black-page-with-404-errors.ba0722e5b5501109.png 784w,
+             https://eyalkalderon.com/processed_images/black-page-with-404-errors.56e51bffa704babb.png 1280w"
+     loading="lazy">
+<p>Darn. Thankfully, those pesky CORS errors are gone, but they have been replaced
+with <code>404 File not found</code> responses instead. Attempting to navigate to one of
+the failing resource URLs in a new browser tab, such as:</p>
+<pre style="background-color:#272822;color:#f8f8f2;"><code><span>http://127.0.0.1:8000/assets/bootstrap/buttonfont/font.fnt?v=d64869dc1df0d1b0f27f38835250e4d1
+</span></code></pre>
+<p>(predictably) results in a <code>404</code> error as well.</p>
+<p>But if we check the <code>websites/games.gameboss.com/bubbleshooterclassic/</code>
+directory again, we see that the <code>font.fnt?v=d64869dc1df0d1b0f27f38835250e4d1</code>
+file we’re looking for is indeed present and in the right place.</p>
+<pre style="background-color:#272822;color:#f8f8f2;"><code><span>$ tree ./websites/games.gameboss.com/
+</span><span>websites/games.gameboss.com/
+</span><span>└── bubbleshooterclassic
+</span><span>    ├── assets
+</span><span>    │   ├── bootstrap
+</span><span>    │   │   ├── buttonfont
+</span><span>    │   │   │   ├── font.fnt?v=d64869dc1df0d1b0f27f38835250e4d1
+</span><span>    │   │   │   └── font.png?v=6c598ce10f2bdaf6bcdd721cd6b0b4d0
+</span><span>    ... ... ...
+</span></code></pre>
+<p>So what’s going on? The destination files exist, so why aren’t they loading?</p>
+<p>Wait a minute… I think the literal <code>?v=...</code> suffixes in the filenames
+generated by <code>wayback_machine_downloader</code> are causing the <code>GET</code> requests to
+fail. That is, any attempt to <code>GET</code> a file called
+<code>font.fnt?v=d64869dc1df0d1b0f27f38835250e4d1</code> would result in a server-side
+lookup of a file called <code>font.fnt</code> with the query string
+<code>v=d64869dc1df0d1b0f27f38835250e4d1</code>.<sup class="footnote-reference" id="fr-3-1"><a href="#fn-3">3</a></sup> Since there is no file named
+<code>font.fnt</code> at that location, the server responds with a <code>404</code> error.</p>
+<p>In that case, what if we were to <a href="https://en.wikipedia.org/wiki/Percent-encoding">percent-encode</a> the <code>font.fnt?v=...</code> portion
+of the URL and try to <code>wget</code> that in the terminal?</p>
+<pre style="background-color:#272822;color:#f8f8f2;"><code><span>$ wget http://127.0.0.1:8000/assets/bootstrap/buttonfont/font.fnt%3Fv%3Dd64869dc1df0d1b0f27f38835250e4d1
+</span><span>--2022-11-20 23:23:33--  http://127.0.0.1:8000/assets/bootstrap/buttonfont/font.fnt%3Fv%3Dd64869dc1df0d1b0f27f38835250e4d1
+</span><span>Connecting to 127.0.0.1:8000... connected.
+</span><span>HTTP request sent, awaiting response... 200 OK
+</span><span>Length: 184466 (180K) [application/octet-stream]
+</span><span>Saving to: ‘font.fnt?v=d64869dc1df0d1b0f27f38835250e4d1’
+</span><span>
+</span><span>font.fnt?v=d64869dc1df0d 100%[================================&gt;] 180.14K  --.-KB/s    in 0s      
+</span><span>
+</span><span>2022-11-20 23:23:33 (458 MB/s) - ‘font.fnt?v=d64869dc1df0d1b0f27f38835250e4d1’ saved [184466/184466]
+</span></code></pre>
+<p>Aha! That works. So that confirms the hypothesis appears to be correct. Let’s
+strip off all the <code>?v=...</code> suffixes from all the filenames and see if that fixes
+the issues we’re seeing.</p>
+<p>So how should I do this? Back in my terminal window, I can recursively list all
+game files that contain a literal <code>?</code> in their names using a bit of Bash:</p>
+<pre data-lang="bash" style="background-color:#272822;color:#f8f8f2;" class="language-bash "><code class="language-bash" data-lang="bash"><span>$ cd ./websites/games.gameboss.com/bubbleshooterclassic/
+</span><span>$ find .</span><span style="font-style:italic;color:#fd971f;"> -name </span><span style="color:#e6db74;">&quot;*\?*&quot;</span><span style="font-style:italic;color:#fd971f;"> -type</span><span> f
+</span><span>./index.html?lang</span><span style="color:#f92672;">=</span><span style="color:#e6db74;">ru
+</span><span>./index.html?lang</span><span style="color:#f92672;">=</span><span style="color:#e6db74;">en&amp;gp=1
+</span><span>./index.html?lang</span><span style="color:#f92672;">=</span><span style="color:#e6db74;">fr
+</span><span>./assets/hd_assets/prompt_bg.png?v</span><span style="color:#f92672;">=</span><span style="color:#e6db74;">bdd07c452aa91dd9309717032b9a30d1
+</span><span>./assets/hd_assets/button_prompt_over.png?v</span><span style="color:#f92672;">=</span><span style="color:#e6db74;">1c7d1e960c33bc02819c19b5c39e3673
+</span><span>...
+</span></code></pre>
+<p>I’d like to chop off every character from the <code>?</code> character onward. Given this
+list of filenames, we can pipe it through <code>cut -d? -f1</code> to do exactly that.</p>
+<pre data-lang="bash" style="background-color:#272822;color:#f8f8f2;" class="language-bash "><code class="language-bash" data-lang="bash"><span>$ find .</span><span style="font-style:italic;color:#fd971f;"> -name </span><span style="color:#e6db74;">&quot;*\?*&quot;</span><span style="font-style:italic;color:#fd971f;"> -type</span><span> f </span><span style="color:#f92672;">| </span><span>cut</span><span style="font-style:italic;color:#fd971f;"> -d</span><span style="color:#f92672;">?</span><span style="font-style:italic;color:#fd971f;"> -f1
+</span><span>./index.html
+</span><span>./index.html
+</span><span>./index.html
+</span><span>./assets/hd_assets/prompt_bg.png
+</span><span>./assets/hd_assets/button_prompt_over.png
+</span><span>...
+</span></code></pre>
+<p>Now I’d like <code>find</code> to execute the <code>mv</code> command on each of those files, renaming
+each one to the <code>cut</code> down version. Here’s the working solution I came up with:</p>
+<pre data-lang="bash" style="background-color:#272822;color:#f8f8f2;" class="language-bash "><code class="language-bash" data-lang="bash"><span>find .</span><span style="font-style:italic;color:#fd971f;"> -name </span><span style="color:#e6db74;">&#39;*\?*&#39;</span><span style="font-style:italic;color:#fd971f;"> -type</span><span> f</span><span style="font-style:italic;color:#fd971f;"> -exec</span><span> bash</span><span style="font-style:italic;color:#fd971f;"> -c </span><span style="color:#e6db74;">&#39;mv $1 $(echo $1 | cut -d? -f1)&#39;</span><span> bash {} </span><span style="color:#ae81ff;">\;
+</span></code></pre>
+<p>Well, there seem to be no errors. Let’s check the output of <code>tree</code> to confirm.</p>
+<pre style="background-color:#272822;color:#f8f8f2;"><code><span>$ tree
+</span><span>.
+</span><span>├── assets
+</span><span>│   ├── bootstrap
+</span><span>│   │   ├── buttonfont
+</span><span>│   │   │   ├── font.fnt
+</span><span>│   │   │   └── font.png
+</span><span>... ... ...
+</span></code></pre>
+<p>Sweet! Looks like all the filenames have been fixed, and not a single file with
+<code>?</code> in its name is in sight. With the HTTP server still running, let’s switch
+back to Firefox, refresh the page for <code>http://127.0.0.1:8000</code>, and see what
+happens…</p>
+<p><img src="https://eyalkalderon.com/processed_images/locally-served-game-1.fb38e552c0ce411d.png" alt="A screenshot of Mozilla Firefox displaying the Bubble Shooter Classic start page"
+     width="959" height="657"
+     sizes="(min-width: 920px) 784px, (min-width: 700px) calc(82vw + 46px), calc(100vw - 40px)" 
+     srcset="https://eyalkalderon.com/processed_images/locally-served-game-1.dcc400eb7f8a05fd.png 640w,
+             https://eyalkalderon.com/processed_images/locally-served-game-1.631e23b61a555189.png 784w"
+     loading="lazy">
+
+<img src="https://eyalkalderon.com/processed_images/locally-served-game-2.c9814ca27c7e1bc8.png" alt="A screenshot of Mozilla Firefox displaying the first level of the game, fully playable"
+     width="959" height="657"
+     sizes="(min-width: 920px) 784px, (min-width: 700px) calc(82vw + 46px), calc(100vw - 40px)" 
+     srcset="https://eyalkalderon.com/processed_images/locally-served-game-2.f640be5f9ba25ba4.png 640w,
+             https://eyalkalderon.com/processed_images/locally-served-game-2.586f749aa7d99234.png 784w"
+     loading="lazy">
+</p>
+<p>Finally! 🎉 Now <em>that’s</em> what I like to see. The game seems to be working.</p>
+<p>Popping open the devtools once more and switching to the “network” tab, I can
+confirm there are zero requests reaching out to the broader Internet and the
+game is running 100% locally:</p>
+<img src="https://eyalkalderon.com/processed_images/examining-network-requests.c52796bee49e55ed.png" alt="A screenshot of the browser&#x27;s network request inspector full of HTTP requests to localhost"
+     width="1280" height="878"
+     sizes="(min-width: 920px) 784px, (min-width: 700px) calc(82vw + 46px), calc(100vw - 40px)" 
+     srcset="https://eyalkalderon.com/processed_images/examining-network-requests.bbb0733f8b7be301.png 640w,
+             https://eyalkalderon.com/processed_images/examining-network-requests.c9b78d28e4080b86.png 784w,
+             https://eyalkalderon.com/processed_images/examining-network-requests.c86d313c9f7787a5.png 1280w"
+     loading="lazy">
+<p>That was so much fun! Now to relay what I’ve learned back to OP…</p>
+<h2 id="conclusion">Conclusion<a class="post-anchor" href="#conclusion" aria-label="Anchor link for: conclusion"><span aria-hidden="true">#</span></a>
+</h2>
+<p>Well… that was certainly more complicated than hitting <kbd>Ctrl+S</kbd>.
+😅 Still, I had a lot of fun working through this project, and I
+learned a lot along the way.</p>
+<p>These deeply satisfying rabbit holes and the occasional success story remind me
+of why I love computers in the first place. This also takes me back to formative
+childhood experiences playing Flash games on early 2000s sites like
+<a href="https://web.archive.org/web/20131229072630/http://weebls-stuff.com/">Weebl’s Stuff</a>, <a href="https://www.newgrounds.com/">Newgrounds</a>, <a href="https://web.archive.org/web/20181231224550/https://www.miniclip.com/games/en/">Miniclip</a>, <a href="https://www.albinoblacksheep.com/">Albino Blacksheep</a>, <a href="https://www.deviantart.com/">DeviantArt</a>,
+and so on. Such moments are fleeting, and it’s hard to relive them today due to
+all the broken links, abandoned sites, and obsolete media formats.</p>
+<p>When <a href="https://www.adobe.com/products/flashplayer/end-of-life.html">Adobe formally dropped support for Flash Player in 2020</a>, it
+sent ripples through these online communities. Everyone knew this was a long
+time coming, and <a href="https://en.wikipedia.org/wiki/Adobe_Flash_Player">Shockwave Flash</a> was on its deathbed for years, but at least
+those old Flash games were still easy to preserve: all you needed to do was grab
+the <code>.swf</code>, get yourself an old copy of Flash player or a modern emulator like
+<a href="https://github.com/ruffle-rs/ruffle">Ruffle</a>, and you’re ready to go.</p>
+<p>Modern HTML5 games are significantly more complicated to preserve due to all the
+added complexity, and this particular example I described, while ultimately
+successful, is hardly the norm. Today, it is the responsibility of Web game
+developers and game engine developers to design their games with historical
+preservation in mind, or else risk one day being forever lost to history.</p>
+<p>Now, if you’ll excuse me, I’m off to play some <a href="https://www.crazygames.com/game/line-rider-2">Line Rider 2</a>.</p>
+<h2 id="tl-dr">TL;DR<a class="post-anchor" href="#tl-dr" aria-label="Anchor link for: tl-dr"><span aria-hidden="true">#</span></a>
+</h2>
+<p>Below is the final set of steps I eventually arrived at to download and run the
+game offline:</p>
+<ol>
+<li>Install Python 3 and Ruby, if you don’t already have them on your machine.</li>
+<li>Confirm there exists a <a href="https://web.archive.org/">Wayback Machine</a> capture of the HTML5 game you would
+like to archive.</li>
+<li><code>gem install wayback_machine_downloader</code></li>
+<li><code>wayback_machine_downloader &lt;live game url&gt;</code>
+<ul>
+<li>This saves everything to <code>websites/&lt;domain&gt;/path/to/game/</code>.</li>
+<li>Make sure to grab <code>/</code> rather than <code>/index.html</code>. This ensures all the
+capture files get fetched and not just the <code>index.html</code> file.</li>
+</ul>
+</li>
+<li>Strip the <code>?v=</code> suffixes off all the filenames, if there are any.<pre data-lang="bash" style="background-color:#272822;color:#f8f8f2;" class="language-bash "><code class="language-bash" data-lang="bash"><span>find .</span><span style="font-style:italic;color:#fd971f;"> -name </span><span style="color:#e6db74;">&#39;*\?*&#39;</span><span style="font-style:italic;color:#fd971f;"> -type</span><span> f</span><span style="font-style:italic;color:#fd971f;"> -exec</span><span> bash</span><span style="font-style:italic;color:#fd971f;"> -c </span><span style="color:#e6db74;">&#39;mv $1 $(echo $1 | cut -d? -f1)&#39;</span><span> bash {} </span><span style="color:#ae81ff;">\;
+</span></code></pre>
+</li>
+<li>Save <a href="https://gist.github.com/mkows/cd2122f427ea722bf41aa169ef762001">this GitHub Gist</a>
+in <code>websites/&lt;domain&gt;/path/to/game/</code> as <code>launch_game.py</code>.</li>
+<li>Serve the game files locally: <code>python3 launch_game.py</code>
+<ul>
+<li>If you are on Linux or macOS, feel free to add a <code>#!/usr/bin/env python3</code>
+shebang to the top of the file and <code>chmod +x launch_game.py</code>. This lets you
+launch the server more conveniently</li>
+</ul>
+</li>
+<li>Navigate to <code>http://127.0.0.1:8000</code> in a Web browser to play.</li>
+</ol>
+<footer class="footnotes">
+<ol class="footnotes-list">
+<li id="fn-1">
+<p>The Wayback Machine uses <a href="https://github.com/webrecorder/wombat">Wombat</a>
+for its client-side URL rewriting needs. <a href="#fr-1-1">↩</a></p>
+</li>
+<li id="fn-2">
+<p>See the <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Access-Control-Allow-Origin">MDN Web Docs entry for <code>Access-Control-Allow-Origin</code></a>
+for details. <a href="#fr-2-1">↩</a></p>
+</li>
+<li id="fn-3">
+<p>In the real published game, this query string corresponds to the <code>md5sum</code>
+of the game asset we’re trying to retrieve. This doesn’t matter to us,
+though; our dumb Python Web server ignores and discards the query string
+anyway. <a href="#fr-3-1">↩</a></p>
+</li>
+</ol>
+</footer>
+
+        </article>
+        <nav class="post-navigation">
+            <header class="post-navigation-title">
+                <h2>Read More Posts</h2>
+                <hr>
+            </header>
+            <div class="post-navigation-buttons">
+                <a rel="next" href="https://eyalkalderon.com/blog/monitor-wireguard-uptime-kuma/" aria-label="Next article">
+                    <span aria-hidden="true">&lt;&nbsp;[</span>Monitoring Wireguard in Uptime Kuma (with OPNsense)<span aria-hidden="true">]</span>
+                </a>
+                <span aria-hidden="true" role="separator">::</span>
+                <a rel="prev" href="https://eyalkalderon.com/blog/nom-error-recovery/" aria-label="Prev article">
+                    <span aria-hidden="true">[</span>Error recovery with parser combinators (using nom)<span aria-hidden="true">]&nbsp;&gt;</span>
+                </a>
+            </div>
+        </nav>
+        <section class="comments">
+            <script src="https://utteranc.es/client.js"
+                repo="ebkalderon/ebkalderon.github.io"
+                issue-term="pathname"
+                theme="github-dark-orange"
+                crossorigin="anonymous"
+                async>
+            </script>
+            <noscript>JavaScript must be enabled to view comments.</noscript>
+        </section>
+    </main>
+    <footer class="footer">
+        <address class="socials">
+            <ul>
+                <li>
+                    <a class="social-link" href="https://eyalkalderon.com/rss.xml" title="rss feed" aria-label="rss feed">
+                        <svg role="img" aria-label="feed icon">
+                            <use aria-hidden="true" href="https://eyalkalderon.com/images/social_icons/rss.svg#icon" />
+                        </svg>
+                    </a>
+                </li>
+                <li>
+                    <a class="social-link" rel="me" href="mailto:ebkalderon@gmail.com?subject=hi&body=PGP%20key%2000AB4C0942DCBA25" title="email" aria-label="email">
+                        <svg role="img" aria-label="email icon">
+                            <use aria-hidden="true" href="https://eyalkalderon.com/images/social_icons/email.svg#icon" />
+                        </svg>
+                    </a>
+                </li>
+                <li>
+                    <a class="social-link" rel="me" href="https://github.com/ebkalderon" title="github" aria-label="github">
+                        <svg role="img" aria-label="github icon">
+                            <use aria-hidden="true" href="https://eyalkalderon.com/images/social_icons/github.svg#icon" />
+                        </svg>
+                    </a>
+                </li>
+                <li>
+                    <a class="social-link" rel="me" href="https://www.linkedin.com/in/ebkalderon" title="linkedin" aria-label="linkedin">
+                        <svg role="img" aria-label="linkedin icon">
+                            <use aria-hidden="true" href="https://eyalkalderon.com/images/social_icons/linkedin.svg#icon" />
+                        </svg>
+                    </a>
+                </li>
+                <li>
+                    <a class="social-link" rel="me" href="https://hachyderm.io/@ebkalderon" title="mastodon" aria-label="mastodon">
+                        <svg role="img" aria-label="mastodon icon">
+                            <use aria-hidden="true" href="https://eyalkalderon.com/images/social_icons/mastodon.svg#icon" />
+                        </svg>
+                    </a>
+                </li>
+                <li>
+                    <a class="social-link" rel="me" href="https://keyoxide.org/d5ad5bd47835b0f0b0c3046c00ab4c0942dcba25" title="keyoxide" aria-label="keyoxide">
+                        <svg role="img" aria-label="keyoxide icon">
+                            <use aria-hidden="true" href="https://eyalkalderon.com/images/social_icons/keyoxide.svg#icon" />
+                        </svg>
+                    </a>
+                </li>
+            </ul>
+        </address>
+        <p class="copyright">
+            <span>© <time>2025</time> Eyal Kalderon</span>
+            <span>Powered by <a href="https://www.getzola.org">Zola</a></span>
+            <span>Theme by <a href="https://eyalkalderon.com">ebkalderon</a></span>
+        </p>
+    </footer>
+</body>
+
+</html>

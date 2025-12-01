@@ -1,0 +1,1342 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+      <title>Eyal Kalderon</title>
+      <link>https://eyalkalderon.com</link>
+      <description>If you listen to a UNIX shell, can you hear the C?</description>
+      <generator>Zola</generator>
+      <language>en</language>
+      <atom:link href="https://eyalkalderon.com/rss.xml" rel="self" type="application/rss+xml"/>
+      <lastBuildDate>Sat, 05 Jul 2025 03:08:11 -0400</lastBuildDate>
+      <item>
+          <title>Moving from Keybase to Keyoxide</title>
+          <pubDate>Sat, 05 Jul 2025 03:08:11 -0400</pubDate>
+          <author>Eyal Kalderon</author>
+          <link>https://eyalkalderon.com/blog/moving-from-keybase-to-keyoxide/</link>
+          <guid>https://eyalkalderon.com/blog/moving-from-keybase-to-keyoxide/</guid>
+          <description xml:base="https://eyalkalderon.com/blog/moving-from-keybase-to-keyoxide/">&lt;p&gt;Ever since &lt;a href=&quot;https:&#x2F;&#x2F;keybase.io&#x2F;blog&#x2F;keybase-joins-zoom&quot;&gt;the acquisition of Keybase by
+Zoom&lt;&#x2F;a&gt; while the world was in the
+throes of the COVID-19 pandemic, the pace of Keybase’s development essentially
+stopped.&lt;&#x2F;p&gt;
+&lt;img src=&quot;https:&#x2F;&#x2F;eyalkalderon.com&#x2F;processed_images&#x2F;contributors-graph-for-keybase-client.5ae0e15065296035.png&quot; alt=&quot;A screenshot of the Contributors graph for the `keybase&amp;#x2F;client` GitHub repository indicating a sharp decline in activity to almost nothing since May 2020&quot;
+     width=&quot;1280&quot; height=&quot;513&quot;
+     sizes=&quot;(min-width: 920px) 784px, (min-width: 700px) calc(82vw + 46px), calc(100vw - 40px)&quot; 
+     srcset=&quot;https:&#x2F;&#x2F;eyalkalderon.com&#x2F;processed_images&#x2F;contributors-graph-for-keybase-client.ab513f7f034484d2.png 640w,
+             https:&#x2F;&#x2F;eyalkalderon.com&#x2F;processed_images&#x2F;contributors-graph-for-keybase-client.69dd40a28bc3b14a.png 784w,
+             https:&#x2F;&#x2F;eyalkalderon.com&#x2F;processed_images&#x2F;contributors-graph-for-keybase-client.b62c836e342b265b.png 1280w&quot;
+     fetchpriority=&quot;high&quot;&gt;
+&lt;p&gt;The official blog went completely silent, third-party integrations started to
+break down, previously-announced improvements to Keybase never materialized,
+unaddressed GitHub issues began piling up, and I started encountering an
+increasing number of 404 errors while navigating through the official site.&lt;&#x2F;p&gt;
+&lt;section class=&quot;alert info&quot; role=&quot;note&quot; aria-labelledby=&quot;A17btz1&amp;#x2F;&quot;&gt;
+    &lt;div class=&quot;alert-icon alert-icon-info&quot;&gt;&lt;&#x2F;div&gt;
+    &lt;div class=&quot;alert-content&quot; role=&quot;presentation&quot;&gt;
+        &lt;strong id=&quot;A17btz1&amp;#x2F;&quot; class=&quot;alert-title&quot; aria-hidden=&quot;true&quot;&gt;INFO&lt;&#x2F;strong&gt;
+        &lt;p&gt;For those unaware, &lt;a href=&quot;https:&#x2F;&#x2F;keybase.io&#x2F;&quot;&gt;Keybase&lt;&#x2F;a&gt; is (was?) a cutting-edge
+social network which aimed to make &lt;abbr title=&quot;Pretty Good Privacy&quot;&gt;PGP&lt;&#x2F;abbr&gt;
+approachable, convenient, and &lt;em&gt;fun&lt;&#x2F;em&gt;. By creating and uploading an
+&lt;a href=&quot;https:&#x2F;&#x2F;www.openpgp.org&#x2F;&quot;&gt;OpenPGP&lt;&#x2F;a&gt; public key to Keybase, you could:&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;Prove ownership of your online identities on Twitter, Reddit, GitHub, etc. or
+even entire websites and Bitcoin wallets, like a “digital passport” of sorts.&lt;&#x2F;li&gt;
+&lt;li&gt;Privately message other users via &lt;a href=&quot;https:&#x2F;&#x2F;en.wikipedia.org&#x2F;wiki&#x2F;End-to-end_encryption&quot;&gt;end-to-end
+encrypted&lt;&#x2F;a&gt; chat rooms.&lt;&#x2F;li&gt;
+&lt;li&gt;Back up personal files to an encrypted cloud drive akin to Google Drive.&lt;&#x2F;li&gt;
+&lt;li&gt;Follow other Keybase users and be notified when their “link tree” of online
+identities has changed.&lt;&#x2F;li&gt;
+&lt;li&gt;Among other things…&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+
+    &lt;&#x2F;div&gt;
+&lt;&#x2F;section&gt;
+&lt;p&gt;As service quality continued to degrade, social media networks began removing
+Keybase integration from their products, which makes Keybase far less useful as
+a so-called “digital passport” these days. For instance, &lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;mastodon&#x2F;mastodon&#x2F;pull&#x2F;17045&quot;&gt;Mastodon removed
+their integration back in November 2021&lt;&#x2F;a&gt;.&lt;&#x2F;p&gt;
+&lt;p&gt;Thankfully, there &lt;a href=&quot;https:&#x2F;&#x2F;www.openpgp.org&#x2F;software&#x2F;kleopatra&#x2F;&quot;&gt;already&lt;&#x2F;a&gt; &lt;a href=&quot;https:&#x2F;&#x2F;signal.org&#x2F;&quot;&gt;exist&lt;&#x2F;a&gt; &lt;a href=&quot;https:&#x2F;&#x2F;proton.me&#x2F;drive&quot;&gt;alternatives&lt;&#x2F;a&gt;
+for basically all of Keybase’s functionality &lt;em&gt;except&lt;&#x2F;em&gt; the core identity
+verification part, for which I have been actively seeking a replacement.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;enter-keyoxide&quot;&gt;Enter Keyoxide&lt;a class=&quot;post-anchor&quot; href=&quot;#enter-keyoxide&quot; aria-label=&quot;Anchor link for: enter-keyoxide&quot;&gt;&lt;span aria-hidden=&quot;true&quot;&gt;#&lt;&#x2F;span&gt;&lt;&#x2F;a&gt;
+&lt;&#x2F;h2&gt;
+&lt;p&gt;Which brings us to this year! I recently stumbled upon
+&lt;a href=&quot;https:&#x2F;&#x2F;keyoxide.org&#x2F;&quot;&gt;Keyoxide&lt;&#x2F;a&gt; as a possible replacement for Keybase. While
+it’s not perfect, it checks all the main boxes:&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;input disabled=&quot;&quot; type=&quot;checkbox&quot; checked=&quot;&quot;&#x2F;&gt;
+Profiles consist of a name, avatar, and OpenPGP key fingerprint.&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;input disabled=&quot;&quot; type=&quot;checkbox&quot; checked=&quot;&quot;&#x2F;&gt;
+Verifies many online social media services, e.g. Mastodon, Reddit,
+Bluesky, and others (&lt;a href=&quot;https:&#x2F;&#x2F;codeberg.org&#x2F;keyoxide&#x2F;doipjs&#x2F;issues&#x2F;?q=&amp;amp;type=all&amp;amp;state=open&amp;amp;labels=183437&quot;&gt;with more on the way&lt;&#x2F;a&gt;).&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;input disabled=&quot;&quot; type=&quot;checkbox&quot; checked=&quot;&quot;&#x2F;&gt;
+Verifies domain name ownership &lt;a href=&quot;https:&#x2F;&#x2F;docs.keyoxide.org&#x2F;service-providers&#x2F;dns&#x2F;&quot;&gt;via DNS &lt;code&gt;TXT&lt;&#x2F;code&gt; records&lt;&#x2F;a&gt;.&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;input disabled=&quot;&quot; type=&quot;checkbox&quot; checked=&quot;&quot;&#x2F;&gt;
+&lt;a href=&quot;https:&#x2F;&#x2F;blog.keyoxide.org&#x2F;keyoxide-launch&#x2F;#What_are_those_decentralized_identity_proofs_you_keep_mentioning?&quot;&gt;Truly decentralized&lt;&#x2F;a&gt;, unlike Keybase.&lt;sup class=&quot;footnote-reference&quot; id=&quot;fr-1-1&quot;&gt;&lt;a href=&quot;#fn-1&quot;&gt;1&lt;&#x2F;a&gt;&lt;&#x2F;sup&gt;&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;Incidentally, the folks developing Keyoxide are the same folks behind the
+&lt;a href=&quot;https:&#x2F;&#x2F;ariadne.id&#x2F;&quot;&gt;Ariadne Identity Specification&lt;&#x2F;a&gt;. Ariadne is the open
+protocol which underpins Keyoxide and is responsible for the actual
+“decentralized identity verification” stuff.&lt;&#x2F;p&gt;
+&lt;p&gt;The best thing about Keyoxide&#x2F;Ariadne, in my opinion, is that &lt;strong&gt;the identity
+proofs are embedded directly in your public key.&lt;&#x2F;strong&gt; This means your Ariadne
+identity profile truly belongs to you and isn’t dependent on a centralized
+service somewhere remaining functional (&lt;em&gt;ahem&lt;&#x2F;em&gt;… looking at you, Keybase).
+Heck, if you’re feeling determined enough and have plenty of time to spare, you
+could even verify the identity claims &lt;em&gt;by hand&lt;&#x2F;em&gt;. I definitely wouldn’t recommend
+it, though; that sounds pretty damn tedious. 😛&lt;&#x2F;p&gt;
+&lt;p&gt;And because Ariadne is an open specification that builds on existing
+technologies like OpenPGP and &lt;a href=&quot;https:&#x2F;&#x2F;ariadne.id&#x2F;related&#x2F;ariadne-signature-profile-0&#x2F;&quot;&gt;ASP&lt;&#x2F;a&gt;, rather than a monolithic product, your
+cryptographic proofs will feasibly outlive the Keyoxide project itself, should
+the developers ever stop working on it someday.&lt;&#x2F;p&gt;
+&lt;p&gt;Though I don’t expect that day to come anytime soon… The Keyoxide project is
+funded by generous &lt;a href=&quot;https:&#x2F;&#x2F;nlnet.nl&#x2F;project&#x2F;Keyoxide&#x2F;&quot;&gt;grants by the NLnet foundation&lt;&#x2F;a&gt; along with &lt;a href=&quot;https:&#x2F;&#x2F;opencollective.com&#x2F;keyoxide&quot;&gt;private
+donations on OpenCollective&lt;&#x2F;a&gt;. Being a non-profit organization with relatively
+stable financial backing and not needing to host any user data themselves, they
+should have a fighting chance of operating for a long time.&lt;&#x2F;p&gt;
+&lt;p&gt;By contrast, it’s clear (in retrospect) that Keybase’s for-profit business model
+was never going to be sustainable long-term. The Keybase team was desperately
+looking for ways to monetize their service: after only 4 years of existence,
+they &lt;a href=&quot;https:&#x2F;&#x2F;keybase.io&#x2F;blog&#x2F;keybase-stellar&quot;&gt;took funds from the Stellar Development Foundation&lt;&#x2F;a&gt; to stay afloat.
+Shortly thereafter, the app rolled out multiple cryptocurrency-focused features
+such as &lt;a href=&quot;https:&#x2F;&#x2F;keybase.io&#x2F;blog&#x2F;cryptographic-coin-flipping&quot;&gt;crypto “coin flipping”&lt;&#x2F;a&gt; and &lt;a href=&quot;https:&#x2F;&#x2F;keybase.io&#x2F;blog&#x2F;keybase-stellar-launch&quot;&gt;built-in Stellar crypto wallets&lt;&#x2F;a&gt; with
+surprise airdrops of coins to Keybase users’ wallets. It seems these moves
+failed to stem the bleeding in the end, hence the Zoom &lt;a href=&quot;https:&#x2F;&#x2F;en.wikipedia.org&#x2F;wiki&#x2F;Acqui-hiring&quot;&gt;acqui-hire&lt;&#x2F;a&gt; in 2020.&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;getting-started&quot;&gt;Getting Started&lt;a class=&quot;post-anchor&quot; href=&quot;#getting-started&quot; aria-label=&quot;Anchor link for: getting-started&quot;&gt;&lt;span aria-hidden=&quot;true&quot;&gt;#&lt;&#x2F;span&gt;&lt;&#x2F;a&gt;
+&lt;&#x2F;h3&gt;
+&lt;p&gt;To get started with Keyoxide, I simply opened my browser and navigated to
+&lt;a href=&quot;https:&#x2F;&#x2F;keyoxide.org&#x2F;d5ad5bd47835b0f0b0c3046c00ab4c0942dcba25&quot;&gt;https:&#x2F;&#x2F;keyoxide.org&#x2F;d5ad5bd47835b0f0b0c3046c00ab4c0942dcba25&lt;&#x2F;a&gt;
+(which is the OpenPGP fingerprint of my public key). To my delight, a profile
+page already existed for me! 🎉&lt;&#x2F;p&gt;
+&lt;figure&gt;
+&lt;img src=&quot;https:&#x2F;&#x2F;eyalkalderon.com&#x2F;processed_images&#x2F;keyoxide-profile-page.5890da60b252b2a2.png&quot; alt=&quot;A screenshot of my profile page on Keyoxide displaying a (somewhat dated) photo of me&quot;
+     width=&quot;1280&quot; height=&quot;762&quot;
+     sizes=&quot;(min-width: 920px) 784px, (min-width: 700px) calc(82vw + 46px), calc(100vw - 40px)&quot; 
+     srcset=&quot;https:&#x2F;&#x2F;eyalkalderon.com&#x2F;processed_images&#x2F;keyoxide-profile-page.81a0ae0697561405.png 640w,
+             https:&#x2F;&#x2F;eyalkalderon.com&#x2F;processed_images&#x2F;keyoxide-profile-page.3404381aabcd78c3.png 784w,
+             https:&#x2F;&#x2F;eyalkalderon.com&#x2F;processed_images&#x2F;keyoxide-profile-page.66a7e52c1fbb4269.png 1280w&quot;
+     loading=&quot;lazy&quot;&gt;
+    &lt;figcaption&gt;
+        &lt;p&gt;My Keyoxide profile, after adding a few proofs&lt;&#x2F;p&gt;
+    &lt;&#x2F;figcaption&gt;
+&lt;&#x2F;figure&gt;
+&lt;p&gt;It seems that Keyoxide automatically creates user profiles for all public keys
+present on the most popular PGP keyservers out there, including
+&lt;a href=&quot;https:&#x2F;&#x2F;keys.openpgp.org&#x2F;&quot;&gt;keys.openpgp.org&lt;&#x2F;a&gt;, which I think is pretty neat.
+Furthermore, Keyoxide automatically retrieved a user avatar from
+&lt;a href=&quot;https:&#x2F;&#x2F;gravatar.com&#x2F;&quot;&gt;Gravatar&lt;&#x2F;a&gt; based on the email address associated with my
+own PGP key, which was a nice touch. Granted, it’s a fairly dated photo, but
+that issue should be trivial enough to fix.&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;adding-identity-proofs&quot;&gt;Adding Identity Proofs&lt;a class=&quot;post-anchor&quot; href=&quot;#adding-identity-proofs&quot; aria-label=&quot;Anchor link for: adding-identity-proofs&quot;&gt;&lt;span aria-hidden=&quot;true&quot;&gt;#&lt;&#x2F;span&gt;&lt;&#x2F;a&gt;
+&lt;&#x2F;h3&gt;
+&lt;p&gt;Adding new identity proofs to my Keyoxide profile is nowhere near as streamlined
+as with Keybase, but it wasn’t too bad once I got the hang of it. Here’s the
+gist:&lt;&#x2F;p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;Find the online service or social media network you would like to verify in
+&lt;a href=&quot;https:&#x2F;&#x2F;docs.keyoxide.org&#x2F;service-providers&#x2F;&quot;&gt;the Keyoxide documentation&lt;&#x2F;a&gt;.&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;Create the proof according to the given instructions. For example, &lt;a href=&quot;https:&#x2F;&#x2F;gist.github.com&#x2F;ebkalderon&#x2F;b2ae0515fcb6933cff7880b68d4d14fe&quot;&gt;here’s a
+link to my GitHub proof&lt;&#x2F;a&gt;.&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;Record the proof in your OpenPGP key using the appropriate &lt;em&gt;notation&lt;&#x2F;em&gt; per the
+Ariadne spec. This process only requires &lt;a href=&quot;https:&#x2F;&#x2F;gnupg.org&#x2F;&quot;&gt;GnuPG&lt;&#x2F;a&gt; and an
+open terminal window.&lt;&#x2F;p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#272822;color:#f8f8f2;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span&gt;gpg&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#fd971f;&quot;&gt; --edit-key&lt;&#x2F;span&gt;&lt;span&gt; d5ad5bd47835b0f0b0c3046c00ab4c0942dcba25
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;At the &lt;code&gt;gpg&amp;gt;&lt;&#x2F;code&gt; prompt, type &lt;code&gt;notation&lt;&#x2F;code&gt; and hit &lt;kbd&gt;Enter&lt;&#x2F;kbd&gt;. This will
+ask you to enter a string of the form:&lt;&#x2F;p&gt;
+&lt;pre style=&quot;background-color:#272822;color:#f8f8f2;&quot;&gt;&lt;code&gt;&lt;span&gt;proof@ariadne.id=$THE_PROOF
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Usually, &lt;code&gt;$THE_PROOF&lt;&#x2F;code&gt; refers to a URL to the social media profile you’re
+trying to claim, but might contain other information. Refer to the
+official Keyoxide instructions for that specific online service to see the
+exact format.&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;At the &lt;code&gt;gpg&amp;gt;&lt;&#x2F;code&gt; prompt, type &lt;code&gt;save&lt;&#x2F;code&gt; and hit &lt;kbd&gt;Enter&lt;&#x2F;kbd&gt;. This will
+apply all changes to your public key and quit out of GnuPG.&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;Upload your updated public key to the OpenPGP keyserver of your choice. In my
+case, that keyserver is &lt;a href=&quot;https:&#x2F;&#x2F;keys.openpgp.org&#x2F;&quot;&gt;keys.openpgp.org&lt;&#x2F;a&gt;. This
+can be done quickly without leaving the terminal window:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#272822;color:#f8f8f2;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span&gt;gpg&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#fd971f;&quot;&gt; --export&lt;&#x2F;span&gt;&lt;span&gt; d5ad5bd47835b0f0b0c3046c00ab4c0942dcba25 &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;| &lt;&#x2F;span&gt;&lt;span&gt;curl&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#fd971f;&quot;&gt; -T&lt;&#x2F;span&gt;&lt;span&gt; - https:&#x2F;&#x2F;keys.openpgp.org
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;If successful, the command prints the following output:&lt;&#x2F;p&gt;
+&lt;pre style=&quot;background-color:#272822;color:#f8f8f2;&quot;&gt;&lt;code&gt;&lt;span&gt;Key successfully uploaded. Proceed with verification here:
+&lt;&#x2F;span&gt;&lt;span&gt;https:&#x2F;&#x2F;keys.openpgp.org&#x2F;upload&#x2F;R_9QF8lSV9hGQJDLgS6igAwfzwToUySZ6IMuVICteuEDQ5k40gMCS7Jd7ckh5iO7WlWK2LHyuV5WX2GtyTWYcq5CLYBAAiZd-rMC9-Eln87cuOS6MMaimomGnur1hqYcB3-K2AMmSeGOcje78vSgRLvF6ZmDiZKuKtmEbcD8CupY3UipnExg1lTEY0nTx2qRf3ppdX_yrG7HsJn2kyMGquLXTw
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;You must open this one-time link in your browser before it expires for your
+updated PGP key to be available worldwide.&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;p&gt;That’s pretty much it! Once you refresh your browser, your Keyoxide
+profile page should automatically show the new identity proofs with either a
+green checkmark (indicating successful identity verification) or a red “x”
+(indicating failure) next to each one.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;conclusion&quot;&gt;Conclusion&lt;a class=&quot;post-anchor&quot; href=&quot;#conclusion&quot; aria-label=&quot;Anchor link for: conclusion&quot;&gt;&lt;span aria-hidden=&quot;true&quot;&gt;#&lt;&#x2F;span&gt;&lt;&#x2F;a&gt;
+&lt;&#x2F;h2&gt;
+&lt;p&gt;So yeah… Keyoxide is pretty neat! I’m happy to have an open source alternative
+to Keybase, and I’m especially happy to have my online identity double-verified
+between Keyoxide and Mastodon. 😄&lt;&#x2F;p&gt;
+&lt;figure&gt;
+&lt;img src=&quot;https:&#x2F;&#x2F;eyalkalderon.com&#x2F;processed_images&#x2F;double-verified-mastodon.b9170fbeba506007.png&quot; alt=&quot;A screenshot of my Mastodon account profile, where the link to Keyoxide is highlighted with a green checkmark, indicating successful reverse verification between the two sites&quot;
+     width=&quot;882&quot; height=&quot;758&quot;
+     sizes=&quot;(min-width: 920px) 784px, (min-width: 700px) calc(82vw + 46px), calc(100vw - 40px)&quot; 
+     srcset=&quot;https:&#x2F;&#x2F;eyalkalderon.com&#x2F;processed_images&#x2F;double-verified-mastodon.336d7a7ee6cd4e31.png 640w,
+             https:&#x2F;&#x2F;eyalkalderon.com&#x2F;processed_images&#x2F;double-verified-mastodon.e6385979f03ce29d.png 784w&quot;
+     loading=&quot;lazy&quot;&gt;
+    &lt;figcaption&gt;
+        &lt;p&gt;Mastodon and Keyoxide verifying each other… Verification-ception!&lt;&#x2F;p&gt;
+    &lt;&#x2F;figcaption&gt;
+&lt;&#x2F;figure&gt;
+&lt;p&gt;&lt;a href=&quot;https:&#x2F;&#x2F;keyoxide.org&#x2F;d5ad5bd47835b0f0b0c3046c00ab4c0942dcba25&quot;&gt;My Keyoxide profile&lt;&#x2F;a&gt; is linked in the footer of this website
+alongside my other social media accounts. While &lt;a href=&quot;https:&#x2F;&#x2F;keybase.io&#x2F;ebkalderon&quot;&gt;my Keybase
+account&lt;&#x2F;a&gt; will remain active for the time being, I
+will no longer be actively using it.&lt;&#x2F;p&gt;
+&lt;footer class=&quot;footnotes&quot;&gt;
+&lt;ol class=&quot;footnotes-list&quot;&gt;
+&lt;li id=&quot;fn-1&quot;&gt;
+&lt;p&gt;When I say “decentralized” here, I do &lt;em&gt;not&lt;&#x2F;em&gt; mean blockchain! Instead,
+think email, RSS feeds, or the World Wide Web itself. &lt;a href=&quot;#fr-1-1&quot;&gt;↩&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;&#x2F;footer&gt;
+</description>
+      </item>
+      <item>
+          <title>Monitoring Wireguard in Uptime Kuma (with OPNsense)</title>
+          <pubDate>Mon, 05 May 2025 00:00:00 +0000</pubDate>
+          <author>Eyal Kalderon</author>
+          <link>https://eyalkalderon.com/blog/monitor-wireguard-uptime-kuma/</link>
+          <guid>https://eyalkalderon.com/blog/monitor-wireguard-uptime-kuma/</guid>
+          <description xml:base="https://eyalkalderon.com/blog/monitor-wireguard-uptime-kuma/">&lt;figure&gt;
+&lt;img src=&quot;https:&#x2F;&#x2F;eyalkalderon.com&#x2F;processed_images&#x2F;wireguard-monitor-in-dashboard.69518d861b8e7b9d.png&quot; alt=&quot;Screenshot of active Wireguard monitor in Uptime Kuma dashboard&quot;
+     width=&quot;1280&quot; height=&quot;816&quot;
+     sizes=&quot;(min-width: 920px) 784px, (min-width: 700px) calc(82vw + 46px), calc(100vw - 40px)&quot; 
+     srcset=&quot;https:&#x2F;&#x2F;eyalkalderon.com&#x2F;processed_images&#x2F;wireguard-monitor-in-dashboard.10fa3f212436eaae.png 640w,
+             https:&#x2F;&#x2F;eyalkalderon.com&#x2F;processed_images&#x2F;wireguard-monitor-in-dashboard.68c474af7cac478b.png 784w,
+             https:&#x2F;&#x2F;eyalkalderon.com&#x2F;processed_images&#x2F;wireguard-monitor-in-dashboard.f6510dc4226943b8.png 1280w,
+             https:&#x2F;&#x2F;eyalkalderon.com&#x2F;processed_images&#x2F;wireguard-monitor-in-dashboard.bcf66592bf1d2d0b.png 1920w,
+             https:&#x2F;&#x2F;eyalkalderon.com&#x2F;processed_images&#x2F;wireguard-monitor-in-dashboard.b88a68e71578c195.png 2560w&quot;
+     fetchpriority=&quot;high&quot;&gt;
+    &lt;figcaption&gt;
+        &lt;p&gt;Wireguard monitor in Uptime Kuma&lt;&#x2F;p&gt;
+    &lt;&#x2F;figcaption&gt;
+&lt;&#x2F;figure&gt;
+&lt;p&gt;I use &lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;louislam&#x2F;uptime-kuma&quot;&gt;Uptime Kuma&lt;&#x2F;a&gt; to monitor the
+status of all self-hosted services that run in my homelab. With one notable
+exception: my public-facing &lt;a href=&quot;https:&#x2F;&#x2F;www.wireguard.com&#x2F;&quot;&gt;Wireguard&lt;&#x2F;a&gt; VPN, which
+cannot easily be monitored by Uptime Kuma. Just see the comments on &lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;louislam&#x2F;uptime-kuma&#x2F;issues&#x2F;4350&quot;&gt;this GitHub
+issue&lt;&#x2F;a&gt; for instance.&lt;&#x2F;p&gt;
+&lt;p&gt;This is because the Wireguard protocol is built on top of UDP instead of TCP.
+Unlike TCP, UDP is &lt;em&gt;connectionless&lt;&#x2F;em&gt;, which means it completely lacks the notion
+of a persistent “connection” existing between two peers, much less whether that
+connection is currently “up” or “down”. Even if I know the precise hostname and
+port number where my Wireguard VPN is hosted, there is no guarantee that that
+endpoint will respond to whatever UDP packets I throw at it.&lt;&#x2F;p&gt;
+&lt;p&gt;In fact, Wireguard will completely ignore &lt;em&gt;all&lt;&#x2F;em&gt; network traffic that doesn’t
+originate from an authorized VPN client (or “peer” in Wireguard parlance). This
+is entirely by design; any protocol chatter conducted prior to the establishment
+of the VPN tunnel is a potential attack vector, so the Wireguard protocol takes
+the &lt;a href=&quot;https:&#x2F;&#x2F;en.wikipedia.org&#x2F;wiki&#x2F;Loose_lips_sink_ships&quot;&gt;“loose lips sink ships”&lt;&#x2F;a&gt; approach and simply doesn’t expose health checks
+at all. This is great for security, but annoying for me trying to build a status
+monitoring solution.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;initial-approach&quot;&gt;Initial Approach&lt;a class=&quot;post-anchor&quot; href=&quot;#initial-approach&quot; aria-label=&quot;Anchor link for: initial-approach&quot;&gt;&lt;span aria-hidden=&quot;true&quot;&gt;#&lt;&#x2F;span&gt;&lt;&#x2F;a&gt;
+&lt;&#x2F;h2&gt;
+&lt;p&gt;One brain-dead simple approach to checking the health of a Wireguard VPN
+endpoint to simply try connecting to it as a client, and then confirm that the
+endpoint is functional by pinging one or more hosts across the &lt;code&gt;wg0&lt;&#x2F;code&gt; network
+interface and seeing if they respond. While this heuristic seems sufficient for
+my needs and straightforward on the surface, this wasn’t something I wanted to
+do.&lt;&#x2F;p&gt;
+&lt;p&gt;My Uptime Kuma instance runs inside a Docker container, and I didn’t feel like
+messing with Docker’s network routing rules. Furthermore, the Wireguard instance
+I want to monitor runs directly on my &lt;a href=&quot;https:&#x2F;&#x2F;opnsense.org&#x2F;&quot;&gt;OPNsense&lt;&#x2F;a&gt;
+firewall, which also acts as my home network’s backbone router, and the server
+where Uptime Kuma is running sits &lt;em&gt;behind&lt;&#x2F;em&gt; that same OPNsense firewall. This
+poses a problem: the aforementioned health check would fail to catch the &lt;em&gt;very&lt;&#x2F;em&gt;
+common case where there’s an Internet outage at my home. Because both Uptime
+Kuma and the Wireguard endpoint would still be able to communicate over LAN, the
+VPN status check would erroneously remain green.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;eventual-solution&quot;&gt;Eventual Solution&lt;a class=&quot;post-anchor&quot; href=&quot;#eventual-solution&quot; aria-label=&quot;Anchor link for: eventual-solution&quot;&gt;&lt;span aria-hidden=&quot;true&quot;&gt;#&lt;&#x2F;span&gt;&lt;&#x2F;a&gt;
+&lt;&#x2F;h2&gt;
+&lt;p&gt;I decided to take a completely different approach. I wrote two simple Uptime
+Kuma monitors which query the &lt;a href=&quot;https:&#x2F;&#x2F;docs.opnsense.org&#x2F;development&#x2F;api.html&quot;&gt;OPNsense REST API&lt;&#x2F;a&gt; to check whether my home VPN
+is currently up or down. It boils down to checking the following conditions:&lt;&#x2F;p&gt;
+&lt;ol&gt;
+&lt;li&gt;Check whether the Wireguard service in OPNsense is healthy.&lt;&#x2F;li&gt;
+&lt;li&gt;Check whether the WAN interface’s IPv4 gateway is online.&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;p&gt;Here’s how I implemented this.&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;configuring-opnsense&quot;&gt;Configuring OPNsense&lt;a class=&quot;post-anchor&quot; href=&quot;#configuring-opnsense&quot; aria-label=&quot;Anchor link for: configuring-opnsense&quot;&gt;&lt;span aria-hidden=&quot;true&quot;&gt;#&lt;&#x2F;span&gt;&lt;&#x2F;a&gt;
+&lt;&#x2F;h3&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;Log into the OPNsense management GUI as the root user.&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;Navigate to &lt;code&gt;System&lt;&#x2F;code&gt; &amp;gt; &lt;code&gt;Access&lt;&#x2F;code&gt; &amp;gt; &lt;code&gt;Users&lt;&#x2F;code&gt;.&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;Create a new unprivileged user account named &lt;code&gt;uptime-kuma&lt;&#x2F;code&gt;. You could skip
+this step and use the existing root account instead in later steps, but I
+would strongly discourage that.&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;Create a new &lt;a href=&quot;https:&#x2F;&#x2F;docs.opnsense.org&#x2F;manual&#x2F;how-tos&#x2F;user-local.html#creating-and-maintainging-api-keys&quot;&gt;API key&lt;&#x2F;a&gt; for the &lt;code&gt;uptime-kuma&lt;&#x2F;code&gt; user by clicking the small
+button with the icon resembling a movie ticket, titled “Create and download
+API key for this user”.&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;This opens a dialog prompting you to save a new text file titled
+&lt;code&gt;$HOSTNAME_$USER_apikey.txt&lt;&#x2F;code&gt;. This text file contains two lines of the form:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;txt&quot; data-name=&quot;$HOSTNAME_$USER_apikey.txt&quot; style=&quot;background-color:#272822;color:#f8f8f2;&quot; class=&quot;language-txt &quot;&gt;&lt;code class=&quot;language-txt&quot; data-lang=&quot;txt&quot; data-name=&quot;$HOSTNAME_$USER_apikey.txt&quot;&gt;&lt;span&gt;key=JS&#x2F;mNJWMxquktkUrqDZGWUMyuBpsnNPzlxOdYtLq&#x2F;RnBJqHWMFBApAeaitVQcaTbqGuzPMZdPFzdaYlp
+&lt;&#x2F;span&gt;&lt;span&gt;secret=LsJqFYgTXqXoFjyRReLlUxeyyMIMtyDjoCChJIZwE+eEjUMOF&#x2F;tSPsKcUiXZzdKVsOkej&#x2F;UWLCJWEBqb
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Save this file locally for the time being, but be prepared to securely delete
+it later once you’re finished configuring Uptime Kuma.&lt;&#x2F;p&gt;
+&lt;section class=&quot;alert warning&quot; role=&quot;note&quot; aria-labelledby=&quot;ZntmgGDc&quot;&gt;
+    &lt;div class=&quot;alert-icon alert-icon-warning&quot;&gt;&lt;&#x2F;div&gt;
+    &lt;div class=&quot;alert-content&quot; role=&quot;presentation&quot;&gt;
+        &lt;strong id=&quot;ZntmgGDc&quot; class=&quot;alert-title&quot; aria-hidden=&quot;true&quot;&gt;WARNING&lt;&#x2F;strong&gt;
+        &lt;p&gt;Both values for &lt;code&gt;key=&lt;&#x2F;code&gt; and &lt;code&gt;secret=&lt;&#x2F;code&gt; shown above are just randomly generated
+nonsense used purely for demonstration purposes. With that said, they do
+visually resemble valid OPNsense API keys.&lt;&#x2F;p&gt;
+&lt;p&gt;I’m sure this doesn’t need to be said, but please do not leak your actual API
+keys to the web!&lt;&#x2F;p&gt;
+
+    &lt;&#x2F;div&gt;
+&lt;&#x2F;section&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;Confirm the API key works as expected by running the following &lt;code&gt;curl&lt;&#x2F;code&gt; command
+in an open terminal:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#272822;color:#f8f8f2;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span&gt;curl&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#fd971f;&quot;&gt; -k -u &lt;&#x2F;span&gt;&lt;span style=&quot;color:#e6db74;&quot;&gt;&amp;quot;$(cut&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#fd971f;&quot;&gt; -d &lt;&#x2F;span&gt;&lt;span style=&quot;color:#e6db74;&quot;&gt;&amp;#39;=&amp;#39;&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#fd971f;&quot;&gt; -f&lt;&#x2F;span&gt;&lt;span style=&quot;color:#e6db74;&quot;&gt; 2 .&#x2F;path_to_apikey.txt &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;| &lt;&#x2F;span&gt;&lt;span style=&quot;color:#e6db74;&quot;&gt;tr &amp;#39;\n&amp;#39; &amp;#39;:&amp;#39;)&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt; https:&#x2F;&#x2F;firewall.yourdomain.com&#x2F;api&#x2F;wireguard&#x2F;service&#x2F;show
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;You should see some JSON printed to the console enumerating all Wireguard VPN
+instances and known peers (i.e. clients) and their properties. If all goes
+well, it’s time to create the new monitors in Uptime Kuma.&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;h3 id=&quot;configuring-uptime-kuma&quot;&gt;Configuring Uptime Kuma&lt;a class=&quot;post-anchor&quot; href=&quot;#configuring-uptime-kuma&quot; aria-label=&quot;Anchor link for: configuring-uptime-kuma&quot;&gt;&lt;span aria-hidden=&quot;true&quot;&gt;#&lt;&#x2F;span&gt;&lt;&#x2F;a&gt;
+&lt;&#x2F;h3&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;Log into the Uptime Kuma dashboard.&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;Create a new monitor named “Wireguard VPN” with these properties:&lt;&#x2F;p&gt;
+&lt;div class=&quot;wide-container&quot;&gt;
+    &lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th&gt;Property&lt;&#x2F;th&gt;&lt;th&gt;Value&lt;&#x2F;th&gt;&lt;&#x2F;tr&gt;&lt;&#x2F;thead&gt;&lt;tbody&gt;
+&lt;tr&gt;&lt;td&gt;Monitor Type&lt;&#x2F;td&gt;&lt;td&gt;&lt;code&gt;Group&lt;&#x2F;code&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;Friendly Name&lt;&#x2F;td&gt;&lt;td&gt;&lt;code&gt;Wireguard VPN&lt;&#x2F;code&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;&#x2F;tbody&gt;&lt;&#x2F;table&gt;
+
+&lt;&#x2F;div&gt;
+&lt;p&gt;Click the &lt;code&gt;Save&lt;&#x2F;code&gt; button to create the monitor.&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;Create another monitor named “Internet Gateway” with these properties:&lt;&#x2F;p&gt;
+&lt;div class=&quot;wide-container&quot;&gt;
+    &lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th&gt;Property&lt;&#x2F;th&gt;&lt;th&gt;Value&lt;&#x2F;th&gt;&lt;&#x2F;tr&gt;&lt;&#x2F;thead&gt;&lt;tbody&gt;
+&lt;tr&gt;&lt;td&gt;Monitor Type&lt;&#x2F;td&gt;&lt;td&gt;&lt;code&gt;HTTP(s) - JSON Query&lt;&#x2F;code&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;Friendly Name&lt;&#x2F;td&gt;&lt;td&gt;&lt;code&gt;Internet Gateway&lt;&#x2F;code&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;URL&lt;&#x2F;td&gt;&lt;td&gt;&lt;code&gt;https:&#x2F;&#x2F;firewall.yourdomain.com&#x2F;api&#x2F;routes&#x2F;gateway&#x2F;status&lt;&#x2F;code&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;JSON Query&lt;&#x2F;td&gt;&lt;td&gt;&lt;code&gt;status=&quot;ok&quot; and items[name=&quot;WAN_GW&quot;].status_translated=&quot;Online&quot;&lt;&#x2F;code&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;Expected Value&lt;&#x2F;td&gt;&lt;td&gt;&lt;code&gt;true&lt;&#x2F;code&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;Monitor Group&lt;&#x2F;td&gt;&lt;td&gt;&lt;code&gt;Wireguard VPN&lt;&#x2F;code&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;&#x2F;tbody&gt;&lt;&#x2F;table&gt;
+
+&lt;&#x2F;div&gt;
+&lt;p&gt;Replace &lt;code&gt;WAN_GW&lt;&#x2F;code&gt; in the JSON query string above with whatever your primary
+IPv4 or IPv6 gateway is named in OPNsense.&lt;sup class=&quot;footnote-reference&quot; id=&quot;fr-1-1&quot;&gt;&lt;a href=&quot;#fn-1&quot;&gt;1&lt;&#x2F;a&gt;&lt;&#x2F;sup&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;Next, under the &lt;strong&gt;Authentication&lt;&#x2F;strong&gt; section, select &lt;code&gt;HTTP Basic Auth&lt;&#x2F;code&gt; as the
+authentication method. Refer back to your &lt;code&gt;$HOSTNAME_$USER_apikey.txt&lt;&#x2F;code&gt; file
+created in Step 5 of the &lt;a href=&quot;https:&#x2F;&#x2F;eyalkalderon.com&#x2F;blog&#x2F;monitor-wireguard-uptime-kuma&#x2F;#configuring-opnsense&quot;&gt;Configuring OPNsense&lt;&#x2F;a&gt;
+section and fill out the following properties:&lt;&#x2F;p&gt;
+&lt;div class=&quot;wide-container&quot;&gt;
+    &lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th&gt;Property&lt;&#x2F;th&gt;&lt;th&gt;Value&lt;&#x2F;th&gt;&lt;&#x2F;tr&gt;&lt;&#x2F;thead&gt;&lt;tbody&gt;
+&lt;tr&gt;&lt;td&gt;Username&lt;&#x2F;td&gt;&lt;td&gt;The value of &lt;code&gt;key=&lt;&#x2F;code&gt; in the text file&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;Password&lt;&#x2F;td&gt;&lt;td&gt;The value of &lt;code&gt;secret=&lt;&#x2F;code&gt; in the text file&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;&#x2F;tbody&gt;&lt;&#x2F;table&gt;
+
+&lt;&#x2F;div&gt;
+&lt;p&gt;Click the &lt;code&gt;Save&lt;&#x2F;code&gt; button to create the monitor.&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;Create one more monitor named “Wireguard Instance” with these properties:&lt;&#x2F;p&gt;
+&lt;div class=&quot;wide-container&quot;&gt;
+    &lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th&gt;Property&lt;&#x2F;th&gt;&lt;th&gt;Value&lt;&#x2F;th&gt;&lt;&#x2F;tr&gt;&lt;&#x2F;thead&gt;&lt;tbody&gt;
+&lt;tr&gt;&lt;td&gt;Monitor Type&lt;&#x2F;td&gt;&lt;td&gt;&lt;code&gt;HTTP(s) - JSON Query&lt;&#x2F;code&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;Friendly Name&lt;&#x2F;td&gt;&lt;td&gt;&lt;code&gt;Wireguard Instance&lt;&#x2F;code&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;URL&lt;&#x2F;td&gt;&lt;td&gt;&lt;code&gt;https:&#x2F;&#x2F;firewall.yourdomain.com&#x2F;api&#x2F;wireguard&#x2F;service&#x2F;show&lt;&#x2F;code&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;JSON Query&lt;&#x2F;td&gt;&lt;td&gt;&lt;code&gt;rows[name=&quot;Remote-Access&quot;].status&lt;&#x2F;code&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;Expected Value&lt;&#x2F;td&gt;&lt;td&gt;&lt;code&gt;up&lt;&#x2F;code&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;Monitor Group&lt;&#x2F;td&gt;&lt;td&gt;&lt;code&gt;Wireguard VPN&lt;&#x2F;code&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;&#x2F;tbody&gt;&lt;&#x2F;table&gt;
+
+&lt;&#x2F;div&gt;
+&lt;p&gt;Replace &lt;code&gt;Remote-Acesss&lt;&#x2F;code&gt; in the JSON query string above with the name of the
+Wireguard instance in OPNsense that you would like to monitor.&lt;sup class=&quot;footnote-reference&quot; id=&quot;fr-2-1&quot;&gt;&lt;a href=&quot;#fn-2&quot;&gt;2&lt;&#x2F;a&gt;&lt;&#x2F;sup&gt;
+Alternatively, feel free to rewrite the JSON query string to poll whether a
+specific peer is connected and throw an error if it goes down; whatever you
+think is best for your own setup.&lt;&#x2F;p&gt;
+&lt;p&gt;Configure the &lt;strong&gt;Authentication&lt;&#x2F;strong&gt; section identically to Step 3 from above.&lt;&#x2F;p&gt;
+&lt;p&gt;Click the &lt;code&gt;Save&lt;&#x2F;code&gt; button to create the monitor.&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;Once all the above done, wait a minute or so for the “Wireguard VPN” monitor
+and its two child monitors to gradually settle into an all-green “up” state.&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;p&gt;You are now ready to add the monitors to your Uptime Kuma status page(s) however
+you see fit.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;explanation&quot;&gt;Explanation&lt;a class=&quot;post-anchor&quot; href=&quot;#explanation&quot; aria-label=&quot;Anchor link for: explanation&quot;&gt;&lt;span aria-hidden=&quot;true&quot;&gt;#&lt;&#x2F;span&gt;&lt;&#x2F;a&gt;
+&lt;&#x2F;h2&gt;
+&lt;p&gt;Basically, this VPN monitoring approach works according to the approach
+&lt;a href=&quot;https:&#x2F;&#x2F;eyalkalderon.com&#x2F;blog&#x2F;monitor-wireguard-uptime-kuma&#x2F;#eventual-solution&quot;&gt;described above&lt;&#x2F;a&gt; by aggregating the results of two
+different health checks.&lt;&#x2F;p&gt;
+&lt;p&gt;The “Wireguard Instance” monitor reports whether the specific Wireguard instance
+is active on your OPNsense system and is in healthy state. If your instance is
+unable to start or is forcibly shut down, or is otherwise, then Uptime Kuma will
+mark the entire “Wireguard VPN” monitor as “down”.&lt;&#x2F;p&gt;
+&lt;p&gt;The “Internet Gateway” monitor reports whether the OPNsense system itself can
+access the Internet via the IPv4&#x2F;v6 gateway you already have set up for
+monitoring. If that gateway’s status no longer returns &lt;code&gt;&quot;Online&quot;&lt;&#x2F;code&gt;, i.e. due to
+an unplugged Ethernet cable or other Internet outage, then Uptime Kuma will mark
+the entire “Wireguard VPN” monitor as “down”.&lt;&#x2F;p&gt;
+&lt;p&gt;You are now free to customize your Uptime Kuma status page to either display all
+three monitors or only the top-level “Wireguard VPN” group monitor, depending on
+how granular you would like your reporting to be. This same flexibility extends
+to the notifications and alerting options as well. For instance, you might want
+to update the “Wireguard Instance” monitor to send a different alert
+notification if the service is undergoing a graceful restart versus a permanent
+outage.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;epilogue&quot;&gt;Epilogue&lt;a class=&quot;post-anchor&quot; href=&quot;#epilogue&quot; aria-label=&quot;Anchor link for: epilogue&quot;&gt;&lt;span aria-hidden=&quot;true&quot;&gt;#&lt;&#x2F;span&gt;&lt;&#x2F;a&gt;
+&lt;&#x2F;h2&gt;
+&lt;p&gt;I should really write a separate post diving into the hardware I’m currently
+using to power the extremely overkill 10 Gbps network I have at home, including
+the tiny-but-mighty DIY OPNsense router acting as the backbone behind it all.
+I’m pretty proud of it when considering the space constraints of the small
+network closet in my home. Perhaps some other day…&lt;&#x2F;p&gt;
+&lt;footer class=&quot;footnotes&quot;&gt;
+&lt;ol class=&quot;footnotes-list&quot;&gt;
+&lt;li id=&quot;fn-1&quot;&gt;
+&lt;p&gt;&lt;a href=&quot;https:&#x2F;&#x2F;docs.opnsense.org&#x2F;manual&#x2F;gateways.html&quot;&gt;OPNsense Manual - System &amp;gt; Gateways&lt;&#x2F;a&gt; &lt;a href=&quot;#fr-1-1&quot;&gt;↩&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li id=&quot;fn-2&quot;&gt;
+&lt;p&gt;&lt;a href=&quot;https:&#x2F;&#x2F;docs.opnsense.org&#x2F;manual&#x2F;vpnet.html#instances&quot;&gt;OPNsense Manual - Virtual Private Networking &amp;gt; Wireguard &amp;gt; Instances&lt;&#x2F;a&gt; &lt;a href=&quot;#fr-2-1&quot;&gt;↩&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;&#x2F;footer&gt;
+</description>
+      </item>
+      <item>
+          <title>Downloading HTML5 games for offline play</title>
+          <pubDate>Mon, 21 Nov 2022 05:02:57 -0500</pubDate>
+          <author>Eyal Kalderon</author>
+          <link>https://eyalkalderon.com/blog/downloading-html5-games/</link>
+          <guid>https://eyalkalderon.com/blog/downloading-html5-games/</guid>
+          <description xml:base="https://eyalkalderon.com/blog/downloading-html5-games/">&lt;p&gt;So, I was &lt;a href=&quot;https:&#x2F;&#x2F;www.urbandictionary.com&#x2F;define.php?term=nerd-snipe&quot;&gt;nerd-sniped&lt;&#x2F;a&gt;
+on Reddit a bit over a week ago.&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;a href=&quot;https:&#x2F;&#x2F;www.reddit.com&#x2F;r&#x2F;webdev&#x2F;comments&#x2F;ypxyyb&#x2F;comment&#x2F;ivn0o5w&#x2F;?context=8&amp;amp;depth=9&quot;&gt;Someone posted on &lt;strong&gt;r&#x2F;webdev&lt;&#x2F;strong&gt;&lt;&#x2F;a&gt; asking whether it would be
+possible to archive a certain HTML5 game locally for offline play, similar to
+how folks used to &lt;a href=&quot;https:&#x2F;&#x2F;www.makeuseof.com&#x2F;tag&#x2F;download-run-flash-games&#x2F;&quot;&gt;archive Flash games&lt;&#x2F;a&gt; by downloading the embedded &lt;code&gt;.swf&lt;&#x2F;code&gt; file,
+back in the early days of the Web. None of the other answers seemed particularly
+helpful at the time, so I decided to take a stab at it.&lt;&#x2F;p&gt;
+&lt;p&gt;Below is a recounting of my original thought process while approaching this
+problem, from beginning to end.&lt;&#x2F;p&gt;
+&lt;section class=&quot;alert warning&quot; role=&quot;note&quot; aria-labelledby=&quot;a82LsTBv&quot;&gt;
+    &lt;div class=&quot;alert-icon alert-icon-warning&quot;&gt;&lt;&#x2F;div&gt;
+    &lt;div class=&quot;alert-content&quot; role=&quot;presentation&quot;&gt;
+        &lt;strong id=&quot;a82LsTBv&quot; class=&quot;alert-title&quot; aria-hidden=&quot;true&quot;&gt;DISCLAIMER&lt;&#x2F;strong&gt;
+        &lt;p&gt;This post is intended for educational and non-commercial &lt;a href=&quot;https:&#x2F;&#x2F;ogc.harvard.edu&#x2F;pages&#x2F;copyright-and-fair-use&quot;&gt;fair use&lt;&#x2F;a&gt; purposes
+only. If you’re impatient, &lt;a href=&quot;#tl-dr&quot;&gt;skip ahead to the TL;DR section&lt;&#x2F;a&gt; for a list
+of steps.&lt;&#x2F;p&gt;
+
+    &lt;&#x2F;div&gt;
+&lt;&#x2F;section&gt;
+&lt;h2 id=&quot;a-first-attempt&quot;&gt;A first attempt&lt;a class=&quot;post-anchor&quot; href=&quot;#a-first-attempt&quot; aria-label=&quot;Anchor link for: a-first-attempt&quot;&gt;&lt;span aria-hidden=&quot;true&quot;&gt;#&lt;&#x2F;span&gt;&lt;&#x2F;a&gt;
+&lt;&#x2F;h2&gt;
+&lt;p&gt;First, let’s take a brief look at &lt;a href=&quot;https:&#x2F;&#x2F;games.gameboss.com&#x2F;bubbleshooterclassic&#x2F;index.html&quot;&gt;the game itself&lt;&#x2F;a&gt;:&lt;&#x2F;p&gt;
+&lt;img src=&quot;https:&#x2F;&#x2F;eyalkalderon.com&#x2F;processed_images&#x2F;the-game.022923071c371e7b.png&quot; alt=&quot;A screenshot of Mozilla Firefox running the game Bubble Shooter Classic&quot;
+     width=&quot;959&quot; height=&quot;657&quot;
+     sizes=&quot;(min-width: 920px) 784px, (min-width: 700px) calc(82vw + 46px), calc(100vw - 40px)&quot; 
+     srcset=&quot;https:&#x2F;&#x2F;eyalkalderon.com&#x2F;processed_images&#x2F;the-game.d8fe16b4afb9982c.png 640w,
+             https:&#x2F;&#x2F;eyalkalderon.com&#x2F;processed_images&#x2F;the-game.e080b66d5f192c8e.png 784w&quot;
+     loading=&quot;lazy&quot;&gt;
+&lt;p&gt;Seems like a simple enough single-player game with no server-side networking
+features. This should be an easy task, then!&lt;&#x2F;p&gt;
+&lt;p&gt;I’ll hit &lt;kbd&gt;Ctrl+S&lt;&#x2F;kbd&gt; in Firefox to save the entire Web page, including any
+referenced assets, open the &lt;code&gt;index.html&lt;&#x2F;code&gt;, and…&lt;&#x2F;p&gt;
+&lt;img src=&quot;https:&#x2F;&#x2F;eyalkalderon.com&#x2F;processed_images&#x2F;white-page.cbd9d8d987a4e1b3.png&quot; alt=&quot;A screenshot of Mozilla Firefox displaying an empty page with a white background&quot;
+     width=&quot;959&quot; height=&quot;657&quot;
+     sizes=&quot;(min-width: 920px) 784px, (min-width: 700px) calc(82vw + 46px), calc(100vw - 40px)&quot; 
+     srcset=&quot;https:&#x2F;&#x2F;eyalkalderon.com&#x2F;processed_images&#x2F;white-page.4e1ba0a8b682edce.png 640w,
+             https:&#x2F;&#x2F;eyalkalderon.com&#x2F;processed_images&#x2F;white-page.212d0cd8172331e9.png 784w&quot;
+     loading=&quot;lazy&quot;&gt;
+&lt;p&gt;A blank page. That’s odd. I wonder why?&lt;&#x2F;p&gt;
+&lt;p&gt;Popping open the debug console with &lt;kbd&gt;F12&lt;&#x2F;kbd&gt; reveals that the game is
+missing a bunch of resources.&lt;&#x2F;p&gt;
+&lt;img src=&quot;https:&#x2F;&#x2F;eyalkalderon.com&#x2F;processed_images&#x2F;missing-resources.466842dce43ec042.png&quot; alt=&quot;A screenshot of the browser debug console full of errors&quot;
+     width=&quot;959&quot; height=&quot;657&quot;
+     sizes=&quot;(min-width: 920px) 784px, (min-width: 700px) calc(82vw + 46px), calc(100vw - 40px)&quot; 
+     srcset=&quot;https:&#x2F;&#x2F;eyalkalderon.com&#x2F;processed_images&#x2F;missing-resources.3fbc6d3ff4090cfa.png 640w,
+             https:&#x2F;&#x2F;eyalkalderon.com&#x2F;processed_images&#x2F;missing-resources.1b301cacd820ff26.png 784w&quot;
+     loading=&quot;lazy&quot;&gt;
+&lt;p&gt;&lt;abbr title=&quot;Cross-Origin Resource Sharing&quot;&gt;CORS&lt;&#x2F;abbr&gt; errors aside, the
+resources aren’t even loading in from the &lt;code&gt;~&#x2F;Downloads&#x2F;GameBoss_files&lt;&#x2F;code&gt; directory
+that Firefox had created; their paths are instead relative to &lt;code&gt;~&#x2F;Downloads&lt;&#x2F;code&gt;.&lt;&#x2F;p&gt;
+&lt;p&gt;Looking through the &lt;code&gt;index.html&lt;&#x2F;code&gt; source, I see the following &lt;code&gt;&amp;lt;script&amp;gt;&lt;&#x2F;code&gt; tags:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;html&quot; style=&quot;background-color:#272822;color:#f8f8f2;&quot; class=&quot;language-html &quot;&gt;&lt;code class=&quot;language-html&quot; data-lang=&quot;html&quot;&gt;&lt;span&gt;&amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;div &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a6e22e;&quot;&gt;...&lt;&#x2F;span&gt;&lt;span&gt;&amp;gt;...&amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;script &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a6e22e;&quot;&gt;async&lt;&#x2F;span&gt;&lt;span&gt;=&lt;&#x2F;span&gt;&lt;span style=&quot;color:#e6db74;&quot;&gt;&amp;quot;&amp;quot; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a6e22e;&quot;&gt;src&lt;&#x2F;span&gt;&lt;span&gt;=&lt;&#x2F;span&gt;&lt;span style=&quot;color:#e6db74;&quot;&gt;&amp;quot;GameBoss_files&#x2F;main-html.js&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;&amp;gt;&amp;lt;&#x2F;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;script&lt;&#x2F;span&gt;&lt;span&gt;&amp;gt;&amp;lt;&#x2F;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;div&lt;&#x2F;span&gt;&lt;span&gt;&amp;gt;
+&lt;&#x2F;span&gt;&lt;span&gt;&amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;script &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a6e22e;&quot;&gt;src&lt;&#x2F;span&gt;&lt;span&gt;=&lt;&#x2F;span&gt;&lt;span style=&quot;color:#e6db74;&quot;&gt;&amp;quot;GameBoss_files&#x2F;flambe.js&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;&amp;gt;&amp;lt;&#x2F;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;script&lt;&#x2F;span&gt;&lt;span&gt;&amp;gt; 
+&lt;&#x2F;span&gt;&lt;span&gt;&amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;script&lt;&#x2F;span&gt;&lt;span&gt;&amp;gt;
+&lt;&#x2F;span&gt;&lt;span&gt;  flambe.embed([&lt;&#x2F;span&gt;&lt;span style=&quot;color:#e6db74;&quot;&gt;&amp;quot;targets&#x2F;main-html.js&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;], &lt;&#x2F;span&gt;&lt;span style=&quot;color:#e6db74;&quot;&gt;&amp;quot;content&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;);
+&lt;&#x2F;span&gt;&lt;span&gt;  
+&lt;&#x2F;span&gt;&lt;span&gt;&amp;lt;&#x2F;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;script&lt;&#x2F;span&gt;&lt;span&gt;&amp;gt;
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;That’s not right. Looks like Firefox failed to detect &lt;code&gt;&quot;targets&#x2F;main-html.js&quot;&lt;&#x2F;code&gt;
+in the inline JavaScript and didn’t rewrite it to
+&lt;code&gt;&quot;GameBoss_files&#x2F;main-html.js&quot;&lt;&#x2F;code&gt; when saving the webpage with &lt;kbd&gt;Ctrl+S&lt;&#x2F;kbd&gt;.
+Fixing this and reloading the page doesn’t seem to do any good.&lt;&#x2F;p&gt;
+&lt;p&gt;This &lt;code&gt;flambe.js&lt;&#x2F;code&gt; script that’s being loaded alongside &lt;code&gt;main-html.js&lt;&#x2F;code&gt; looks
+interesting, though. The name seems to refer to
+&lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;aduros&#x2F;flambe&quot;&gt;Flambe&lt;&#x2F;a&gt;, a 2D game engine written in
+&lt;a href=&quot;https:&#x2F;&#x2F;haxe.org&quot;&gt;Haxe&lt;&#x2F;a&gt; that deploys to HTML5.&lt;&#x2F;p&gt;
+&lt;p&gt;Going back into the devtools again, let’s switch to the debugger and inspect the
+source code for &lt;code&gt;main-html.js&lt;&#x2F;code&gt;. This is probably where the actual game logic
+lives, since I presume &lt;code&gt;flambe.js&lt;&#x2F;code&gt; contains the base game engine.&lt;&#x2F;p&gt;
+&lt;img src=&quot;https:&#x2F;&#x2F;eyalkalderon.com&#x2F;processed_images&#x2F;messy-source.dedca80f07788ba2.png&quot; alt=&quot;A screenshot of Mozilla Firefox displaying some messy JavaScript code&quot;
+     width=&quot;959&quot; height=&quot;657&quot;
+     sizes=&quot;(min-width: 920px) 784px, (min-width: 700px) calc(82vw + 46px), calc(100vw - 40px)&quot; 
+     srcset=&quot;https:&#x2F;&#x2F;eyalkalderon.com&#x2F;processed_images&#x2F;messy-source.fe446eca88b09e85.png 640w,
+             https:&#x2F;&#x2F;eyalkalderon.com&#x2F;processed_images&#x2F;messy-source.d907488988c49698.png 784w&quot;
+     loading=&quot;lazy&quot;&gt;
+&lt;p&gt;Ouch, that’s hard to read. Let’s pretty-print that code…&lt;&#x2F;p&gt;
+&lt;img src=&quot;https:&#x2F;&#x2F;eyalkalderon.com&#x2F;processed_images&#x2F;pretty-printed-source.daaee6fde9c45845.png&quot; alt=&quot;A screenshot of Mozilla Firefox displaying the same JavaScript code pretty-printed&quot;
+     width=&quot;959&quot; height=&quot;657&quot;
+     sizes=&quot;(min-width: 920px) 784px, (min-width: 700px) calc(82vw + 46px), calc(100vw - 40px)&quot; 
+     srcset=&quot;https:&#x2F;&#x2F;eyalkalderon.com&#x2F;processed_images&#x2F;pretty-printed-source.27bb063ca4ee0f0f.png 640w,
+             https:&#x2F;&#x2F;eyalkalderon.com&#x2F;processed_images&#x2F;pretty-printed-source.8463018bb3a7d1b3.png 784w&quot;
+     loading=&quot;lazy&quot;&gt;
+&lt;p&gt;Much better! 👍 Searching for the word “assets” in the open file, I find a
+promising-looking section towards the bottom:&lt;&#x2F;p&gt;
+&lt;img src=&quot;https:&#x2F;&#x2F;eyalkalderon.com&#x2F;processed_images&#x2F;asset-map-identified.43afe8c1936a3495.png&quot; alt=&quot;A snippet of JavaScript code for a complex object named __meta__&quot;
+     width=&quot;959&quot; height=&quot;657&quot;
+     sizes=&quot;(min-width: 920px) 784px, (min-width: 700px) calc(82vw + 46px), calc(100vw - 40px)&quot; 
+     srcset=&quot;https:&#x2F;&#x2F;eyalkalderon.com&#x2F;processed_images&#x2F;asset-map-identified.c7b93de3cc1a4da1.png 640w,
+             https:&#x2F;&#x2F;eyalkalderon.com&#x2F;processed_images&#x2F;asset-map-identified.5b76adebc1909ab9.png 784w&quot;
+     loading=&quot;lazy&quot;&gt;
+&lt;p&gt;This nested &lt;code&gt;__meta__&lt;&#x2F;code&gt; object field appears to contain all the game assets, and
+is organized into the following structure:&lt;&#x2F;p&gt;
+&lt;pre style=&quot;background-color:#272822;color:#f8f8f2;&quot;&gt;&lt;code&gt;&lt;span&gt;assets
+&lt;&#x2F;span&gt;&lt;span&gt;├── bootstrap
+&lt;&#x2F;span&gt;&lt;span&gt;│   └── ...
+&lt;&#x2F;span&gt;&lt;span&gt;└── hd_assets
+&lt;&#x2F;span&gt;&lt;span&gt;    └── ...
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Each entry contains the asset’s path (relative to the game’s root URL), its size
+in bytes, and an MD5 hash digest, presumably for verifying the file’s integrity.
+Below is an example entry:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;js&quot; style=&quot;background-color:#272822;color:#f8f8f2;&quot; class=&quot;language-js &quot;&gt;&lt;code class=&quot;language-js&quot; data-lang=&quot;js&quot;&gt;&lt;span&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;  bytes: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ae81ff;&quot;&gt;18446&lt;&#x2F;span&gt;&lt;span&gt;,
+&lt;&#x2F;span&gt;&lt;span&gt;  md5: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#e6db74;&quot;&gt;&amp;#39;d64869dc1df0d1b0f27f38835250e4d1&amp;#39;&lt;&#x2F;span&gt;&lt;span&gt;,
+&lt;&#x2F;span&gt;&lt;span&gt;  name: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#e6db74;&quot;&gt;&amp;#39;buttonfont&#x2F;font.fnt&amp;#39;
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Honestly, the task of downloading each and every file by hand and arranging it
+into the correct folder structure seems daunting. There may also be other broken
+paths in the code or assets that I’m unaware of, complicating things. Fixing all
+this up would be tedious enough on its own, much less teaching an Internet
+stranger how to do it.&lt;&#x2F;p&gt;
+&lt;p&gt;I decided to leave a comment directed at the OP explaining the complexity of the
+task at hand and asked “why not use a &lt;a href=&quot;https:&#x2F;&#x2F;web.archive.org&#x2F;&quot;&gt;Wayback Machine&lt;&#x2F;a&gt; capture of the game
+instead?” It seems perfectly functional, and this link is guaranteed to last as
+long as &lt;a href=&quot;https:&#x2F;&#x2F;archive.org&#x2F;.&quot;&gt;Archive.org&lt;&#x2F;a&gt; itself exists as an organization (which is hopefully a
+good long while; please donate to them).&lt;&#x2F;p&gt;
+&lt;p&gt;It turns out it was OP who created this particular Wayback Machine capture in
+the first place! This was done prior to posting their question in &lt;strong&gt;r&#x2F;webdev&lt;&#x2F;strong&gt;.
+While this does indeed preserve the game for the future, they didn’t like how
+slowly the archived page loaded and were wondering if totally offline play was
+possible. So we’re back to square one: how can we archive this game?&lt;&#x2F;p&gt;
+&lt;p&gt;Wait a minute… If downloading the game files directly from the publisher’s
+website is unreliable due to broken paths and missing assets, then maybe we
+could download it from the Wayback Machine instead? Its client-side URL
+rewriting capabilities are very advanced&lt;sup class=&quot;footnote-reference&quot; id=&quot;fr-1-1&quot;&gt;&lt;a href=&quot;#fn-1&quot;&gt;1&lt;&#x2F;a&gt;&lt;&#x2F;sup&gt;, so surely it will have managed to
+capture all the necessary files. Perhaps this approach might work better?&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;starting-again-a-new-lead&quot;&gt;Starting again, a new lead&lt;a class=&quot;post-anchor&quot; href=&quot;#starting-again-a-new-lead&quot; aria-label=&quot;Anchor link for: starting-again-a-new-lead&quot;&gt;&lt;span aria-hidden=&quot;true&quot;&gt;#&lt;&#x2F;span&gt;&lt;&#x2F;a&gt;
+&lt;&#x2F;h2&gt;
+&lt;p&gt;Rather than naively downloading the Wayback Machine capture of the game using
+&lt;kbd&gt;Ctrl+S&lt;&#x2F;kbd&gt; again and potentially suffer the same issues as before, I
+want to try a third-party tool named &lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;hartator&#x2F;wayback-machine-downloader&quot;&gt;&lt;code&gt;wayback-machine-downloader&lt;&#x2F;code&gt;&lt;&#x2F;a&gt; instead.
+This seems to do exactly what I need!&lt;&#x2F;p&gt;
+&lt;p&gt;Switching to a new directory in the terminal, let’s install the Ruby gem and run
+it against the live website, being careful to leave off the &lt;code&gt;index.html&lt;&#x2F;code&gt; at the
+end so it fetches the whole &lt;code&gt;bubbleshooterclassic&lt;&#x2F;code&gt; directory rather than just
+the one file.&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#272822;color:#f8f8f2;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span&gt;gem install wayback_machine_downloader
+&lt;&#x2F;span&gt;&lt;span&gt;wayback_machine_downloader https:&#x2F;&#x2F;games.gameboss.com&#x2F;bubbleshooterclassic&#x2F;
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Success! Looks like it found the capture and is grabbing the files.&lt;&#x2F;p&gt;
+&lt;pre style=&quot;background-color:#272822;color:#f8f8f2;&quot;&gt;&lt;code&gt;&lt;span&gt;Downloading https:&#x2F;&#x2F;games.gameboss.com&#x2F;bubbleshooterclassic&#x2F; to websites&#x2F;games.gameboss.com&#x2F; from Wayback Machine archives.
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;Getting snapshot pages.. found 92 snaphots to consider.
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;79 files to download:
+&lt;&#x2F;span&gt;&lt;span&gt;https:&#x2F;&#x2F;games.gameboss.com&#x2F;bubbleshooterclassic&#x2F; -&amp;gt; websites&#x2F;games.gameboss.com&#x2F;bubbleshooterclassic&#x2F;index.html (1&#x2F;79)
+&lt;&#x2F;span&gt;&lt;span&gt;...
+&lt;&#x2F;span&gt;&lt;span&gt;Download completed in 111.17s, saved in websites&#x2F;games.gameboss.com&#x2F; (79 files)
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Okay, now that the download has finished, let’s see what we’ve got here:&lt;&#x2F;p&gt;
+&lt;pre style=&quot;background-color:#272822;color:#f8f8f2;&quot;&gt;&lt;code&gt;&lt;span&gt;$ tree .&#x2F;websites&#x2F;games.gameboss.com&#x2F;
+&lt;&#x2F;span&gt;&lt;span&gt;websites&#x2F;games.gameboss.com&#x2F;
+&lt;&#x2F;span&gt;&lt;span&gt;└── bubbleshooterclassic
+&lt;&#x2F;span&gt;&lt;span&gt;    ├── assets
+&lt;&#x2F;span&gt;&lt;span&gt;    │   ├── bootstrap
+&lt;&#x2F;span&gt;&lt;span&gt;    │   │   ├── buttonfont
+&lt;&#x2F;span&gt;&lt;span&gt;    │   │   │   ├── font.fnt?v=d64869dc1df0d1b0f27f38835250e4d1
+&lt;&#x2F;span&gt;&lt;span&gt;    │   │   │   └── font.png?v=6c598ce10f2bdaf6bcdd721cd6b0b4d0
+&lt;&#x2F;span&gt;&lt;span&gt;    ... ... ...
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Alright, looks promising. Let’s try to open the &lt;code&gt;index.html&lt;&#x2F;code&gt; in the browser
+again…&lt;&#x2F;p&gt;
+&lt;img src=&quot;https:&#x2F;&#x2F;eyalkalderon.com&#x2F;processed_images&#x2F;black-page.e2b5abbfee5f19c7.png&quot; alt=&quot;A screenshot of Mozilla Firefox displaying an empty page with a black background&quot;
+     width=&quot;959&quot; height=&quot;657&quot;
+     sizes=&quot;(min-width: 920px) 784px, (min-width: 700px) calc(82vw + 46px), calc(100vw - 40px)&quot; 
+     srcset=&quot;https:&#x2F;&#x2F;eyalkalderon.com&#x2F;processed_images&#x2F;black-page.43cd9753eb9fdbdf.png 640w,
+             https:&#x2F;&#x2F;eyalkalderon.com&#x2F;processed_images&#x2F;black-page.4eaa569976da696a.png 784w&quot;
+     loading=&quot;lazy&quot;&gt;
+&lt;p&gt;Well, a black screen instead of a white screen is an improvement, I guess. I
+suppose I should’ve expected something to still be wrong.&lt;&#x2F;p&gt;
+&lt;p&gt;Let’s check the console again…&lt;&#x2F;p&gt;
+&lt;img src=&quot;https:&#x2F;&#x2F;eyalkalderon.com&#x2F;processed_images&#x2F;cross-origin-errors.5b8dc76a112edd95.png&quot; alt=&quot;A screenshot of the browser debug console with CORS errors similar to before&quot;
+     width=&quot;959&quot; height=&quot;657&quot;
+     sizes=&quot;(min-width: 920px) 784px, (min-width: 700px) calc(82vw + 46px), calc(100vw - 40px)&quot; 
+     srcset=&quot;https:&#x2F;&#x2F;eyalkalderon.com&#x2F;processed_images&#x2F;cross-origin-errors.3dc8c956bbec8923.png 640w,
+             https:&#x2F;&#x2F;eyalkalderon.com&#x2F;processed_images&#x2F;cross-origin-errors.65bcbedf9643e38f.png 784w&quot;
+     loading=&quot;lazy&quot;&gt;
+&lt;p&gt;Ah, right. We still haven’t resolved the cross-origin &lt;code&gt;GET&lt;&#x2F;code&gt; errors we were
+seeing before. There are two possible ways to approach this problem:&lt;&#x2F;p&gt;
+&lt;ol&gt;
+&lt;li&gt;Disable CORS enforcement at the browser level.&lt;&#x2F;li&gt;
+&lt;li&gt;Serve the game locally on an HTTP server that attaches a
+&lt;code&gt;Access-Control-Allow-Origin: *&lt;&#x2F;code&gt; header to every response sent.&lt;sup class=&quot;footnote-reference&quot; id=&quot;fr-2-1&quot;&gt;&lt;a href=&quot;#fn-2&quot;&gt;2&lt;&#x2F;a&gt;&lt;&#x2F;sup&gt;&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;p&gt;The first option would be nice in theory, since it would allow anyone to
+double-click on the &lt;code&gt;index.html&lt;&#x2F;code&gt; in their file browser to open and play the
+game. However, this is infeasible in practice: the process of disabling CORS
+enforcement works slightly differently for every major browser. Some, like
+Mozilla Firefox, don’t even allow users to broadly disable CORS checks anymore
+for security reasons (the &lt;code&gt;security.fileuri.strict_origin_policy&lt;&#x2F;code&gt; key still
+exists in &lt;code&gt;about:config&lt;&#x2F;code&gt;, but its scope is too narrow to be useful here).
+Besides, we don’t want to persistently override CORS for all sites; that could
+be a security risk.&lt;&#x2F;p&gt;
+&lt;p&gt;That leaves option two. While more complex than option one, this is a more
+targeted solution that is guaranteed to work equally across all major browsers,
+isn’t a potential security risk, and is nonetheless easy enough to do.&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;a href=&quot;https:&#x2F;&#x2F;gist.github.com&#x2F;mkows&#x2F;cd2122f427ea722bf41aa169ef762001&quot;&gt;This short Python script&lt;&#x2F;a&gt;
+should do nicely in a pinch. It does exactly what it says on the tin: it serves
+all the files present in the current working directory on &lt;code&gt;http:&#x2F;&#x2F;0.0.0.0:8000&lt;&#x2F;code&gt;,
+and crucially, it appends an &lt;code&gt;Access-Control-Allow-Origin: *&lt;&#x2F;code&gt; header to every
+outgoing response, which should nullify those CORS checks currently preventing
+the game from loading.&lt;&#x2F;p&gt;
+&lt;p&gt;Let’s save the script as &lt;code&gt;launch_game.py&lt;&#x2F;code&gt; in the
+&lt;code&gt;websites&#x2F;games.gamesboss.com&#x2F;bubbleshooterclassic&#x2F;&lt;&#x2F;code&gt; directory, which contains
+the &lt;code&gt;index.html&lt;&#x2F;code&gt; and all the files we want to serve. We can then start the Web
+server, like so:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#272822;color:#f8f8f2;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span&gt;python3 launch_game.py
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;This prints the following prompt and then hangs:&lt;&#x2F;p&gt;
+&lt;pre style=&quot;background-color:#272822;color:#f8f8f2;&quot;&gt;&lt;code&gt;&lt;span&gt;serving at port 8000
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Okay, the server should now be listening on port 8000 on &lt;code&gt;0.0.0.0&lt;&#x2F;code&gt;, which
+effectively means all available network interfaces, including the loopback
+device. Let’s nagivate to &lt;code&gt;http:&#x2F;&#x2F;127.0.0.1:8000&lt;&#x2F;code&gt; in a browser window, then, and
+see what we have.&lt;&#x2F;p&gt;
+&lt;img src=&quot;https:&#x2F;&#x2F;eyalkalderon.com&#x2F;processed_images&#x2F;black-page-with-404-errors.965df323c1e830ee.png&quot; alt=&quot;A screenshot of Mozilla Firefox displaying a black page with 404 errors in the debug console&quot;
+     width=&quot;1280&quot; height=&quot;878&quot;
+     sizes=&quot;(min-width: 920px) 784px, (min-width: 700px) calc(82vw + 46px), calc(100vw - 40px)&quot; 
+     srcset=&quot;https:&#x2F;&#x2F;eyalkalderon.com&#x2F;processed_images&#x2F;black-page-with-404-errors.c2ce7b70fa9fe441.png 640w,
+             https:&#x2F;&#x2F;eyalkalderon.com&#x2F;processed_images&#x2F;black-page-with-404-errors.ba0722e5b5501109.png 784w,
+             https:&#x2F;&#x2F;eyalkalderon.com&#x2F;processed_images&#x2F;black-page-with-404-errors.56e51bffa704babb.png 1280w&quot;
+     loading=&quot;lazy&quot;&gt;
+&lt;p&gt;Darn. Thankfully, those pesky CORS errors are gone, but they have been replaced
+with &lt;code&gt;404 File not found&lt;&#x2F;code&gt; responses instead. Attempting to navigate to one of
+the failing resource URLs in a new browser tab, such as:&lt;&#x2F;p&gt;
+&lt;pre style=&quot;background-color:#272822;color:#f8f8f2;&quot;&gt;&lt;code&gt;&lt;span&gt;http:&#x2F;&#x2F;127.0.0.1:8000&#x2F;assets&#x2F;bootstrap&#x2F;buttonfont&#x2F;font.fnt?v=d64869dc1df0d1b0f27f38835250e4d1
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;(predictably) results in a &lt;code&gt;404&lt;&#x2F;code&gt; error as well.&lt;&#x2F;p&gt;
+&lt;p&gt;But if we check the &lt;code&gt;websites&#x2F;games.gameboss.com&#x2F;bubbleshooterclassic&#x2F;&lt;&#x2F;code&gt;
+directory again, we see that the &lt;code&gt;font.fnt?v=d64869dc1df0d1b0f27f38835250e4d1&lt;&#x2F;code&gt;
+file we’re looking for is indeed present and in the right place.&lt;&#x2F;p&gt;
+&lt;pre style=&quot;background-color:#272822;color:#f8f8f2;&quot;&gt;&lt;code&gt;&lt;span&gt;$ tree .&#x2F;websites&#x2F;games.gameboss.com&#x2F;
+&lt;&#x2F;span&gt;&lt;span&gt;websites&#x2F;games.gameboss.com&#x2F;
+&lt;&#x2F;span&gt;&lt;span&gt;└── bubbleshooterclassic
+&lt;&#x2F;span&gt;&lt;span&gt;    ├── assets
+&lt;&#x2F;span&gt;&lt;span&gt;    │   ├── bootstrap
+&lt;&#x2F;span&gt;&lt;span&gt;    │   │   ├── buttonfont
+&lt;&#x2F;span&gt;&lt;span&gt;    │   │   │   ├── font.fnt?v=d64869dc1df0d1b0f27f38835250e4d1
+&lt;&#x2F;span&gt;&lt;span&gt;    │   │   │   └── font.png?v=6c598ce10f2bdaf6bcdd721cd6b0b4d0
+&lt;&#x2F;span&gt;&lt;span&gt;    ... ... ...
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;So what’s going on? The destination files exist, so why aren’t they loading?&lt;&#x2F;p&gt;
+&lt;p&gt;Wait a minute… I think the literal &lt;code&gt;?v=...&lt;&#x2F;code&gt; suffixes in the filenames
+generated by &lt;code&gt;wayback_machine_downloader&lt;&#x2F;code&gt; are causing the &lt;code&gt;GET&lt;&#x2F;code&gt; requests to
+fail. That is, any attempt to &lt;code&gt;GET&lt;&#x2F;code&gt; a file called
+&lt;code&gt;font.fnt?v=d64869dc1df0d1b0f27f38835250e4d1&lt;&#x2F;code&gt; would result in a server-side
+lookup of a file called &lt;code&gt;font.fnt&lt;&#x2F;code&gt; with the query string
+&lt;code&gt;v=d64869dc1df0d1b0f27f38835250e4d1&lt;&#x2F;code&gt;.&lt;sup class=&quot;footnote-reference&quot; id=&quot;fr-3-1&quot;&gt;&lt;a href=&quot;#fn-3&quot;&gt;3&lt;&#x2F;a&gt;&lt;&#x2F;sup&gt; Since there is no file named
+&lt;code&gt;font.fnt&lt;&#x2F;code&gt; at that location, the server responds with a &lt;code&gt;404&lt;&#x2F;code&gt; error.&lt;&#x2F;p&gt;
+&lt;p&gt;In that case, what if we were to &lt;a href=&quot;https:&#x2F;&#x2F;en.wikipedia.org&#x2F;wiki&#x2F;Percent-encoding&quot;&gt;percent-encode&lt;&#x2F;a&gt; the &lt;code&gt;font.fnt?v=...&lt;&#x2F;code&gt; portion
+of the URL and try to &lt;code&gt;wget&lt;&#x2F;code&gt; that in the terminal?&lt;&#x2F;p&gt;
+&lt;pre style=&quot;background-color:#272822;color:#f8f8f2;&quot;&gt;&lt;code&gt;&lt;span&gt;$ wget http:&#x2F;&#x2F;127.0.0.1:8000&#x2F;assets&#x2F;bootstrap&#x2F;buttonfont&#x2F;font.fnt%3Fv%3Dd64869dc1df0d1b0f27f38835250e4d1
+&lt;&#x2F;span&gt;&lt;span&gt;--2022-11-20 23:23:33--  http:&#x2F;&#x2F;127.0.0.1:8000&#x2F;assets&#x2F;bootstrap&#x2F;buttonfont&#x2F;font.fnt%3Fv%3Dd64869dc1df0d1b0f27f38835250e4d1
+&lt;&#x2F;span&gt;&lt;span&gt;Connecting to 127.0.0.1:8000... connected.
+&lt;&#x2F;span&gt;&lt;span&gt;HTTP request sent, awaiting response... 200 OK
+&lt;&#x2F;span&gt;&lt;span&gt;Length: 184466 (180K) [application&#x2F;octet-stream]
+&lt;&#x2F;span&gt;&lt;span&gt;Saving to: ‘font.fnt?v=d64869dc1df0d1b0f27f38835250e4d1’
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;font.fnt?v=d64869dc1df0d 100%[================================&amp;gt;] 180.14K  --.-KB&#x2F;s    in 0s      
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;2022-11-20 23:23:33 (458 MB&#x2F;s) - ‘font.fnt?v=d64869dc1df0d1b0f27f38835250e4d1’ saved [184466&#x2F;184466]
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Aha! That works. So that confirms the hypothesis appears to be correct. Let’s
+strip off all the &lt;code&gt;?v=...&lt;&#x2F;code&gt; suffixes from all the filenames and see if that fixes
+the issues we’re seeing.&lt;&#x2F;p&gt;
+&lt;p&gt;So how should I do this? Back in my terminal window, I can recursively list all
+game files that contain a literal &lt;code&gt;?&lt;&#x2F;code&gt; in their names using a bit of Bash:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#272822;color:#f8f8f2;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span&gt;$ cd .&#x2F;websites&#x2F;games.gameboss.com&#x2F;bubbleshooterclassic&#x2F;
+&lt;&#x2F;span&gt;&lt;span&gt;$ find .&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#fd971f;&quot;&gt; -name &lt;&#x2F;span&gt;&lt;span style=&quot;color:#e6db74;&quot;&gt;&amp;quot;*\?*&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#fd971f;&quot;&gt; -type&lt;&#x2F;span&gt;&lt;span&gt; f
+&lt;&#x2F;span&gt;&lt;span&gt;.&#x2F;index.html?lang&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;=&lt;&#x2F;span&gt;&lt;span style=&quot;color:#e6db74;&quot;&gt;ru
+&lt;&#x2F;span&gt;&lt;span&gt;.&#x2F;index.html?lang&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;=&lt;&#x2F;span&gt;&lt;span style=&quot;color:#e6db74;&quot;&gt;en&amp;amp;gp=1
+&lt;&#x2F;span&gt;&lt;span&gt;.&#x2F;index.html?lang&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;=&lt;&#x2F;span&gt;&lt;span style=&quot;color:#e6db74;&quot;&gt;fr
+&lt;&#x2F;span&gt;&lt;span&gt;.&#x2F;assets&#x2F;hd_assets&#x2F;prompt_bg.png?v&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;=&lt;&#x2F;span&gt;&lt;span style=&quot;color:#e6db74;&quot;&gt;bdd07c452aa91dd9309717032b9a30d1
+&lt;&#x2F;span&gt;&lt;span&gt;.&#x2F;assets&#x2F;hd_assets&#x2F;button_prompt_over.png?v&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;=&lt;&#x2F;span&gt;&lt;span style=&quot;color:#e6db74;&quot;&gt;1c7d1e960c33bc02819c19b5c39e3673
+&lt;&#x2F;span&gt;&lt;span&gt;...
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;I’d like to chop off every character from the &lt;code&gt;?&lt;&#x2F;code&gt; character onward. Given this
+list of filenames, we can pipe it through &lt;code&gt;cut -d? -f1&lt;&#x2F;code&gt; to do exactly that.&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#272822;color:#f8f8f2;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span&gt;$ find .&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#fd971f;&quot;&gt; -name &lt;&#x2F;span&gt;&lt;span style=&quot;color:#e6db74;&quot;&gt;&amp;quot;*\?*&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#fd971f;&quot;&gt; -type&lt;&#x2F;span&gt;&lt;span&gt; f &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;| &lt;&#x2F;span&gt;&lt;span&gt;cut&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#fd971f;&quot;&gt; -d&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;?&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#fd971f;&quot;&gt; -f1
+&lt;&#x2F;span&gt;&lt;span&gt;.&#x2F;index.html
+&lt;&#x2F;span&gt;&lt;span&gt;.&#x2F;index.html
+&lt;&#x2F;span&gt;&lt;span&gt;.&#x2F;index.html
+&lt;&#x2F;span&gt;&lt;span&gt;.&#x2F;assets&#x2F;hd_assets&#x2F;prompt_bg.png
+&lt;&#x2F;span&gt;&lt;span&gt;.&#x2F;assets&#x2F;hd_assets&#x2F;button_prompt_over.png
+&lt;&#x2F;span&gt;&lt;span&gt;...
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Now I’d like &lt;code&gt;find&lt;&#x2F;code&gt; to execute the &lt;code&gt;mv&lt;&#x2F;code&gt; command on each of those files, renaming
+each one to the &lt;code&gt;cut&lt;&#x2F;code&gt; down version. Here’s the working solution I came up with:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#272822;color:#f8f8f2;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span&gt;find .&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#fd971f;&quot;&gt; -name &lt;&#x2F;span&gt;&lt;span style=&quot;color:#e6db74;&quot;&gt;&amp;#39;*\?*&amp;#39;&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#fd971f;&quot;&gt; -type&lt;&#x2F;span&gt;&lt;span&gt; f&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#fd971f;&quot;&gt; -exec&lt;&#x2F;span&gt;&lt;span&gt; bash&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#fd971f;&quot;&gt; -c &lt;&#x2F;span&gt;&lt;span style=&quot;color:#e6db74;&quot;&gt;&amp;#39;mv $1 $(echo $1 | cut -d? -f1)&amp;#39;&lt;&#x2F;span&gt;&lt;span&gt; bash {} &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ae81ff;&quot;&gt;\;
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Well, there seem to be no errors. Let’s check the output of &lt;code&gt;tree&lt;&#x2F;code&gt; to confirm.&lt;&#x2F;p&gt;
+&lt;pre style=&quot;background-color:#272822;color:#f8f8f2;&quot;&gt;&lt;code&gt;&lt;span&gt;$ tree
+&lt;&#x2F;span&gt;&lt;span&gt;.
+&lt;&#x2F;span&gt;&lt;span&gt;├── assets
+&lt;&#x2F;span&gt;&lt;span&gt;│   ├── bootstrap
+&lt;&#x2F;span&gt;&lt;span&gt;│   │   ├── buttonfont
+&lt;&#x2F;span&gt;&lt;span&gt;│   │   │   ├── font.fnt
+&lt;&#x2F;span&gt;&lt;span&gt;│   │   │   └── font.png
+&lt;&#x2F;span&gt;&lt;span&gt;... ... ...
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Sweet! Looks like all the filenames have been fixed, and not a single file with
+&lt;code&gt;?&lt;&#x2F;code&gt; in its name is in sight. With the HTTP server still running, let’s switch
+back to Firefox, refresh the page for &lt;code&gt;http:&#x2F;&#x2F;127.0.0.1:8000&lt;&#x2F;code&gt;, and see what
+happens…&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;img src=&quot;https:&#x2F;&#x2F;eyalkalderon.com&#x2F;processed_images&#x2F;locally-served-game-1.fb38e552c0ce411d.png&quot; alt=&quot;A screenshot of Mozilla Firefox displaying the Bubble Shooter Classic start page&quot;
+     width=&quot;959&quot; height=&quot;657&quot;
+     sizes=&quot;(min-width: 920px) 784px, (min-width: 700px) calc(82vw + 46px), calc(100vw - 40px)&quot; 
+     srcset=&quot;https:&#x2F;&#x2F;eyalkalderon.com&#x2F;processed_images&#x2F;locally-served-game-1.dcc400eb7f8a05fd.png 640w,
+             https:&#x2F;&#x2F;eyalkalderon.com&#x2F;processed_images&#x2F;locally-served-game-1.631e23b61a555189.png 784w&quot;
+     loading=&quot;lazy&quot;&gt;
+
+&lt;img src=&quot;https:&#x2F;&#x2F;eyalkalderon.com&#x2F;processed_images&#x2F;locally-served-game-2.c9814ca27c7e1bc8.png&quot; alt=&quot;A screenshot of Mozilla Firefox displaying the first level of the game, fully playable&quot;
+     width=&quot;959&quot; height=&quot;657&quot;
+     sizes=&quot;(min-width: 920px) 784px, (min-width: 700px) calc(82vw + 46px), calc(100vw - 40px)&quot; 
+     srcset=&quot;https:&#x2F;&#x2F;eyalkalderon.com&#x2F;processed_images&#x2F;locally-served-game-2.f640be5f9ba25ba4.png 640w,
+             https:&#x2F;&#x2F;eyalkalderon.com&#x2F;processed_images&#x2F;locally-served-game-2.586f749aa7d99234.png 784w&quot;
+     loading=&quot;lazy&quot;&gt;
+&lt;&#x2F;p&gt;
+&lt;p&gt;Finally! 🎉 Now &lt;em&gt;that’s&lt;&#x2F;em&gt; what I like to see. The game seems to be working.&lt;&#x2F;p&gt;
+&lt;p&gt;Popping open the devtools once more and switching to the “network” tab, I can
+confirm there are zero requests reaching out to the broader Internet and the
+game is running 100% locally:&lt;&#x2F;p&gt;
+&lt;img src=&quot;https:&#x2F;&#x2F;eyalkalderon.com&#x2F;processed_images&#x2F;examining-network-requests.c52796bee49e55ed.png&quot; alt=&quot;A screenshot of the browser&amp;#x27;s network request inspector full of HTTP requests to localhost&quot;
+     width=&quot;1280&quot; height=&quot;878&quot;
+     sizes=&quot;(min-width: 920px) 784px, (min-width: 700px) calc(82vw + 46px), calc(100vw - 40px)&quot; 
+     srcset=&quot;https:&#x2F;&#x2F;eyalkalderon.com&#x2F;processed_images&#x2F;examining-network-requests.bbb0733f8b7be301.png 640w,
+             https:&#x2F;&#x2F;eyalkalderon.com&#x2F;processed_images&#x2F;examining-network-requests.c9b78d28e4080b86.png 784w,
+             https:&#x2F;&#x2F;eyalkalderon.com&#x2F;processed_images&#x2F;examining-network-requests.c86d313c9f7787a5.png 1280w&quot;
+     loading=&quot;lazy&quot;&gt;
+&lt;p&gt;That was so much fun! Now to relay what I’ve learned back to OP…&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;conclusion&quot;&gt;Conclusion&lt;a class=&quot;post-anchor&quot; href=&quot;#conclusion&quot; aria-label=&quot;Anchor link for: conclusion&quot;&gt;&lt;span aria-hidden=&quot;true&quot;&gt;#&lt;&#x2F;span&gt;&lt;&#x2F;a&gt;
+&lt;&#x2F;h2&gt;
+&lt;p&gt;Well… that was certainly more complicated than hitting &lt;kbd&gt;Ctrl+S&lt;&#x2F;kbd&gt;.
+😅 Still, I had a lot of fun working through this project, and I
+learned a lot along the way.&lt;&#x2F;p&gt;
+&lt;p&gt;These deeply satisfying rabbit holes and the occasional success story remind me
+of why I love computers in the first place. This also takes me back to formative
+childhood experiences playing Flash games on early 2000s sites like
+&lt;a href=&quot;https:&#x2F;&#x2F;web.archive.org&#x2F;web&#x2F;20131229072630&#x2F;http:&#x2F;&#x2F;weebls-stuff.com&#x2F;&quot;&gt;Weebl’s Stuff&lt;&#x2F;a&gt;, &lt;a href=&quot;https:&#x2F;&#x2F;www.newgrounds.com&#x2F;&quot;&gt;Newgrounds&lt;&#x2F;a&gt;, &lt;a href=&quot;https:&#x2F;&#x2F;web.archive.org&#x2F;web&#x2F;20181231224550&#x2F;https:&#x2F;&#x2F;www.miniclip.com&#x2F;games&#x2F;en&#x2F;&quot;&gt;Miniclip&lt;&#x2F;a&gt;, &lt;a href=&quot;https:&#x2F;&#x2F;www.albinoblacksheep.com&#x2F;&quot;&gt;Albino Blacksheep&lt;&#x2F;a&gt;, &lt;a href=&quot;https:&#x2F;&#x2F;www.deviantart.com&#x2F;&quot;&gt;DeviantArt&lt;&#x2F;a&gt;,
+and so on. Such moments are fleeting, and it’s hard to relive them today due to
+all the broken links, abandoned sites, and obsolete media formats.&lt;&#x2F;p&gt;
+&lt;p&gt;When &lt;a href=&quot;https:&#x2F;&#x2F;www.adobe.com&#x2F;products&#x2F;flashplayer&#x2F;end-of-life.html&quot;&gt;Adobe formally dropped support for Flash Player in 2020&lt;&#x2F;a&gt;, it
+sent ripples through these online communities. Everyone knew this was a long
+time coming, and &lt;a href=&quot;https:&#x2F;&#x2F;en.wikipedia.org&#x2F;wiki&#x2F;Adobe_Flash_Player&quot;&gt;Shockwave Flash&lt;&#x2F;a&gt; was on its deathbed for years, but at least
+those old Flash games were still easy to preserve: all you needed to do was grab
+the &lt;code&gt;.swf&lt;&#x2F;code&gt;, get yourself an old copy of Flash player or a modern emulator like
+&lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;ruffle-rs&#x2F;ruffle&quot;&gt;Ruffle&lt;&#x2F;a&gt;, and you’re ready to go.&lt;&#x2F;p&gt;
+&lt;p&gt;Modern HTML5 games are significantly more complicated to preserve due to all the
+added complexity, and this particular example I described, while ultimately
+successful, is hardly the norm. Today, it is the responsibility of Web game
+developers and game engine developers to design their games with historical
+preservation in mind, or else risk one day being forever lost to history.&lt;&#x2F;p&gt;
+&lt;p&gt;Now, if you’ll excuse me, I’m off to play some &lt;a href=&quot;https:&#x2F;&#x2F;www.crazygames.com&#x2F;game&#x2F;line-rider-2&quot;&gt;Line Rider 2&lt;&#x2F;a&gt;.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;tl-dr&quot;&gt;TL;DR&lt;a class=&quot;post-anchor&quot; href=&quot;#tl-dr&quot; aria-label=&quot;Anchor link for: tl-dr&quot;&gt;&lt;span aria-hidden=&quot;true&quot;&gt;#&lt;&#x2F;span&gt;&lt;&#x2F;a&gt;
+&lt;&#x2F;h2&gt;
+&lt;p&gt;Below is the final set of steps I eventually arrived at to download and run the
+game offline:&lt;&#x2F;p&gt;
+&lt;ol&gt;
+&lt;li&gt;Install Python 3 and Ruby, if you don’t already have them on your machine.&lt;&#x2F;li&gt;
+&lt;li&gt;Confirm there exists a &lt;a href=&quot;https:&#x2F;&#x2F;web.archive.org&#x2F;&quot;&gt;Wayback Machine&lt;&#x2F;a&gt; capture of the HTML5 game you would
+like to archive.&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;code&gt;gem install wayback_machine_downloader&lt;&#x2F;code&gt;&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;code&gt;wayback_machine_downloader &amp;lt;live game url&amp;gt;&lt;&#x2F;code&gt;
+&lt;ul&gt;
+&lt;li&gt;This saves everything to &lt;code&gt;websites&#x2F;&amp;lt;domain&amp;gt;&#x2F;path&#x2F;to&#x2F;game&#x2F;&lt;&#x2F;code&gt;.&lt;&#x2F;li&gt;
+&lt;li&gt;Make sure to grab &lt;code&gt;&#x2F;&lt;&#x2F;code&gt; rather than &lt;code&gt;&#x2F;index.html&lt;&#x2F;code&gt;. This ensures all the
+capture files get fetched and not just the &lt;code&gt;index.html&lt;&#x2F;code&gt; file.&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;Strip the &lt;code&gt;?v=&lt;&#x2F;code&gt; suffixes off all the filenames, if there are any.&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#272822;color:#f8f8f2;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span&gt;find .&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#fd971f;&quot;&gt; -name &lt;&#x2F;span&gt;&lt;span style=&quot;color:#e6db74;&quot;&gt;&amp;#39;*\?*&amp;#39;&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#fd971f;&quot;&gt; -type&lt;&#x2F;span&gt;&lt;span&gt; f&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#fd971f;&quot;&gt; -exec&lt;&#x2F;span&gt;&lt;span&gt; bash&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#fd971f;&quot;&gt; -c &lt;&#x2F;span&gt;&lt;span style=&quot;color:#e6db74;&quot;&gt;&amp;#39;mv $1 $(echo $1 | cut -d? -f1)&amp;#39;&lt;&#x2F;span&gt;&lt;span&gt; bash {} &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ae81ff;&quot;&gt;\;
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;Save &lt;a href=&quot;https:&#x2F;&#x2F;gist.github.com&#x2F;mkows&#x2F;cd2122f427ea722bf41aa169ef762001&quot;&gt;this GitHub Gist&lt;&#x2F;a&gt;
+in &lt;code&gt;websites&#x2F;&amp;lt;domain&amp;gt;&#x2F;path&#x2F;to&#x2F;game&#x2F;&lt;&#x2F;code&gt; as &lt;code&gt;launch_game.py&lt;&#x2F;code&gt;.&lt;&#x2F;li&gt;
+&lt;li&gt;Serve the game files locally: &lt;code&gt;python3 launch_game.py&lt;&#x2F;code&gt;
+&lt;ul&gt;
+&lt;li&gt;If you are on Linux or macOS, feel free to add a &lt;code&gt;#!&#x2F;usr&#x2F;bin&#x2F;env python3&lt;&#x2F;code&gt;
+shebang to the top of the file and &lt;code&gt;chmod +x launch_game.py&lt;&#x2F;code&gt;. This lets you
+launch the server more conveniently&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;Navigate to &lt;code&gt;http:&#x2F;&#x2F;127.0.0.1:8000&lt;&#x2F;code&gt; in a Web browser to play.&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;footer class=&quot;footnotes&quot;&gt;
+&lt;ol class=&quot;footnotes-list&quot;&gt;
+&lt;li id=&quot;fn-1&quot;&gt;
+&lt;p&gt;The Wayback Machine uses &lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;webrecorder&#x2F;wombat&quot;&gt;Wombat&lt;&#x2F;a&gt;
+for its client-side URL rewriting needs. &lt;a href=&quot;#fr-1-1&quot;&gt;↩&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li id=&quot;fn-2&quot;&gt;
+&lt;p&gt;See the &lt;a href=&quot;https:&#x2F;&#x2F;developer.mozilla.org&#x2F;en-US&#x2F;docs&#x2F;Web&#x2F;HTTP&#x2F;Headers&#x2F;Access-Control-Allow-Origin&quot;&gt;MDN Web Docs entry for &lt;code&gt;Access-Control-Allow-Origin&lt;&#x2F;code&gt;&lt;&#x2F;a&gt;
+for details. &lt;a href=&quot;#fr-2-1&quot;&gt;↩&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li id=&quot;fn-3&quot;&gt;
+&lt;p&gt;In the real published game, this query string corresponds to the &lt;code&gt;md5sum&lt;&#x2F;code&gt;
+of the game asset we’re trying to retrieve. This doesn’t matter to us,
+though; our dumb Python Web server ignores and discards the query string
+anyway. &lt;a href=&quot;#fr-3-1&quot;&gt;↩&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;&#x2F;footer&gt;
+</description>
+      </item>
+      <item>
+          <title>Error recovery with parser combinators (using nom)</title>
+          <pubDate>Wed, 01 Apr 2020 17:51:12 +0800</pubDate>
+          <author>Eyal Kalderon</author>
+          <link>https://eyalkalderon.com/blog/nom-error-recovery/</link>
+          <guid>https://eyalkalderon.com/blog/nom-error-recovery/</guid>
+          <description xml:base="https://eyalkalderon.com/blog/nom-error-recovery/">&lt;p&gt;As the COVID-19 pandemic continues to ravage the globe, lots of people are stuck
+at home, either working remotely or sitting around without much to do. The
+previous afternoon, I had stumbled across an online announcement that the
+&lt;a href=&quot;https:&#x2F;&#x2F;www.acm.org&#x2F;articles&#x2F;bulletins&#x2F;2020&#x2F;march&#x2F;dl-access-during-covid-19&quot;&gt;ACM Digital Library has been made free to all to read and download&lt;&#x2F;a&gt; to
+help foster research, discovery, and learning during this time of crisis.
+Feeling curious, and having previously wanted to read certain research papers
+from the ACM DL previously, I took the opportunity to peruse through its library
+and read as much content as I could. As I was doing so, I stumbled across a very
+useful paper called &lt;a href=&quot;https:&#x2F;&#x2F;dl.acm.org&#x2F;doi&#x2F;10.1145&#x2F;3167132.3167261&quot;&gt;&lt;strong&gt;“Syntax error recovery in parsing expression
+grammars”&lt;&#x2F;strong&gt;&lt;&#x2F;a&gt; by (Medeiros, S. and Fabio Mascarenhas, 2018) that I would
+like to share, and I’ll be testing some of its concepts using a prototype parser
+written in &lt;a href=&quot;https:&#x2F;&#x2F;www.rust-lang.org&quot;&gt;Rust&lt;&#x2F;a&gt; with the help of the &lt;a href=&quot;https:&#x2F;&#x2F;docs.rs&#x2F;nom&quot;&gt;&lt;code&gt;nom&lt;&#x2F;code&gt;&lt;&#x2F;a&gt; crate.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;some-background&quot;&gt;Some background&lt;a class=&quot;post-anchor&quot; href=&quot;#some-background&quot; aria-label=&quot;Anchor link for: some-background&quot;&gt;&lt;span aria-hidden=&quot;true&quot;&gt;#&lt;&#x2F;span&gt;&lt;&#x2F;a&gt;
+&lt;&#x2F;h2&gt;
+&lt;p&gt;Language parsing is a very broad and interesting topic, with a swathe of varying
+approaches and tools to choose from depending on the requirements of the task at
+hand, but the basic premise is simple: the goal of a parser is to consume some
+data as input, break it down into its component parts according to some grammar,
+and derive meaning or understanding from it (&lt;a href=&quot;https:&#x2F;&#x2F;en.wikipedia.org&#x2F;wiki&#x2F;Parsing&quot;&gt;wiki&lt;&#x2F;a&gt;). I personally happen to
+enjoy working with &lt;em&gt;parsing expression grammars&lt;&#x2F;em&gt; (PEGs) and &lt;em&gt;parser combinators&lt;&#x2F;em&gt;
+when writing my own projects.&lt;&#x2F;p&gt;
+&lt;p&gt;In case you are not familiar, PEG is a kind of declarative formal language for
+describing other languages in terms of string pattern matching. That is, PEG
+allows the parser author to declare the grammar of the language they wish to
+parse using sets of expressions like those shown below:&lt;&#x2F;p&gt;
+&lt;pre style=&quot;background-color:#272822;color:#f8f8f2;&quot;&gt;&lt;code&gt;&lt;span&gt;expr    ← sum
+&lt;&#x2F;span&gt;&lt;span&gt;sum     ← product ((&amp;#39;+&amp;#39; &#x2F; &amp;#39;-&amp;#39;) product)*
+&lt;&#x2F;span&gt;&lt;span&gt;product ← value ((&amp;#39;*&amp;#39; &#x2F; &amp;#39;&#x2F;&amp;#39;) value)*
+&lt;&#x2F;span&gt;&lt;span&gt;value   ← [0-9]+ &#x2F; &amp;#39;(&amp;#39; expr &amp;#39;)&amp;#39;
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;These PEG rules would then be able to describe the rules to a simple arithmetic
+language that behaves like this:&lt;&#x2F;p&gt;
+&lt;div class=&quot;wide-container&quot;&gt;
+    &lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th&gt;Input&lt;&#x2F;th&gt;&lt;th&gt;Parsed syntax tree&lt;&#x2F;th&gt;&lt;&#x2F;tr&gt;&lt;&#x2F;thead&gt;&lt;tbody&gt;
+&lt;tr&gt;&lt;td&gt;123&lt;&#x2F;td&gt;&lt;td&gt;&lt;code&gt;Value(123)&lt;&#x2F;code&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;1 + 2&lt;&#x2F;td&gt;&lt;td&gt;&lt;code&gt;Sum(Value(1), Value(2))&lt;&#x2F;code&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;1 + 2 * 3&lt;&#x2F;td&gt;&lt;td&gt;&lt;code&gt;Sum(Value(1), Product(Value(2), Value(3)))&lt;&#x2F;code&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;(1 + 2) * 3&lt;&#x2F;td&gt;&lt;td&gt;&lt;code&gt;Product(Sum(Value(1), Value(2)), Value(3))&lt;&#x2F;code&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;&#x2F;tbody&gt;&lt;&#x2F;table&gt;
+
+&lt;&#x2F;div&gt;
+&lt;p&gt;Any PEG expression can be converted directly into a &lt;a href=&quot;https:&#x2F;&#x2F;en.wikipedia.org&#x2F;wiki&#x2F;Recursive_descent_parser&quot;&gt;recursive descent parser&lt;&#x2F;a&gt;,
+either automatically using a parser generator or crafted by hand in the
+programming language of your choice.&lt;&#x2F;p&gt;
+&lt;p&gt;I really enjoy using parser combinator frameworks like &lt;a href=&quot;https:&#x2F;&#x2F;docs.rs&#x2F;nom&quot;&gt;&lt;code&gt;nom&lt;&#x2F;code&gt;&lt;&#x2F;a&gt; as a nice middle
+ground between the two options, since they grant you the freedom and flexibility
+of writing your parser fully in the host language (in this example, Rust), but
+the resulting code is succinct, fairly declarative, and looks somewhat PEG-ish,
+if you tilt your head and squint hard enough.&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;rust&quot; style=&quot;background-color:#272822;color:#f8f8f2;&quot; class=&quot;language-rust &quot;&gt;&lt;code class=&quot;language-rust&quot; data-lang=&quot;rust&quot;&gt;&lt;span style=&quot;font-style:italic;color:#66d9ef;&quot;&gt;fn &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a6e22e;&quot;&gt;expr&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#fd971f;&quot;&gt;input&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;&amp;amp;&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#66d9ef;&quot;&gt;str&lt;&#x2F;span&gt;&lt;span&gt;) -&amp;gt; IResult&amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;&amp;amp;&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#66d9ef;&quot;&gt;str&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;&amp;amp;&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#66d9ef;&quot;&gt;str&lt;&#x2F;span&gt;&lt;span&gt;&amp;gt; {
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#66d9ef;&quot;&gt;sum&lt;&#x2F;span&gt;&lt;span&gt;(input)
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#66d9ef;&quot;&gt;fn &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a6e22e;&quot;&gt;sum&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#fd971f;&quot;&gt;input&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;&amp;amp;&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#66d9ef;&quot;&gt;str&lt;&#x2F;span&gt;&lt;span&gt;) -&amp;gt; IResult&amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;&amp;amp;&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#66d9ef;&quot;&gt;str&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;&amp;amp;&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#66d9ef;&quot;&gt;str&lt;&#x2F;span&gt;&lt;span&gt;&amp;gt; {
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#66d9ef;&quot;&gt;let&lt;&#x2F;span&gt;&lt;span&gt; op &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#66d9ef;&quot;&gt;alt&lt;&#x2F;span&gt;&lt;span&gt;((&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#66d9ef;&quot;&gt;char&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#e6db74;&quot;&gt;&amp;#39;+&amp;#39;&lt;&#x2F;span&gt;&lt;span&gt;), &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#66d9ef;&quot;&gt;char&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#e6db74;&quot;&gt;&amp;#39;-&amp;#39;&lt;&#x2F;span&gt;&lt;span&gt;)));
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#66d9ef;&quot;&gt;recognize&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#66d9ef;&quot;&gt;pair&lt;&#x2F;span&gt;&lt;span&gt;(product, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#66d9ef;&quot;&gt;many0&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#66d9ef;&quot;&gt;pair&lt;&#x2F;span&gt;&lt;span&gt;(op, product))))(input)
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#66d9ef;&quot;&gt;fn &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a6e22e;&quot;&gt;product&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#fd971f;&quot;&gt;input&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;&amp;amp;&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#66d9ef;&quot;&gt;str&lt;&#x2F;span&gt;&lt;span&gt;) -&amp;gt; IResult&amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;&amp;amp;&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#66d9ef;&quot;&gt;str&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;&amp;amp;&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#66d9ef;&quot;&gt;str&lt;&#x2F;span&gt;&lt;span&gt;&amp;gt; {
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#66d9ef;&quot;&gt;let&lt;&#x2F;span&gt;&lt;span&gt; op &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#66d9ef;&quot;&gt;alt&lt;&#x2F;span&gt;&lt;span&gt;((&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#66d9ef;&quot;&gt;char&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#e6db74;&quot;&gt;&amp;#39;*&amp;#39;&lt;&#x2F;span&gt;&lt;span&gt;), &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#66d9ef;&quot;&gt;char&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#e6db74;&quot;&gt;&amp;#39;&#x2F;&amp;#39;&lt;&#x2F;span&gt;&lt;span&gt;)));
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#66d9ef;&quot;&gt;recognize&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#66d9ef;&quot;&gt;pair&lt;&#x2F;span&gt;&lt;span&gt;(value, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#66d9ef;&quot;&gt;many0&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#66d9ef;&quot;&gt;pair&lt;&#x2F;span&gt;&lt;span&gt;(op, value))))(input)
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#66d9ef;&quot;&gt;fn &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a6e22e;&quot;&gt;value&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#fd971f;&quot;&gt;input&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;&amp;amp;&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#66d9ef;&quot;&gt;str&lt;&#x2F;span&gt;&lt;span&gt;) -&amp;gt; IResult&amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;&amp;amp;&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#66d9ef;&quot;&gt;str&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;&amp;amp;&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#66d9ef;&quot;&gt;str&lt;&#x2F;span&gt;&lt;span&gt;&amp;gt; {
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#66d9ef;&quot;&gt;recognize&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#66d9ef;&quot;&gt;alt&lt;&#x2F;span&gt;&lt;span&gt;((digit1, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#66d9ef;&quot;&gt;delimited&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#66d9ef;&quot;&gt;char&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#e6db74;&quot;&gt;&amp;#39;(&amp;#39;&lt;&#x2F;span&gt;&lt;span&gt;), expr, &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#66d9ef;&quot;&gt;char&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#e6db74;&quot;&gt;&amp;#39;)&amp;#39;&lt;&#x2F;span&gt;&lt;span&gt;)))))(input)
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Each of the four parsers above corresponds to a PEG rule, and since each one is
+represented as a pure function, they compose nicely in code and each one can
+easily be tested in isolation from the others, e.g. with inline unit tests. All
+in all, I enjoy working with PEG and parser combinators!&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;motivation&quot;&gt;Motivation&lt;a class=&quot;post-anchor&quot; href=&quot;#motivation&quot; aria-label=&quot;Anchor link for: motivation&quot;&gt;&lt;span aria-hidden=&quot;true&quot;&gt;#&lt;&#x2F;span&gt;&lt;&#x2F;a&gt;
+&lt;&#x2F;h2&gt;
+&lt;p&gt;I’ve been hacking on a parser and &lt;a href=&quot;https:&#x2F;&#x2F;microsoft.github.io&#x2F;language-server-protocol&#x2F;&quot;&gt;language server&lt;&#x2F;a&gt; for the &lt;a href=&quot;https:&#x2F;&#x2F;nixos.org&#x2F;nix&#x2F;&quot;&gt;Nix programming
+language&lt;&#x2F;a&gt; as a side project (&lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;ebkalderon&#x2F;nix-language-server&quot;&gt;GitHub&lt;&#x2F;a&gt;) for some time now, and this extended
+period of being stuck at home renewed my interest in working on it. This
+language server aims to supply code analysis, and auto-completion for compatible
+third-party text editors and IDEs. This project has been very challenging for me
+to work on, in a good way, because language servers tend to have very strict
+requirements of their underlying parsers.&lt;&#x2F;p&gt;
+&lt;p&gt;Most compilers and static analysis tools are &lt;a href=&quot;https:&#x2F;&#x2F;en.wikipedia.org&#x2F;wiki&#x2F;Batch_program&quot;&gt;batch programs&lt;&#x2F;a&gt; which act like a
+dumb pipe, consuming source code in one end and spitting an executable out the
+other (yes, incremental compilation and artifact caching bends this analogy a
+bit, but the basic premise still holds). This means that their parsers and
+resulting &lt;a href=&quot;https:&#x2F;&#x2F;en.wikipedia.org&#x2F;wiki&#x2F;Abstract_syntax_tree&quot;&gt;abstract syntax trees&lt;&#x2F;a&gt; are optimized for very different things than
+what an interactive IDE would want.&lt;&#x2F;p&gt;
+&lt;p&gt;Since the user is continuously modifying the source text and entering keystrokes
+into their editor, the parser providing syntax checking for their editor is very
+frequently exposed to incomplete or downright invalid snippets of code more
+often than not. This means that halting parsing and bailing with an error
+message whenever the first error is encountered, like many traditional parsers
+do, is &lt;em&gt;simply not an option&lt;&#x2F;em&gt;.&lt;&#x2F;p&gt;
+
+  &lt;figure class=&quot;center&quot; &gt;
+    &lt;img src=&quot;rust-analyzer.gif&quot; alt=&quot;rust-analyzer in action&quot; &#x2F;&gt;
+    
+      &lt;figcaption class=&quot;center&quot;&gt;Parser producing a best-effort syntax tree from incomplete code (&lt;a href=&quot;https:&#x2F;&#x2F;rust-analyzer.github.io&#x2F;thisweek&#x2F;2020&#x2F;03&#x2F;16&#x2F;changelog-16.html&quot;&gt;credit&lt;&#x2F;a&gt;)&lt;&#x2F;figcaption&gt;
+    
+  &lt;&#x2F;figure&gt;
+
+&lt;p&gt;Instead, the parser needs to be as fault-tolerant as possible, always producing
+a syntax tree of some kind on every single parse and deriving as much syntactic
+and semantic meaning as it can from user input, however malformed it might be.
+Your editor should still be able to provide meaningful code completion, hover
+documentation, go-to-definition, and symbol searching regardless of whether
+there is a missing semicolon somewhere halfway down the page.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;a-naive-approach&quot;&gt;A naive approach&lt;a class=&quot;post-anchor&quot; href=&quot;#a-naive-approach&quot; aria-label=&quot;Anchor link for: a-naive-approach&quot;&gt;&lt;span aria-hidden=&quot;true&quot;&gt;#&lt;&#x2F;span&gt;&lt;&#x2F;a&gt;
+&lt;&#x2F;h2&gt;
+&lt;p&gt;When I first started working on this project, I had chosen to implement my Nix
+parser in Rust using &lt;code&gt;nom&lt;&#x2F;code&gt; 5.0, since that was the tool I was most comfortable
+using for writing parsers at the time.&lt;&#x2F;p&gt;
+&lt;p&gt;As I was writing up my parsers, I very quickly realized that bailing early from
+parsing with an &lt;code&gt;Err(nom::Err::Error(_))&lt;&#x2F;code&gt; or &lt;code&gt;Err(nom::Error::Failure(_))&lt;&#x2F;code&gt;
+wasn’t a good idea for emitting errors. The former triggers a backtrack, which I
+didn’t always want, and the latter would halt parsing altogether with an error,
+which I never wanted. &lt;code&gt;Err(nom::Error::Incomplete(_))&lt;&#x2F;code&gt; sounded promising due to
+the name, but it too ended up being useless given the design constraints I had
+in mind. I needed some way to log that a non-fatal parse error had been
+encountered and resume parsing as though nothing had happened, but
+unfortunately, there seemed to be nothing in the vast &lt;code&gt;nom&lt;&#x2F;code&gt; parser combinator
+toolbox that could help me deal with this.&lt;&#x2F;p&gt;
+&lt;p&gt;Given that &lt;code&gt;nom&lt;&#x2F;code&gt; parser combinators are pure functions whose signatures are
+structured like this:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;rust&quot; style=&quot;background-color:#272822;color:#f8f8f2;&quot; class=&quot;language-rust &quot;&gt;&lt;code class=&quot;language-rust&quot; data-lang=&quot;rust&quot;&gt;&lt;span style=&quot;font-style:italic;color:#66d9ef;&quot;&gt;impl &lt;&#x2F;span&gt;&lt;span&gt;Fn(Input) -&amp;gt; IResult&amp;lt;Input, Output, Error&amp;gt;
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;which maps to:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;rust&quot; style=&quot;background-color:#272822;color:#f8f8f2;&quot; class=&quot;language-rust &quot;&gt;&lt;code class=&quot;language-rust&quot; data-lang=&quot;rust&quot;&gt;&lt;span style=&quot;font-style:italic;color:#66d9ef;&quot;&gt;impl &lt;&#x2F;span&gt;&lt;span&gt;Fn(Input) -&amp;gt; Result&amp;lt;(Remaining, Output), Error&amp;gt;
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;I decided to carry these non-fatal parse errors through the &lt;code&gt;Output&lt;&#x2F;code&gt; instead of
+returning them through &lt;code&gt;Result::Err(nom::Error::Error(_))&lt;&#x2F;code&gt; using a custom data
+structure which I had named &lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;ebkalderon&#x2F;nix-language-server&#x2F;blob&#x2F;master&#x2F;nix-parser&#x2F;src&#x2F;parser&#x2F;partial.rs#L64-L68&quot;&gt;&lt;code&gt;Partial&lt;&#x2F;code&gt;&lt;&#x2F;a&gt;. This was a monadic data structure which
+was essentially:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;rust&quot; data-name=&quot;nix-parser&#x2F;src&#x2F;parser&#x2F;partial.rs&quot; style=&quot;background-color:#272822;color:#f8f8f2;&quot; class=&quot;language-rust &quot;&gt;&lt;code class=&quot;language-rust&quot; data-lang=&quot;rust&quot; data-name=&quot;nix-parser&#x2F;src&#x2F;parser&#x2F;partial.rs&quot;&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;pub &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#66d9ef;&quot;&gt;struct &lt;&#x2F;span&gt;&lt;span&gt;Partial&amp;lt;T&amp;gt; {
+&lt;&#x2F;span&gt;&lt;span&gt;    value: &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#66d9ef;&quot;&gt;Option&lt;&#x2F;span&gt;&lt;span&gt;&amp;lt;T&amp;gt;,
+&lt;&#x2F;span&gt;&lt;span&gt;    errors: &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#66d9ef;&quot;&gt;Vec&lt;&#x2F;span&gt;&lt;span&gt;&amp;lt;Error&amp;gt;,
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#66d9ef;&quot;&gt;impl&lt;&#x2F;span&gt;&lt;span&gt;&amp;lt;T&amp;gt; Partial&amp;lt;T&amp;gt; {
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;pub &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#66d9ef;&quot;&gt;fn &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a6e22e;&quot;&gt;map&lt;&#x2F;span&gt;&lt;span&gt;&amp;lt;U, F&amp;gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#fd971f;&quot;&gt;self&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#fd971f;&quot;&gt;f&lt;&#x2F;span&gt;&lt;span&gt;: F) -&amp;gt; Partial&amp;lt;U&amp;gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;where
+&lt;&#x2F;span&gt;&lt;span&gt;        F: FnOnce(T) -&amp;gt; U
+&lt;&#x2F;span&gt;&lt;span&gt;    { &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;... &lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;pub &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#66d9ef;&quot;&gt;fn &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a6e22e;&quot;&gt;flat_map&lt;&#x2F;span&gt;&lt;span&gt;&amp;lt;U, F&amp;gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;mut &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#fd971f;&quot;&gt;self&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#fd971f;&quot;&gt;f&lt;&#x2F;span&gt;&lt;span&gt;: F) -&amp;gt; Partial&amp;lt;U&amp;gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;where
+&lt;&#x2F;span&gt;&lt;span&gt;        F: FnOnce(T) -&amp;gt; Partial&amp;lt;U&amp;gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    { &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;... &lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;pub &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#66d9ef;&quot;&gt;fn &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a6e22e;&quot;&gt;value&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;&amp;amp;&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#fd971f;&quot;&gt;self&lt;&#x2F;span&gt;&lt;span&gt;) -&amp;gt; &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#66d9ef;&quot;&gt;Option&lt;&#x2F;span&gt;&lt;span&gt;&amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;&amp;amp;&lt;&#x2F;span&gt;&lt;span&gt;T&amp;gt; {
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;...
+&lt;&#x2F;span&gt;&lt;span&gt;    }
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;pub &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#66d9ef;&quot;&gt;fn &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a6e22e;&quot;&gt;errors&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;&amp;amp;&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#fd971f;&quot;&gt;self&lt;&#x2F;span&gt;&lt;span&gt;) -&amp;gt; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;&amp;amp;&lt;&#x2F;span&gt;&lt;span&gt;[Error] {
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;...
+&lt;&#x2F;span&gt;&lt;span&gt;    }
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;pub &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#66d9ef;&quot;&gt;fn &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a6e22e;&quot;&gt;verify&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#fd971f;&quot;&gt;self&lt;&#x2F;span&gt;&lt;span&gt;) -&amp;gt; &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#66d9ef;&quot;&gt;Result&lt;&#x2F;span&gt;&lt;span&gt;&amp;lt;T, &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#66d9ef;&quot;&gt;Vec&lt;&#x2F;span&gt;&lt;span&gt;&amp;lt;Error&amp;gt;&amp;gt; {
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;...
+&lt;&#x2F;span&gt;&lt;span&gt;    }
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;This data structure was complemented with a bunch of custom &lt;code&gt;nom&lt;&#x2F;code&gt; combinators,
+e.g. &lt;code&gt;map_partial()&lt;&#x2F;code&gt;, &lt;code&gt;expect_terminated()&lt;&#x2F;code&gt;, and &lt;code&gt;skip_if_err()&lt;&#x2F;code&gt;, which would
+allow me to compose these fault-tolerant parsers together while accumulating
+errors in the &lt;code&gt;errors&lt;&#x2F;code&gt; field.&lt;&#x2F;p&gt;
+&lt;p&gt;The consumer of this data structure would then choose to either:&lt;&#x2F;p&gt;
+&lt;ol&gt;
+&lt;li&gt;Assert that they need a valid AST without errors by calling &lt;code&gt;expr.verify()&lt;&#x2F;code&gt;,
+transforming the &lt;code&gt;Partial&amp;lt;T&amp;gt;&lt;&#x2F;code&gt; into a &lt;code&gt;Result&amp;lt;T, Vec&amp;lt;Error&amp;gt;&amp;gt;&lt;&#x2F;code&gt;. This option
+would be useful for traditonal batch compiler authors, as well as for testing
+and debugging.&lt;&#x2F;li&gt;
+&lt;li&gt;Extract and examine the contents of the &lt;code&gt;value&lt;&#x2F;code&gt; and &lt;code&gt;errors&lt;&#x2F;code&gt; field
+separately. This is what the language server would do: publish the
+accumulated errors to the user’s editor in the form of diagnostics and then
+perform further analysis on the syntax tree contained in &lt;code&gt;value&lt;&#x2F;code&gt;.&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;p&gt;All the parser combinators would have this function signature instead:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;rust&quot; style=&quot;background-color:#272822;color:#f8f8f2;&quot; class=&quot;language-rust &quot;&gt;&lt;code class=&quot;language-rust&quot; data-lang=&quot;rust&quot;&gt;&lt;span style=&quot;font-style:italic;color:#66d9ef;&quot;&gt;impl &lt;&#x2F;span&gt;&lt;span&gt;Fn(Input) -&amp;gt; IResult&amp;lt;Input, Partial&amp;lt;Output&amp;gt;, Error&amp;gt;
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;While this approach seemed to work well initially, it spiralled out of control
+once the parser grew beyond a certain size. The number of &lt;code&gt;Partial&lt;&#x2F;code&gt; specific
+combinators grew, the parser logic got hairier, more imperative, and trickier to
+debug, and the performance implications of carrying around a heavy stack of
+errors from function to function &lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;ebkalderon&#x2F;nix-language-server&#x2F;commit&#x2F;4cd939a2917709a527bd1967f4a29bfd9f2767cc&quot;&gt;were astonishingly awful&lt;&#x2F;a&gt;. It didn’t
+look and feel that much like PEG anymore.&lt;&#x2F;p&gt;
+&lt;p&gt;I will admit I learned a lot about a breadth of topics during this time, from
+benchmarking functions with &lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;bheisler&#x2F;criterion.rs&quot;&gt;&lt;code&gt;criterion&lt;&#x2F;code&gt;&lt;&#x2F;a&gt; to generating flamegraphs with
+&lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;ferrous-systems&#x2F;flamegraph&quot;&gt;&lt;code&gt;cargo-flamegraph&lt;&#x2F;code&gt;&lt;&#x2F;a&gt;, and going to extreme lengths to avoid heap allocations to
+make the parser as fast as possible. I used &lt;a href=&quot;https:&#x2F;&#x2F;docs.rs&#x2F;nom_locate&quot;&gt;&lt;code&gt;nom_locate&lt;&#x2F;code&gt;&lt;&#x2F;a&gt; to retain string span
+information and be as zero-copy as possible when constructing the syntax tree.
+But ultimately, I couldn’t fix all the warts and fundamental flaws. I needed a
+new approach.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;the-paper-s-solution&quot;&gt;The paper’s solution&lt;a class=&quot;post-anchor&quot; href=&quot;#the-paper-s-solution&quot; aria-label=&quot;Anchor link for: the-paper-s-solution&quot;&gt;&lt;span aria-hidden=&quot;true&quot;&gt;#&lt;&#x2F;span&gt;&lt;&#x2F;a&gt;
+&lt;&#x2F;h2&gt;
+&lt;p&gt;Finally, back to the paper that originally inspired this article! I shelved this
+project some months ago due to work and personal life matters, but came back
+to it last month with some fresh ideas and a better intuition of where to look.
+Discouraged by the previous setbacks, I was questioning whether parser
+combinators in general were flexible enough to express parsers which were both
+permissive and fault-tolerant, while also emitting good hand-crafted
+diagnostics. But then I stumbled upon the &lt;a href=&quot;https:&#x2F;&#x2F;dl.acm.org&#x2F;doi&#x2F;10.1145&#x2F;3167132.3167261&quot;&gt;“Syntax error recovery in parsing
+expression grammars” (2018)&lt;&#x2F;a&gt; paper while scouring the ACM DL search
+engine for interesting articles last night.&lt;&#x2F;p&gt;
+&lt;p&gt;The authors of this paper actually managed to get pretty great results parsing
+the &lt;a href=&quot;https:&#x2F;&#x2F;www.lua.org&#x2F;&quot;&gt;Lua programming language&lt;&#x2F;a&gt; using a set of extended PEGs, producing excellent
+tailor-made diagnostics rivaling the automatic error recovering capabilities of
+their control, a top-down &lt;a href=&quot;https:&#x2F;&#x2F;en.wikipedia.org&#x2F;wiki&#x2F;LL_parser&quot;&gt;LL parser&lt;&#x2F;a&gt; generated by &lt;a href=&quot;https:&#x2F;&#x2F;www.antlr.org&#x2F;&quot;&gt;ANTLR&lt;&#x2F;a&gt;. Their techniques are
+similar to those outlined in &lt;a href=&quot;https:&#x2F;&#x2F;matklad.github.io&#x2F;2018&#x2F;06&#x2F;06&#x2F;modern-parser-generator.html&quot;&gt;this excellent blog post by @matklad&lt;&#x2F;a&gt;,
+prominent author of &lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;rust-analyzer&#x2F;rust-analyzer&quot;&gt;&lt;code&gt;rust-analyzer&lt;&#x2F;code&gt;&lt;&#x2F;a&gt; and &lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;matklad&#x2F;rowan&quot;&gt;&lt;code&gt;rowan&lt;&#x2F;code&gt;&lt;&#x2F;a&gt;, a library for
+lossless &lt;a href=&quot;https:&#x2F;&#x2F;en.wikipedia.org&#x2F;wiki&#x2F;Parse_tree&quot;&gt;concrete syntax trees&lt;&#x2F;a&gt;.&lt;&#x2F;p&gt;
+&lt;p&gt;And they managed to do all of this while not bailing out on the first parse
+error and still producing some kind of syntax tree &lt;em&gt;100% of the time&lt;&#x2F;em&gt; in all the
+cases they tested. And the final result still looks and feels like PEG. Quite
+promising stuff! 😍&lt;&#x2F;p&gt;
+&lt;p&gt;I was immediately excited by this paper since I knew that any error recovery
+strategy for PEG could potentially be applicable in a parser combinator library
+like &lt;code&gt;nom&lt;&#x2F;code&gt;, given that both approaches employ recursive descent. If you’re
+interested in the specific error recovery strategies used, I would strongly
+recommend you read the entire paper for yourself.&lt;&#x2F;p&gt;
+&lt;p&gt;I would also recommend looking at &lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;sqmedeiros&#x2F;lpeglabel&quot;&gt;LPegLabel&lt;&#x2F;a&gt;, a reference implementation of a
+PEG parser generator using these techniques developed by authors Medeiros and
+Mascarenhas, if you’d like a more concrete example.&lt;&#x2F;p&gt;
+&lt;p&gt;In general, though, it boils down to a few key principles:&lt;&#x2F;p&gt;
+&lt;ol&gt;
+&lt;li&gt;Parsing should &lt;em&gt;never&lt;&#x2F;em&gt; fail. If some kind of syntax tree isn’t produced, it’s
+considered a bug. Basically, the output of the top-level parser should be a
+&lt;code&gt;(T, Vec&amp;lt;Error&amp;gt;)&lt;&#x2F;code&gt;, not &lt;code&gt;Result&amp;lt;T, Vec&amp;lt;Error&amp;gt;&amp;gt;&lt;&#x2F;code&gt;. Also, your syntax tree should
+provide a fallback &lt;code&gt;Error&lt;&#x2F;code&gt; node type for representing invalid, unparseable
+expressions.&lt;&#x2F;li&gt;
+&lt;li&gt;The PEG rules describing your language are loosened and extended to include
+recovery expressions annotated by “labels” which basically ensures that
+parsing never fails. These recovery expressions emit error messages when
+evaluated but will silently allow parsing to continue unabated. Sometimes
+they skip forward a few tokens, but often the cursor just stays where it is.
+I’ll demonstrate a very basic recovery expression with implemented with &lt;code&gt;nom&lt;&#x2F;code&gt;
+later on.&lt;&#x2F;li&gt;
+&lt;li&gt;Synchronization tokens like &lt;code&gt;)&lt;&#x2F;code&gt;, &lt;code&gt;}&lt;&#x2F;code&gt;, and &lt;code&gt;;&lt;&#x2F;code&gt; are used to skip ahead through
+the text when necessary to avoid recovery expressions emitting spurious
+errors down the line after an earlier one has already fired.&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;p&gt;The first and third concepts aren’t really anything new in the academic space.
+Infallible parsing, special syntax tree nodes for marking errors, and the use of
+synchronization tokens for error recovery are common tactics used to great
+effect in hand-written recursive descent parsers, but this paper applies them
+nicely to PEG parsers (which in turn, I would apply to parser combinators)
+without sacrificing their declarative nature. It also provides a small library
+of handy recovery expressions you can use in different situations to either emit
+high quality errors or suppress them.&lt;&#x2F;p&gt;
+&lt;p&gt;Let’s take a look at a real world example of a fault-tolerant parser written
+in Rust using the &lt;code&gt;nom&lt;&#x2F;code&gt; 5.0 parser combinator library.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;demonstration&quot;&gt;Demonstration&lt;a class=&quot;post-anchor&quot; href=&quot;#demonstration&quot; aria-label=&quot;Anchor link for: demonstration&quot;&gt;&lt;span aria-hidden=&quot;true&quot;&gt;#&lt;&#x2F;span&gt;&lt;&#x2F;a&gt;
+&lt;&#x2F;h2&gt;
+&lt;p&gt;The full source code for this demo can be found &lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;ebkalderon&#x2F;example-fault-tolerant-parser&quot;&gt;here&lt;&#x2F;a&gt; if you’d like to
+read the whole thing, but the idea is to apply the most basic error recovery
+strategies outlined in the paper for PEGs using parser combinators.&lt;&#x2F;p&gt;
+&lt;p&gt;Below are some Rust types and traits that we will use throughout our example:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;rust&quot; style=&quot;background-color:#272822;color:#f8f8f2;&quot; class=&quot;language-rust &quot;&gt;&lt;code class=&quot;language-rust&quot; data-lang=&quot;rust&quot;&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;use &lt;&#x2F;span&gt;&lt;span&gt;std::ops::Range;
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#75715e;&quot;&gt;&#x2F;&#x2F;&#x2F; This used in place of `&amp;amp;str` or `&amp;amp;[u8]` in our `nom` parsers.
+&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#66d9ef;&quot;&gt;type &lt;&#x2F;span&gt;&lt;span&gt;LocatedSpan&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;&amp;lt;&amp;#39;a&amp;gt; = &lt;&#x2F;span&gt;&lt;span&gt;nom_locate::LocatedSpan&amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;&amp;amp;&amp;#39;a &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#66d9ef;&quot;&gt;str&lt;&#x2F;span&gt;&lt;span&gt;, State&amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;&amp;#39;a&lt;&#x2F;span&gt;&lt;span&gt;&amp;gt;&amp;gt;;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#75715e;&quot;&gt;&#x2F;&#x2F;&#x2F; Convenient type alias for `nom::IResult&amp;lt;I, O&amp;gt;` reduced to `IResult&amp;lt;O&amp;gt;`.
+&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#66d9ef;&quot;&gt;type &lt;&#x2F;span&gt;&lt;span&gt;IResult&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;&amp;lt;&amp;#39;a&lt;&#x2F;span&gt;&lt;span&gt;, T&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;&amp;gt; = &lt;&#x2F;span&gt;&lt;span&gt;nom::IResult&amp;lt;LocatedSpan&amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;&amp;#39;a&lt;&#x2F;span&gt;&lt;span&gt;&amp;gt;, T&amp;gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#66d9ef;&quot;&gt;trait &lt;&#x2F;span&gt;&lt;span&gt;ToRange {
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#66d9ef;&quot;&gt;fn &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a6e22e;&quot;&gt;to_range&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;&amp;amp;&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#fd971f;&quot;&gt;self&lt;&#x2F;span&gt;&lt;span&gt;) -&amp;gt; Range&amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#66d9ef;&quot;&gt;usize&lt;&#x2F;span&gt;&lt;span&gt;&amp;gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#66d9ef;&quot;&gt;impl&lt;&#x2F;span&gt;&lt;span&gt;&amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;&amp;#39;a&lt;&#x2F;span&gt;&lt;span&gt;&amp;gt; ToRange &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;for &lt;&#x2F;span&gt;&lt;span&gt;LocatedSpan&amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;&amp;#39;a&lt;&#x2F;span&gt;&lt;span&gt;&amp;gt; {
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#66d9ef;&quot;&gt;fn &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a6e22e;&quot;&gt;to_range&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;&amp;amp;&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#fd971f;&quot;&gt;self&lt;&#x2F;span&gt;&lt;span&gt;) -&amp;gt; Range&amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#66d9ef;&quot;&gt;usize&lt;&#x2F;span&gt;&lt;span&gt;&amp;gt; {
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#66d9ef;&quot;&gt;let&lt;&#x2F;span&gt;&lt;span&gt; start &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span&gt;self.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#66d9ef;&quot;&gt;location_offset&lt;&#x2F;span&gt;&lt;span&gt;();
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#66d9ef;&quot;&gt;let&lt;&#x2F;span&gt;&lt;span&gt; end &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;=&lt;&#x2F;span&gt;&lt;span&gt; start &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;+ &lt;&#x2F;span&gt;&lt;span&gt;self.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#66d9ef;&quot;&gt;fragment&lt;&#x2F;span&gt;&lt;span&gt;().&lt;&#x2F;span&gt;&lt;span style=&quot;color:#66d9ef;&quot;&gt;len&lt;&#x2F;span&gt;&lt;span&gt;();
+&lt;&#x2F;span&gt;&lt;span&gt;        start&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;..&lt;&#x2F;span&gt;&lt;span&gt;end
+&lt;&#x2F;span&gt;&lt;span&gt;    }
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#75715e;&quot;&gt;&#x2F;&#x2F;&#x2F; Error containing a text span and an error message to display.
+&lt;&#x2F;span&gt;&lt;span&gt;#[derive(Debug)]
+&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#66d9ef;&quot;&gt;struct &lt;&#x2F;span&gt;&lt;span&gt;Error(Range&amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#66d9ef;&quot;&gt;usize&lt;&#x2F;span&gt;&lt;span&gt;&amp;gt;, String);
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#75715e;&quot;&gt;&#x2F;&#x2F;&#x2F; Carried around in the `LocatedSpan::extra` field in
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#75715e;&quot;&gt;&#x2F;&#x2F;&#x2F; between `nom` parsers.
+&lt;&#x2F;span&gt;&lt;span&gt;#[derive(Clone, Debug)]
+&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#66d9ef;&quot;&gt;struct &lt;&#x2F;span&gt;&lt;span&gt;State&amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;&amp;#39;a&lt;&#x2F;span&gt;&lt;span&gt;&amp;gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;&amp;amp;&amp;#39;a &lt;&#x2F;span&gt;&lt;span&gt;RefCell&amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#66d9ef;&quot;&gt;Vec&lt;&#x2F;span&gt;&lt;span&gt;&amp;lt;Error&amp;gt;&amp;gt;);
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#66d9ef;&quot;&gt;impl&lt;&#x2F;span&gt;&lt;span&gt;&amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;&amp;#39;a&lt;&#x2F;span&gt;&lt;span&gt;&amp;gt; State&amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;&amp;#39;a&lt;&#x2F;span&gt;&lt;span&gt;&amp;gt; {
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#75715e;&quot;&gt;&#x2F;&#x2F;&#x2F; Pushes an error onto the errors stack from within a `nom`
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#75715e;&quot;&gt;&#x2F;&#x2F;&#x2F; parser combinator while still allowing parsing to continue.
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;pub &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#66d9ef;&quot;&gt;fn &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a6e22e;&quot;&gt;report_error&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;&amp;amp;&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#fd971f;&quot;&gt;self&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#fd971f;&quot;&gt;error&lt;&#x2F;span&gt;&lt;span&gt;: Error) {
+&lt;&#x2F;span&gt;&lt;span&gt;        self.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ae81ff;&quot;&gt;0.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#66d9ef;&quot;&gt;borrow_mut&lt;&#x2F;span&gt;&lt;span&gt;().&lt;&#x2F;span&gt;&lt;span style=&quot;color:#66d9ef;&quot;&gt;push&lt;&#x2F;span&gt;&lt;span&gt;(error);
+&lt;&#x2F;span&gt;&lt;span&gt;    }
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Our top-level &lt;code&gt;parse()&lt;&#x2F;code&gt; function is defined as follows:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;rust&quot; style=&quot;background-color:#272822;color:#f8f8f2;&quot; class=&quot;language-rust &quot;&gt;&lt;code class=&quot;language-rust&quot; data-lang=&quot;rust&quot;&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;pub &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#66d9ef;&quot;&gt;fn &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a6e22e;&quot;&gt;parse&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#fd971f;&quot;&gt;source&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;&amp;amp;&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#66d9ef;&quot;&gt;str&lt;&#x2F;span&gt;&lt;span&gt;) -&amp;gt; (Expr, &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#66d9ef;&quot;&gt;Vec&lt;&#x2F;span&gt;&lt;span&gt;&amp;lt;Error&amp;gt;) {
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#75715e;&quot;&gt;&#x2F;&#x2F;&#x2F; Store our error stack external to our `nom` parser here. It
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#75715e;&quot;&gt;&#x2F;&#x2F;&#x2F; is wrapped in a `RefCell` so parser functions down the line
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#75715e;&quot;&gt;&#x2F;&#x2F;&#x2F; can remotely push errors onto it as they run.
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#66d9ef;&quot;&gt;let&lt;&#x2F;span&gt;&lt;span&gt; errors &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span&gt;RefCell::new(&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#66d9ef;&quot;&gt;Vec&lt;&#x2F;span&gt;&lt;span&gt;::new());
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#66d9ef;&quot;&gt;let&lt;&#x2F;span&gt;&lt;span&gt; input &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span&gt;LocatedSpan::new_extra(source, State(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;&amp;amp;&lt;&#x2F;span&gt;&lt;span&gt;errors));
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#66d9ef;&quot;&gt;let &lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;_&lt;&#x2F;span&gt;&lt;span&gt;, expr) &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#66d9ef;&quot;&gt;all_consuming&lt;&#x2F;span&gt;&lt;span&gt;(source_file)(input).&lt;&#x2F;span&gt;&lt;span style=&quot;color:#66d9ef;&quot;&gt;expect&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#e6db74;&quot;&gt;&amp;quot;parser cannot fail&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;);
+&lt;&#x2F;span&gt;&lt;span&gt;    (expr, errors.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#66d9ef;&quot;&gt;into_inner&lt;&#x2F;span&gt;&lt;span&gt;())
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Notice how we &lt;code&gt;.expect()&lt;&#x2F;code&gt; on our all-consuming &lt;code&gt;source_file()&lt;&#x2F;code&gt; parser. Remember,
+if we fail to produce some kind of syntax tree and consume all of the input 100%
+of the time, that’s considered a bug in the parser.&lt;&#x2F;p&gt;
+&lt;p&gt;For the sake of example, I’ve implemented only one recovery expression outlined
+in the paper in the form of a custom parser combinator I call &lt;code&gt;expect()&lt;&#x2F;code&gt;. It
+looks like this:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;rust&quot; style=&quot;background-color:#272822;color:#f8f8f2;&quot; class=&quot;language-rust &quot;&gt;&lt;code class=&quot;language-rust&quot; data-lang=&quot;rust&quot;&gt;&lt;span style=&quot;color:#75715e;&quot;&gt;&#x2F;&#x2F;&#x2F; Evaluate `parser` and wrap the result in a `Some(_)`. Otherwise,
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#75715e;&quot;&gt;&#x2F;&#x2F;&#x2F; emit the  provided `error_msg` and return a `None` while allowing
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#75715e;&quot;&gt;&#x2F;&#x2F;&#x2F; parsing to continue.
+&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#66d9ef;&quot;&gt;fn &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a6e22e;&quot;&gt;expect&lt;&#x2F;span&gt;&lt;span&gt;&amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;&amp;#39;a&lt;&#x2F;span&gt;&lt;span&gt;, F, E, T&amp;gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#fd971f;&quot;&gt;parser&lt;&#x2F;span&gt;&lt;span&gt;: F, &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#fd971f;&quot;&gt;error_msg&lt;&#x2F;span&gt;&lt;span&gt;: E) -&amp;gt; impl Fn(LocatedSpan&amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;&amp;#39;a&lt;&#x2F;span&gt;&lt;span&gt;&amp;gt;) -&amp;gt; IResult&amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#66d9ef;&quot;&gt;Option&lt;&#x2F;span&gt;&lt;span&gt;&amp;lt;T&amp;gt;&amp;gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;where
+&lt;&#x2F;span&gt;&lt;span&gt;    F: Fn(LocatedSpan&amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;&amp;#39;a&lt;&#x2F;span&gt;&lt;span&gt;&amp;gt;) -&amp;gt; IResult&amp;lt;T&amp;gt;,
+&lt;&#x2F;span&gt;&lt;span&gt;    E: ToString,
+&lt;&#x2F;span&gt;&lt;span&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;move |&lt;&#x2F;span&gt;&lt;span&gt;input&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;| match &lt;&#x2F;span&gt;&lt;span style=&quot;color:#66d9ef;&quot;&gt;parser&lt;&#x2F;span&gt;&lt;span&gt;(input) {
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#66d9ef;&quot;&gt;Ok&lt;&#x2F;span&gt;&lt;span&gt;((remaining, out)) &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;=&amp;gt; &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#66d9ef;&quot;&gt;Ok&lt;&#x2F;span&gt;&lt;span&gt;((remaining, &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#66d9ef;&quot;&gt;Some&lt;&#x2F;span&gt;&lt;span&gt;(out))),
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#66d9ef;&quot;&gt;Err&lt;&#x2F;span&gt;&lt;span&gt;(nom::Err::Error((input, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;_&lt;&#x2F;span&gt;&lt;span&gt;))) &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;| &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#66d9ef;&quot;&gt;Err&lt;&#x2F;span&gt;&lt;span&gt;(nom::Err::Failure((input, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;_&lt;&#x2F;span&gt;&lt;span&gt;))) &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;=&amp;gt; &lt;&#x2F;span&gt;&lt;span&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;            &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#66d9ef;&quot;&gt;let&lt;&#x2F;span&gt;&lt;span&gt; err &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;=&lt;&#x2F;span&gt;&lt;span&gt; Error(input.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#66d9ef;&quot;&gt;to_range&lt;&#x2F;span&gt;&lt;span&gt;(), error_msg.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#66d9ef;&quot;&gt;to_string&lt;&#x2F;span&gt;&lt;span&gt;());
+&lt;&#x2F;span&gt;&lt;span&gt;            input.extra.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#66d9ef;&quot;&gt;report_error&lt;&#x2F;span&gt;&lt;span&gt;(err); &lt;&#x2F;span&gt;&lt;span style=&quot;color:#75715e;&quot;&gt;&#x2F;&#x2F; Push error onto stack.
+&lt;&#x2F;span&gt;&lt;span&gt;            &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#66d9ef;&quot;&gt;Ok&lt;&#x2F;span&gt;&lt;span&gt;((input, &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#66d9ef;&quot;&gt;None&lt;&#x2F;span&gt;&lt;span&gt;)) &lt;&#x2F;span&gt;&lt;span style=&quot;color:#75715e;&quot;&gt;&#x2F;&#x2F; Parsing failed, but keep going.
+&lt;&#x2F;span&gt;&lt;span&gt;        }
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#66d9ef;&quot;&gt;Err&lt;&#x2F;span&gt;&lt;span&gt;(err) &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;=&amp;gt; &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#66d9ef;&quot;&gt;Err&lt;&#x2F;span&gt;&lt;span&gt;(err),
+&lt;&#x2F;span&gt;&lt;span&gt;    }
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;This is the realm where parser combinator libraries really shine. This
+&lt;code&gt;expect()&lt;&#x2F;code&gt; combinator can be composed with other parser functions and produce
+results which closely map to their PEG counterparts. Below is an example parser
+capable of parsing a parenthesized expression which uses &lt;code&gt;expect()&lt;&#x2F;code&gt; to report
+errors:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;rust&quot; style=&quot;background-color:#272822;color:#f8f8f2;&quot; class=&quot;language-rust &quot;&gt;&lt;code class=&quot;language-rust&quot; data-lang=&quot;rust&quot;&gt;&lt;span style=&quot;font-style:italic;color:#66d9ef;&quot;&gt;fn &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a6e22e;&quot;&gt;paren&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#fd971f;&quot;&gt;input&lt;&#x2F;span&gt;&lt;span&gt;: LocatedSpan) -&amp;gt; IResult&amp;lt;Expr&amp;gt; {
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#75715e;&quot;&gt;&#x2F;&#x2F; This approach of using `expect()` to annotate a parser
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#75715e;&quot;&gt;&#x2F;&#x2F; with a message follows the original paper&amp;#39;s definition of
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#75715e;&quot;&gt;&#x2F;&#x2F; labels annotating certain parts of the PEG grammar.
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#66d9ef;&quot;&gt;let&lt;&#x2F;span&gt;&lt;span&gt; paren &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#66d9ef;&quot;&gt;delimited&lt;&#x2F;span&gt;&lt;span&gt;(
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#66d9ef;&quot;&gt;char&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#e6db74;&quot;&gt;&amp;#39;(&amp;#39;&lt;&#x2F;span&gt;&lt;span&gt;),
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#66d9ef;&quot;&gt;expect&lt;&#x2F;span&gt;&lt;span&gt;(expr, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#e6db74;&quot;&gt;&amp;quot;expected expression after `(`&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;),
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#66d9ef;&quot;&gt;expect&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#66d9ef;&quot;&gt;char&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#e6db74;&quot;&gt;&amp;#39;)&amp;#39;&lt;&#x2F;span&gt;&lt;span&gt;), &lt;&#x2F;span&gt;&lt;span style=&quot;color:#e6db74;&quot;&gt;&amp;quot;missing `)`&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;),
+&lt;&#x2F;span&gt;&lt;span&gt;    );
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#66d9ef;&quot;&gt;map&lt;&#x2F;span&gt;&lt;span&gt;(paren, |&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#fd971f;&quot;&gt;inner&lt;&#x2F;span&gt;&lt;span&gt;| {
+&lt;&#x2F;span&gt;&lt;span&gt;        Expr::Paren(&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#66d9ef;&quot;&gt;Box&lt;&#x2F;span&gt;&lt;span&gt;::new(inner.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#66d9ef;&quot;&gt;unwrap_or&lt;&#x2F;span&gt;&lt;span&gt;(Expr::Error)))
+&lt;&#x2F;span&gt;&lt;span&gt;    })(input)
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h2 id=&quot;results&quot;&gt;Results&lt;a class=&quot;post-anchor&quot; href=&quot;#results&quot; aria-label=&quot;Anchor link for: results&quot;&gt;&lt;span aria-hidden=&quot;true&quot;&gt;#&lt;&#x2F;span&gt;&lt;&#x2F;a&gt;
+&lt;&#x2F;h2&gt;
+&lt;p&gt;The final results of this toy implementation were quite striking, consistently
+producing some very pretty parse results. Given a very trivial AST that looks
+like this:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;rust&quot; style=&quot;background-color:#272822;color:#f8f8f2;&quot; class=&quot;language-rust &quot;&gt;&lt;code class=&quot;language-rust&quot; data-lang=&quot;rust&quot;&gt;&lt;span style=&quot;color:#75715e;&quot;&gt;&#x2F;&#x2F;&#x2F; `foo`, `foo_bar`, `foo123`
+&lt;&#x2F;span&gt;&lt;span&gt;#[derive(Debug)]
+&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#66d9ef;&quot;&gt;struct &lt;&#x2F;span&gt;&lt;span&gt;Ident(String);
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;#[derive(Debug)]
+&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#66d9ef;&quot;&gt;enum &lt;&#x2F;span&gt;&lt;span&gt;Expr {
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#75715e;&quot;&gt;&#x2F;&#x2F;&#x2F; `(foo)`
+&lt;&#x2F;span&gt;&lt;span&gt;    Paren(&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#66d9ef;&quot;&gt;Box&lt;&#x2F;span&gt;&lt;span&gt;&amp;lt;Expr&amp;gt;),
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#75715e;&quot;&gt;&#x2F;&#x2F;&#x2F; `foo`
+&lt;&#x2F;span&gt;&lt;span&gt;    Ident(Ident),
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#75715e;&quot;&gt;&#x2F;&#x2F;&#x2F; An unparseable, invalid expression.
+&lt;&#x2F;span&gt;&lt;span&gt;    Error,
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;The following outputs were produced by calling &lt;code&gt;parse()&lt;&#x2F;code&gt;:&lt;&#x2F;p&gt;
+&lt;div class=&quot;wide-container&quot;&gt;
+    &lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th&gt;Input&lt;&#x2F;th&gt;&lt;th&gt;Produced syntax tree&lt;&#x2F;th&gt;&lt;th&gt;Errors&lt;&#x2F;th&gt;&lt;&#x2F;tr&gt;&lt;&#x2F;thead&gt;&lt;tbody&gt;
+&lt;tr&gt;&lt;td&gt;foo&lt;&#x2F;td&gt;&lt;td&gt;&lt;code&gt;Ident(Ident(&quot;foo&quot;))&lt;&#x2F;code&gt;&lt;&#x2F;td&gt;&lt;td&gt;&lt;code&gt;[]&lt;&#x2F;code&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;(foo)&lt;&#x2F;td&gt;&lt;td&gt;&lt;code&gt;Paren(Ident(Ident(&quot;foo&quot;)))&lt;&#x2F;code&gt;&lt;&#x2F;td&gt;&lt;td&gt;&lt;code&gt;[]&lt;&#x2F;code&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;(foo))&lt;&#x2F;td&gt;&lt;td&gt;&lt;code&gt;Paren(Ident(Ident(&quot;foo&quot;)))&lt;&#x2F;code&gt;&lt;&#x2F;td&gt;&lt;td&gt;&lt;code&gt;[Error(5..6, &quot;expected EOF&quot;)]&lt;&#x2F;code&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;(%&lt;&#x2F;td&gt;&lt;td&gt;&lt;code&gt;Paren(Error)&lt;&#x2F;code&gt;&lt;&#x2F;td&gt;&lt;td&gt;&lt;code&gt;[Error(1..2, &quot;unexpected `%`&quot;), Error(2..2, &quot;missing `)`&quot;)]&lt;&#x2F;code&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;(&lt;&#x2F;td&gt;&lt;td&gt;&lt;code&gt;Paren(Error)&lt;&#x2F;code&gt;&lt;&#x2F;td&gt;&lt;td&gt;&lt;code&gt;[Error(1..1, &quot;expected expression after `(`&quot;), Error(1..1, &quot;missing `)`&quot;)]&lt;&#x2F;code&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;%&lt;&#x2F;td&gt;&lt;td&gt;&lt;code&gt;Error&lt;&#x2F;code&gt;&lt;&#x2F;td&gt;&lt;td&gt;&lt;code&gt;[Error(0..1, &quot;unexpected `%`&quot;)]&lt;&#x2F;code&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;()&lt;&#x2F;td&gt;&lt;td&gt;&lt;code&gt;Paren(Error)&lt;&#x2F;code&gt;&lt;&#x2F;td&gt;&lt;td&gt;&lt;code&gt;[Error(1..2, &quot;expected expression after `(`&quot;)]&lt;&#x2F;code&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt; &lt;&#x2F;td&gt;&lt;td&gt;&lt;code&gt;Error&lt;&#x2F;code&gt;&lt;&#x2F;td&gt;&lt;td&gt;&lt;code&gt;[]&lt;&#x2F;code&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;&#x2F;tbody&gt;&lt;&#x2F;table&gt;
+
+&lt;&#x2F;div&gt;
+&lt;p&gt;These results are markedly better than what I had gotten with &lt;code&gt;nom&lt;&#x2F;code&gt; previously
+when I was relying on the built-in &lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;Geal&#x2F;nom&#x2F;blob&#x2F;master&#x2F;doc&#x2F;error_management.md&quot;&gt;custom error management&lt;&#x2F;a&gt; facilities, and the
+logic is significantly more declarative and understandable than the &lt;code&gt;Partial&amp;lt;T&amp;gt;&lt;&#x2F;code&gt;
+approach. And best of all, the final parsers are much shorter, easier to reason
+about, and are more directly analogous to their PEG equivalents, which makes the
+project much more maintainable in the long run.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;future-work&quot;&gt;Future work&lt;a class=&quot;post-anchor&quot; href=&quot;#future-work&quot; aria-label=&quot;Anchor link for: future-work&quot;&gt;&lt;span aria-hidden=&quot;true&quot;&gt;#&lt;&#x2F;span&gt;&lt;&#x2F;a&gt;
+&lt;&#x2F;h2&gt;
+&lt;p&gt;The example shown above was intentionally designed very simply in order to
+demonstrate the core concepts from Medeiros’ and Mascarenhas’ 2018 paper applied
+to parser combinators with &lt;code&gt;nom&lt;&#x2F;code&gt;. In order to support parsing a complex
+programming language like Nix, I will need to translate more of the recovery
+expressions described in the paper to &lt;code&gt;nom&lt;&#x2F;code&gt; combinators. I will also need to
+investigate richer forms of error representation, possibly containing multiple
+spans, warnings, lints, etc.&lt;&#x2F;p&gt;
+&lt;p&gt;I should also add that the parser used in my actual project does not use
+&lt;code&gt;LocatedSpan&lt;&#x2F;code&gt;, but instead processes a custom &lt;code&gt;Tokens&amp;lt;&#x27;a&amp;gt;&lt;&#x2F;code&gt; type. Because of
+this, I can’t integrate the code used in this example into my project as-is. I
+will need to adapt it to work with this custom type, a topic which is considered
+out of scope for this particular post.&lt;&#x2F;p&gt;
+&lt;p&gt;I also didn’t cover incremental parsing nor concrete syntax trees (that much) in
+this guide, and I plan for &lt;code&gt;nix-parser&lt;&#x2F;code&gt; to produce a lossless concrete syntax
+tree (courtesy of &lt;a href=&quot;https:&#x2F;&#x2F;docs.rs&#x2F;rowan&quot;&gt;&lt;code&gt;rowan&lt;&#x2F;code&gt;&lt;&#x2F;a&gt;) instead of an abstract syntax tree like the
+example.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;conclusion&quot;&gt;Conclusion&lt;a class=&quot;post-anchor&quot; href=&quot;#conclusion&quot; aria-label=&quot;Anchor link for: conclusion&quot;&gt;&lt;span aria-hidden=&quot;true&quot;&gt;#&lt;&#x2F;span&gt;&lt;&#x2F;a&gt;
+&lt;&#x2F;h2&gt;
+&lt;p&gt;Implementing a parser with good error recovery strategies and rich,
+user-friendly diagnostics is as much an art as it is a science (I think the Rust
+compiler devs would agree). This is even more true when it comes to parsers
+catering to the needs of language servers, REPLs, and other interactive uses
+where you need to be very tolerant to parse errors and provide meaningful
+diagnostics in response to messy and incomplete input. I learned many valuable
+things on this journey, and I’m still learning further as I go along. For one, I
+need to brush up on my formal methods and re-read the paper a few more times to
+fully digest the information.&lt;&#x2F;p&gt;
+&lt;p&gt;I’m incredibly grateful to the &lt;a href=&quot;https:&#x2F;&#x2F;www.acm.org&#x2F;&quot;&gt;ACM&lt;&#x2F;a&gt; for having made their
+Digital Library open to the public during this global pandemic, and I’m also
+grateful to Sérgio Medeiros (UFRN, Brazil) and Fabio Mascarenhas (UFRJ, Brazil)
+for having produced the original research paper. I’m glad to have stumbled
+across it, and I learned some nice lessons out of it. If you’re a fan of PEG
+parsers and&#x2F;or parser combinators and you haven’t read this paper yet, please
+do. It’s pretty neat!&lt;&#x2F;p&gt;
+&lt;p&gt;In the meantime, I’ll be casually hacking away on &lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;ebkalderon&#x2F;nix-language-server&quot;&gt;&lt;code&gt;nix-language-server&lt;&#x2F;code&gt;&lt;&#x2F;a&gt;
+whenever I have some spare time, armed with plenty of useful knowledge and
+principles I didn’t have before. Maybe I’ll actually get to producing meaningful
+auto-completions and semantic analysis out of it for once, as soon as I can
+focus on traversing the syntax tree itself and building a usable interpreter for
+evaluating the language. 😛&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;external-links&quot;&gt;External links&lt;a class=&quot;post-anchor&quot; href=&quot;#external-links&quot; aria-label=&quot;Anchor link for: external-links&quot;&gt;&lt;span aria-hidden=&quot;true&quot;&gt;#&lt;&#x2F;span&gt;&lt;&#x2F;a&gt;
+&lt;&#x2F;h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;https:&#x2F;&#x2F;dl.acm.org&#x2F;doi&#x2F;10.1145&#x2F;3167132.3167261&quot;&gt;“Syntax error recovery in parsing expression grammars”&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;ebkalderon&#x2F;example-fault-tolerant-parser&quot;&gt;Source code for demo&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;a href=&quot;https:&#x2F;&#x2F;matklad.github.io&#x2F;2018&#x2F;06&#x2F;06&#x2F;modern-parser-generator.html&quot;&gt;Modern Parser Generator&lt;&#x2F;a&gt; (&lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;matklad&quot;&gt;@matklad&lt;&#x2F;a&gt;)&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;dotnet&#x2F;roslyn&#x2F;blob&#x2F;6b00b6c&#x2F;docs&#x2F;wiki&#x2F;Roslyn-Overview.md#errors&quot;&gt;Roslyn Overview (.NET)&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;ebkalderon&#x2F;nix-language-server&quot;&gt;ebkalderon&#x2F;nix-language-server&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+</description>
+      </item>
+      <item>
+          <title>Introduction</title>
+          <pubDate>Sat, 19 Jan 2019 00:00:00 +0000</pubDate>
+          <author>Eyal Kalderon</author>
+          <link>https://eyalkalderon.com/blog/introduction/</link>
+          <guid>https://eyalkalderon.com/blog/introduction/</guid>
+          <description xml:base="https://eyalkalderon.com/blog/introduction/">&lt;p&gt;Welcome to my new development blog! This is a place where I can record my
+thoughts on various topics, technical or otherwise. Conveying one’s own thought
+processes precisely and eloquently through text is a very valuable skill, and
+it’s one that only comes through practice.&lt;&#x2F;p&gt;
+&lt;p&gt;Notice that I wrote &lt;em&gt;new&lt;&#x2F;em&gt; development blog in the very first sentence of this
+post. That choice of words was quite intentional. I used to maintain a
+&lt;a href=&quot;https:&#x2F;&#x2F;nullpwd.wordpress.com&#x2F;&quot;&gt;personal WordPress blog&lt;&#x2F;a&gt; quite a few years ago, beginning in 2011. It was also
+the place where I announced the founding of the &lt;a href=&quot;https:&#x2F;&#x2F;nullpwd.wordpress.com&#x2F;2016&#x2F;01&#x2F;13&#x2F;starting-an-open-source-project&#x2F;&quot;&gt;Amethyst&lt;&#x2F;a&gt; game engine project,
+which happened to also be my last post to date. Crafting articles, writing
+guides, and posting them for the world to see was great fun, though, and I’d
+like to start doing that again.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;a-note-about-platforms&quot;&gt;A note about platforms&lt;a class=&quot;post-anchor&quot; href=&quot;#a-note-about-platforms&quot; aria-label=&quot;Anchor link for: a-note-about-platforms&quot;&gt;&lt;span aria-hidden=&quot;true&quot;&gt;#&lt;&#x2F;span&gt;&lt;&#x2F;a&gt;
+&lt;&#x2F;h2&gt;
+&lt;p&gt;WordPress holds a special place in my heart as a familiar, venerable, and
+flexible &lt;abbr title=&quot;content management system&quot;&gt;CMS&lt;&#x2F;abbr&gt; and blog platform.
+but I feel as though I have outgrown it in the past few years. Underneath its
+appealing interface, there is an incredible amount of hidden complexity that
+sometimes rears its ugly head if you go poking around deep enough. This isn’t a
+bad thing, as WordPress is intended as a premier tool for crafting all sorts of
+professional websites. However, I simply have no need for 99% of the features it
+offers, and since I have grown increasingly comfortable working with Git and the
+terminal, I would personally rather write &lt;a href=&quot;https:&#x2F;&#x2F;daringfireball.net&#x2F;projects&#x2F;markdown&#x2F;syntax&quot;&gt;Markdown&lt;&#x2F;a&gt; in simple text files
+committed to version control than have to deal with WordPress’ idiosyncrasies.&lt;&#x2F;p&gt;
+&lt;p&gt;As such, I have decided to re-launch my personal blog as a static site hosted on
+&lt;a href=&quot;https:&#x2F;&#x2F;pages.github.com&#x2F;&quot;&gt;GitHub Pages&lt;&#x2F;a&gt; using &lt;a href=&quot;https:&#x2F;&#x2F;www.getzola.org&#x2F;&quot;&gt;Zola&lt;&#x2F;a&gt; as my preferred static site generator. I chose to
+use Zola over a more established tool like &lt;a href=&quot;https:&#x2F;&#x2F;jekyllrb.com&#x2F;&quot;&gt;Jekyll&lt;&#x2F;a&gt;, which GitHub Pages has
+native support for, because I enjoy the lack of external dependencies required
+by Zola itself, the simple TOML-based configuration, and its subjectively
+cleaner project layout. Plus, it’s written in &lt;a href=&quot;https:&#x2F;&#x2F;www.rust-lang.org&#x2F;&quot;&gt;Rust&lt;&#x2F;a&gt;, a programming language
+which I happen to personally enjoy.&lt;&#x2F;p&gt;
+&lt;p&gt;This new blog is deployed automatically through &lt;a href=&quot;https:&#x2F;&#x2F;travis-ci.org&#x2F;&quot;&gt;Travis CI&lt;&#x2F;a&gt; and the source code
+is available as free and open source software on GitHub (&lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;ebkalderon&#x2F;ebkalderon.github.io&#x2F;&quot;&gt;repository link&lt;&#x2F;a&gt;).
+Feel free to peruse through the source, if you’d like. If you’d like to get in
+touch with me, hit me up on any of these &lt;a href=&quot;https:&#x2F;&#x2F;eyalkalderon.com&#x2F;about&#x2F;&quot;&gt;social links&lt;&#x2F;a&gt;.&lt;&#x2F;p&gt;
+</description>
+      </item>
+    </channel>
+</rss>
