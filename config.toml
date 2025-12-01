@@ -30,9 +30,9 @@ header_title = "eyal kalderon"
 show_default_author = false
 
 main_menu = [
-    { name = "home", url = "", trailing_slash = true },
-    { name = "about", url = "about", trailing_slash = true },
-    { name = "projects", url = "projects", trailing_slash = true },
+    { name = "home", url = "@/_index.md", trailing_slash = true },
+    { name = "about", url = "@/about/_index.md", trailing_slash = true },
+    { name = "projects", url = "@/projects/_index.md", trailing_slash = true },
     { name = "résumé", url = "resume.pdf", new_tab = true },
     { name = "rss", url = "rss.xml" },
 ]
