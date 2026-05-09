@@ -17,10 +17,14 @@ taxonomies = [
 
 [markdown]
 bottom_footnotes = true
-highlight_code = true
-highlight_theme = "monokai"
 render_emoji = true
 smart_punctuation = true
+github_alerts = true
+
+[markdown.highlighting]
+style = "inline"
+theme = "monokai-classic"
+extra_themes = ["./themes/terminus/syntaxes/monokai-classic.json"]
 
 [extra]
 copy_button = false
