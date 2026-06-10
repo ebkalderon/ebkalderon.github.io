@@ -4,7 +4,7 @@ title = "Home"
 [extra]
 framed = true
 section_path = "blog/_index.md"
-max_posts = 5
+max_posts = 3
 +++
 
 <h1><span lang="he" dir="rtl">אַהְלָן! 👋🏼</span></h1>
