@@ -42,5 +42,6 @@ cup of coffee! :coffee:
 * [LinkedIn (ebkalderon)](https://www.linkedin.com/in/ebkalderon)
 * [Mastodon (@ebkalderon@hachyderm.io)](https://hachyderm.io/@ebkalderon)
 * [Twitter (@ebkalderon)](https://twitter.com/ebkalderon)
+* [Signal (ebkalderon.05)](https://signal.me/#eu/0SAOFGo0dgJCbpCfqYUnWDdVnwKXzX1MlUrGlJBq5Nt5KRx541dMsrXb5IV_NIUS)
 * [Keybase (ebkalderon)](https://keybase.io/ebkalderon)
 * [Say hello via email](mailto:ebkalderon@gmail.com?subject=hi) (PGP: [00AB4C0942DCBA25](pubkey.asc))
